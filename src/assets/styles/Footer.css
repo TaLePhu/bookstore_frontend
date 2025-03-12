@@ -1,0 +1,36 @@
+.footer{
+    width: 100%;
+    background-color: #3B71CA;
+    padding: 35px 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 25px;
+}
+.region-1 {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.box-icon {
+    width: 35px;
+    height: 35px;
+    border: 2px solid white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.icon-size {
+    width: 18px;
+    height: 18px;
+}
+
+.region-1 p{
+    width: max-content; /* Hoặc width: 100px; */
+    margin: 0 auto;
+}

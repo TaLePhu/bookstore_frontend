@@ -1,11 +1,50 @@
 import React from 'react';
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import './App.css';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 function App() {
   return (
-    <div className="App bg-primary">
-      <h2>book store web</h2>
+    <div className="App bg-white">
+      <Navbar/>
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+
+
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+
+      <p>sssssssssssssssssss</p>
+      <p>sssssssssssssssssss</p>
+
+      <Footer/>
+
     </div>
   );
 }

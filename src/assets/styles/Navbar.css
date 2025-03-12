@@ -7,18 +7,17 @@
     box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.10);
     position: fixed;
     width: 100%;
-    padding: 5px 35px;
+    padding: 5px 20px;
     z-index: 99;
 }
 
 .img-size{
-    height: 50px;
-    width: 50px;
+    height: 40px;
+    width: 40px;
 }
 .region{
     display: flex;
     align-items: center;
-    gap: 20px;
 }
 .search {
     width: 250px;
@@ -41,4 +40,26 @@
     right: 10px; 
     transform: translateY(-50%); /* Căn giữa theo chiều dọc */
     cursor: pointer;
+}
+ul {
+    list-style: none; /* Bỏ dấu chấm đầu dòng */
+    display: flex;
+    padding: 0;
+    margin: 0;
+}
+
+ul li {
+    position: relative;
+}
+
+ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    padding: 10px 15px;
+    transition: color 0.2s ease-in-out;
+}
+
+ul li a:hover {
+    color: #007bff; /* Màu xanh khi hover */
 }

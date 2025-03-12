@@ -1,25 +1,27 @@
 import '../assets/styles/Navbar.css'
 
-function Navbar() {
+const Navbar = () => {
     return (
       <header className="navbar">
         <div className='region'>
-          <img className='img-size' src="/logo192.png" alt="Logo" />
-
-          <a href="/">Trang chủ</a>
-          <a href="/">Giới thiệu</a>
-          <a href="/">Kho sách</a>
-          <a href="/">Thể loại</a>
-          <a href="/">Chính sách</a>
+          <a href='/'><img className='img-size' src="/logoTeam.png" alt="Logo" /></a>
+          <ul>
+            <li><a href="/">Trang chủ</a></li>
+            <li><a href="/">Giới thiệu</a></li>
+            <li><a href="/">Kho sách</a></li>
+            <li><a href="/">Thể loại</a></li>
+          </ul>
         </div>
         <div className='search'>
           <input className='input-search' placeholder='Tìm kiếm...'/>
           <img className='icon-search' src="/icons/icons8-search-48.png" alt="icon-search" />
         </div>
         <div className='region'>
-          <img src="/icons/icons8-cart-24.png" alt="icon-cart" />
-          <a href="/">Đăng nhập</a>
-          <a href='/'>Đăng ký</a>
+          <ul>
+            <li><img src="/icons/icons8-cart-24.png" alt="icon-cart" /></li>
+            <li><a href="/">Đăng nhập</a></li>
+            <li><a href='/'>Đăng ký</a></li>
+          </ul>      
         </div>
       </header>
     );

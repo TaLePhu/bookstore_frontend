@@ -29,8 +29,39 @@
     width: 18px;
     height: 18px;
 }
+.region-2 {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
 
-.region-1 p{
+.region-2 p{
     width: max-content; /* Hoặc width: 100px; */
     margin: 0 auto;
+    color: white;
+    font-weight: 600;
+}
+
+.input-email{
+    background-color: white;
+    border-radius: 5px;
+    width: 422px;
+    padding: 0px 10px;
+    outline: none;
+    border: 1px solid #3B71CA;
+    height: 38px;
+}
+
+.btn-dk {
+    color: white;
+    border: 1px solid white;
+    width: 120px;
+    border-radius: 5px;
+    background-color: #3B71CA;
+    height: 38px;
+}
+
+.btn-dk:hover {
+    border: 2px solid white;
+    font-weight: 600;
 }

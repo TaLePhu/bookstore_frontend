@@ -1,6 +1,6 @@
 import '../assets/styles/Footer.css'
 
-function Footer() {
+const Footer = () => {
     return(
         <div className="footer">
             <div className='region-1'>
@@ -41,15 +41,23 @@ function Footer() {
                     </div>
                 </a>
             </div>
-            <div className='region-1'>
+            <div className='region-2'>
                 <p>Đăng ký nhận bảng tin</p>
-                <input placeholder='Nhập Email'/>
-                <button>Đăng ký</button>
+                <input className='input-email' placeholder='Nhập Email'/>
+                <button className='btn-dk'>Đăng ký</button>
+            </div>
+
+            <div className='region-2'>
+                <div>ddd</div>
+                <div>ddd</div>
+                <div>ddd</div>
+                <div>ddd</div>
             </div>
 
             <p>&copy; 2025 Team12</p>
 
         </div>
     );
-}
+};
+
 export default Footer;

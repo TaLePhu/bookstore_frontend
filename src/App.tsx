@@ -8,16 +8,6 @@ function App() {
   return (
     <div className="App bg-white">
       <Navbar/>
-      <p>sssssssssssssssssss</p>
-      <p>sssssssssssssssssss</p>
-      <p>sssssssssssssssssss</p>
-      <p>sssssssssssssssssss</p>
-      <p>sssssssssssssssssss</p>
-
-      <p>sssssssssssssssssss</p>
-      <p>sssssssssssssssssss</p>
-      <p>sssssssssssssssssss</p>
-      <p>sssssssssssssssssss</p>
 
       <p>sssssssssssssssssss</p>
       <p>sssssssssssssssssss</p>
@@ -30,16 +20,6 @@ function App() {
       <p>sssssssssssssssssss</p>
       <p>sssssssssssssssssss</p>
       <p>sssssssssssssssssss</p>
-      <p>sssssssssssssssssss</p>
-      <p>sssssssssssssssssss</p>
-
-
-      <p>sssssssssssssssssss</p>
-      <p>sssssssssssssssssss</p>
-      <p>sssssssssssssssssss</p>
-      <p>sssssssssssssssssss</p>
-      <p>sssssssssssssssssss</p>
-
       <p>sssssssssssssssssss</p>
       <p>sssssssssssssssssss</p>
 

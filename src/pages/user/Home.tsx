@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import '../../assets/styles/Home.css';
 
 const DATA = [
@@ -20,11 +21,51 @@ const DATA = [
     }
 ];
 
+const BANNER_IMAGES = [
+    "https://cdn1.fahasa.com/media/magentothem/banner7/Zen_840x320.png",
+    "https://cdn1.fahasa.com/media/magentothem/banner7/Mainbanner_1503_840x320.png",
+    "https://cdn1.fahasa.com/media/magentothem/banner7/muasamkhongtienmatT325_840x320.png"
+];
 
 const Home = () => {
+
+    const [currentBanner, setCurrentBanner] = useState(0);
+
+    // Tự động chuyển ảnh mỗi 3 giây
+    useEffect(() => {
+        const interval = setInterval(() => {
+            nextBanner();
+        }, 3000);
+        return () => clearInterval(interval);
+    }, [currentBanner]);
+
+    const nextBanner = () => {
+        setCurrentBanner((prev) => (prev + 1) % BANNER_IMAGES.length);
+    };
+
+    const prevBanner = () => {
+        setCurrentBanner((prev) => (prev - 1 + BANNER_IMAGES.length) % BANNER_IMAGES.length);
+    };
+
     return (
         <div className="container-home">
-            <div>div 1</div>
+            {/* Banner */}
+            <div className="banner">
+                <button className="prev" onClick={prevBanner}>❮</button>
+                <img src={BANNER_IMAGES[currentBanner]} alt="Banner" className="banner-image" />
+                <button className="next" onClick={nextBanner}>❯</button>
+                {/* Dots in the image */}
+                <div className="dots-overlay">
+                    {BANNER_IMAGES.map((_, index) => (
+                        <span
+                            key={index}
+                            className={`dot ${index === currentBanner ? "active" : ""}`}
+                            onClick={() => setCurrentBanner(index)}
+                        />
+                    ))}
+                </div>
+            </div>
+            
             <div>div 2</div>
 
             {/* List item*/}
@@ -37,9 +78,11 @@ const Home = () => {
                     <div className="list-item">
                         {category.items.slice(0, 10).map(item => (
                             <div key={item.id} className="box-item">
-                                <img src={item.image} alt={item.title} />
-                                <h4>{item.title}</h4>
-                                <p>{item.description}</p>
+                                <Link to={`/detail/${item.id}`}>
+                                    <img src={item.image} alt={item.title} />
+                                    <h4>{item.title}</h4>
+                                    <p>{item.description}</p>
+                                </Link>
                             </div>
                         ))}
                     </div>

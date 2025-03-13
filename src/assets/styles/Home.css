@@ -1,0 +1,69 @@
+.container-home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0 30px;
+    
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+.list-total {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.list-item {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; /* Cho phép các item tự xuống hàng */
+    justify-content: center;
+    gap: 15px; /* Khoảng cách giữa các item */
+}
+
+
+.box-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    padding: 15px;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #818181;
+    text-align: center;
+    cursor: pointer;
+}
+
+
+.box-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.box-item h4 {
+    font-size: 16px;
+    margin: 10px 0 5px;
+    color: #333;
+}
+
+.box-item p {
+    font-size: 14px;
+    color: #666;
+}

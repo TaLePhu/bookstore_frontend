@@ -47,11 +47,8 @@ const Footer = () => {
                 <button className='btn-dk'>Đăng ký</button>
             </div>
 
-            <div className='region-2'>
-                <div>ddd</div>
-                <div>ddd</div>
-                <div>ddd</div>
-                <div>ddd</div>
+            <div className='region-3'>
+               
             </div>
 
             <p>&copy; 2025 Team12</p>

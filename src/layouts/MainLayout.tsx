@@ -1,8 +1,16 @@
+import { Outlet } from 'react-router-dom';
+import '../assets/styles/MainLayout.css';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const MainLayout = () => {
     return(
-        <div>
-            <h1> Đây là MainLayout </h1>
+        <div className="App bg-white">
+            <Navbar/>
+            <div className="main-content">
+                <Outlet />
+            </div>
+            <Footer/>
         </div>
     );
 };

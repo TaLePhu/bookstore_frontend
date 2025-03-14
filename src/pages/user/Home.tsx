@@ -78,7 +78,7 @@ const Home = () => {
                     <div className="list-item">
                         {category.items.slice(0, 10).map(item => (
                             <div key={item.id} className="box-item">
-                                <Link to={`/detail/${item.id}`}>
+                                <Link to={`/detail/${item.id}`} state={{ product: item }}>
                                     <img src={item.image} alt={item.title} />
                                     <h4>{item.title}</h4>
                                     <p>{item.description}</p>

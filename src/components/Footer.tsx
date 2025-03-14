@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import '../assets/styles/Footer.css'
 
 const Footer = () => {
@@ -48,7 +49,34 @@ const Footer = () => {
             </div>
 
             <div className='region-3'>
-               
+               <div className='region-3-box'>
+                    <span>Dịch vụ</span>
+                    <ul>
+                        <li><Link to='/'>Điều khoản sử dụng</Link></li>
+                        <li><Link to='/'>Chính sách bảo mật thông tin cá nhân</Link></li>
+                        <li><Link to='/'>Chính sách bảo mật thanh toán</Link></li>
+                        <li><Link to='/'>Hệ thống trung tâm - nhà sách</Link></li>
+                    </ul>
+               </div>
+               <div className='region-3-box'>
+                    <span>Hỗ trợ</span>
+                    <ul>
+                        <li><Link to='/'>Chính sách đổi - trả - hoàn tiền</Link></li>
+                        <li><Link to='/'>Chính sách bảo hành - bồi hoàn</Link></li>
+                        <li><Link to='/'>Chính sách vận chuyển</Link></li>
+                        <li><Link to='/'>Chính sách khách sỉ</Link></li>
+                    </ul>
+               </div>
+               <div className='region-3-box'>
+                    <span>Tài khoản của tôi</span>
+                    <ul>
+                        <li><Link to='/'>Đăng nhập/Tạo mới tài khoản</Link></li>
+                        <li><Link to='/'>Thay đổi địa chỉ khách hàng</Link></li>
+                        <li><Link to='/'>Chi tiết tài khoản</Link></li>
+                        <li><Link to='/'>Lịch sử mua hàng</Link></li>
+                    </ul>
+               </div>
+               <div className='mapp-img'></div>
             </div>
 
             <p>&copy; 2025 Team12</p>

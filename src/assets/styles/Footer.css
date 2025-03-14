@@ -66,3 +66,51 @@
     border: 2px solid white;
     font-weight: 600;
 }
+
+.region-3 {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.region-3-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.region-3-box span{
+    font-size: 20px;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.region-3-box ul{
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.region-3-box ul li{
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    flex-direction: column;
+}
+
+.region-3-box ul li a{
+    color: white;
+    text-decoration: none;
+}
+
+.mapp-img {
+    width: 345px;
+    height: 180px;
+    background-color: #bcc5d4;
+}

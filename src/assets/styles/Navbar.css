@@ -10,7 +10,10 @@
     padding: 5px 20px;
     z-index: 99;
 }
-
+.size-icon {
+    width: 24px;
+    height: 24px;
+}
 .img-size{
     height: 40px;
     width: 40px;
@@ -41,6 +44,44 @@
     right: 10px; 
     transform: translateY(-50%); /* Căn giữa theo chiều dọc */
     cursor: pointer;
+}
+.navbar-list-1 {
+    list-style: none; /* Bỏ dấu chấm đầu dòng */
+    display: flex;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar-list-1 li {
+    position: relative;
+}
+
+.navbar-list-1 li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    padding: 10px 15px;
+    transition: color 0.2s ease-in-out;
+}
+
+.navbar-list-1 li a:hover {
+    color: #007bff; 
+}
+
+.navbar-list-1 li::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: #007bff;
+    transition: width 0.2s ease-in-out, left 0.2s ease-in-out;
+}
+
+.navbar-list-1 li:hover::after {
+    width: 100%;
+    left: 0;
 }
 .navbar-list {
     list-style: none; /* Bỏ dấu chấm đầu dòng */
@@ -79,4 +120,74 @@
 .navbar-list li:hover::after {
     width: 100%;
     left: 0;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.menu-toggle img {
+    width: 24px;
+    height: 24px;
+}
+
+.navbar-list {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar-list.open {
+    display: block;
+}
+
+/* Icon đăng nhập */
+.icon-login {
+    display: none; /* Mặc định ẩn icon */
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+@media (max-width: 899px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .navbar-list {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        background: #FFF;
+        box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.10);
+        z-index: 100;
+    }
+
+    .navbar-list li {
+        text-align: center;
+        padding: 10px 0;
+    }
+
+    .navbar-list li a {
+        padding: 10px 0;
+        display: block;
+    }
+
+    .search {
+        width: auto;
+    }
+
+    .navbar-list-1 {
+        display: none; /* Ẩn danh sách "Đăng nhập" và "Đăng ký" */
+    }
+
+    .icon-login {
+        display: block; /* Hiển thị icon thay thế */
+    }
 }

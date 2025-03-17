@@ -1,6 +1,20 @@
+// install các thư viện này để dùng được
+// npm install --save @fortawesome/fontawesome-svg-core
+// npm install --save @fortawesome/free-solid-svg-icons
+// npm install --save @fortawesome/react-fontawesome
+//npm install react-modal
+
 import { useLocation } from "react-router-dom";
 import '../../assets/styles/ProductDetails.css';
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTruck, faStar } from "@fortawesome/free-solid-svg-icons";
+import Modal from "react-modal";
+import axios from "axios";
+import Select from "react-select";
+import { SingleValue } from "react-select";
+
+// Modal.setAppElement("#root");
 
 const ProductDetails = () => {
     const [quantity, setQuantity] = useState(1); 
@@ -17,6 +31,84 @@ const ProductDetails = () => {
         }
     };
 
+    //Thêm modal chọn địa chỉ
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [provinces, setProvinces] = useState([]);
+    const [districts, setDistricts] = useState([]);
+    const [wards, setWards] = useState([]);
+
+    // const [selectedProvince, setSelectedProvince] = useState(null);
+    // const [selectedDistrict, setSelectedDistrict] = useState(null);
+    // const [selectedWard, setSelectedWard] = useState(null);
+    const [selectedAddress, setSelectedAddress] = useState("Chưa chọn địa chỉ");
+    const [selectedProvince, setSelectedProvince] = useState<{ value: number, label: string } | null>(null);
+    const [selectedDistrict, setSelectedDistrict] = useState<{ value: number, label: string } | null>(null);
+    const [selectedWard, setSelectedWard] = useState<{ value: number, label: string } | null>(null);
+
+    // Load danh sách tỉnh
+    useEffect(() => {
+        axios.get("https://provinces.open-api.vn/api/p/")
+            .then(response => {
+                setProvinces(response.data.map((prov: { code: number, name: string }) => ({
+                    value: prov.code, label: prov.name
+                })));
+            });
+    }, []);
+
+    interface District {
+        code: string;
+        name: string;
+      }
+      
+      interface Ward {
+        code: string;
+        name: string;
+      }
+    // Khi chọn tỉnh, load danh sách huyện
+    const handleProvinceChange = (selectedOption: SingleValue<{ value: number; label: string }>) => {
+        setSelectedProvince(selectedOption);
+        setSelectedDistrict(null);
+        setSelectedWard(null);
+        if (selectedOption) {
+            axios.get(`https://provinces.open-api.vn/api/p/${selectedOption.value}?depth=2`)
+                .then(response => {
+                    setDistricts(response.data.districts.map((dist: District) => ({
+                        value: dist.code, label: dist.name
+                    })));
+                });
+        }
+    };
+
+    // Khi chọn huyện, load danh sách xã
+    const handleDistrictChange = (selectedOption: SingleValue<{ value: number; label: string }>) => {
+        setSelectedDistrict(selectedOption);
+        setSelectedWard(null);
+        if (selectedOption) {
+            axios.get(`https://provinces.open-api.vn/api/d/${selectedOption.value}?depth=2`)
+                .then(response => {
+                    setWards(response.data.wards.map((ward: Ward) => ({
+                        value: ward.code, label: ward.name
+                    })));
+                });
+        }
+    };
+
+    // Khi chọn xã
+    const handleWardChange = (selectedOption: SingleValue<{ value: number; label: string }>) => {
+        setSelectedWard(selectedOption);
+    };
+
+    // Xác nhận địa chỉ
+    const handleSaveAddress = () => {
+        if (selectedProvince && selectedDistrict && selectedWard) {
+            setSelectedAddress(`${selectedWard.label}, ${selectedDistrict.label}, ${selectedProvince.label}`);
+            setIsModalOpen(false);
+        } else {
+            alert("Vui lòng chọn đầy đủ tỉnh, huyện, xã.");
+        }
+    };
+    
+    //Lấy dữ liệu từ trang Home
     const location = useLocation();
     const product = location.state?.product; 
     if (!product) return <p>Không tìm thấy sản phẩm</p>;
@@ -90,6 +182,17 @@ const ProductDetails = () => {
                             </div>
                         </div>
                         <div className="info-product2">
+                            <div className="info-product2-review">
+                                <div className="star-reviews">
+                                    <FontAwesomeIcon icon={faStar} />
+                                    <FontAwesomeIcon icon={faStar} />
+                                    <FontAwesomeIcon icon={faStar} />
+                                    <FontAwesomeIcon icon={faStar} />
+                                    <FontAwesomeIcon icon={faStar} />
+                                </div>
+                                <p className="info-product2-reviews-label">(0 đánh giá)</p>
+                            </div>
+                            <div className="info-product2-separator" >|</div>
                             <div className="info-product2-item">
                                 <p className="info-product2-label">Đã bán: 
                                     <span className="info-product2-value"> 2.1k</span>
@@ -105,13 +208,47 @@ const ProductDetails = () => {
                         <p className="title-info-ship">Thông tin vận chuyển</p>
                         <div className="ship-address">
                             <span>Giao hàng đến: </span>
-                            <span className="address">Phường Bến Nghé, Quận 1, Hồ Chí Minh</span>
-                            <a href="#" className="change-address">Thay đổi</a>
+                            <span className="address">{selectedAddress}</span>
+                            <a className="change-address" onClick={() => setIsModalOpen(true)}>Thay đổi</a>
                         </div>
+                    {/* Modal chọn địa chỉ */}
+                    <Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)} className="ReactModal__Content">
+                        <h2>Chọn địa chỉ</h2>
+                        
+                        <Select
+                            options={provinces}
+                            value={selectedProvince}
+                            onChange={handleProvinceChange}
+                            placeholder="Chọn tỉnh/thành phố"
+                            className="select-item"
+                        />
+
+                        <Select
+                            options={districts}
+                            value={selectedDistrict}
+                            onChange={handleDistrictChange}
+                            placeholder="Chọn quận/huyện"
+                            isDisabled={!selectedProvince}
+                            className="select-item"
+                        />
+
+                        <Select
+                            options={wards}
+                            value={selectedWard}
+                            onChange={handleWardChange}
+                            placeholder="Chọn phường/xã"
+                            isDisabled={!selectedDistrict}
+                            className="select-item"
+                        />
+
+                        <button onClick={handleSaveAddress} className="btn-save">Xác nhận</button>
+                        <button onClick={() => setIsModalOpen(false)} className="btn-dong">Đóng</button>
+                    </Modal>
+                   
+
                         <div className="shipping-option">
-                                <p className="shipping-method">🚛<strong>Giao hàng tiêu chuẩn</strong></p>
+                                <p className="shipping-method"><FontAwesomeIcon icon={faTruck} /><strong> Giao hàng tiêu chuẩn</strong></p>
                                 <p className="shipping-date">Dự kiến giao <strong>Thứ bảy - 15/03</strong></p>
-                            
                         </div>
                         <div className="related-deals">
                             <div className="deals-header">

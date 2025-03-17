@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import '../../assets/styles/Home.css';
 
+
 const DATA = [
     {
         category: "Truyện",

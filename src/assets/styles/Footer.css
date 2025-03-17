@@ -114,3 +114,36 @@
     height: 180px;
     background-color: #bcc5d4;
 }
+
+@media (max-width: 768px) {
+    .region-2 input{
+        width: 100%;
+    }
+    .btn-dk {
+        color: white;
+        border: 1px solid white;
+        width: 90px;
+        border-radius: 5px;
+        background-color: #3B71CA;
+        height: 38px;
+        font-size: 12px;
+    }
+    .region-3 {
+        flex-direction: column; /* Chuyển từ ngang sang dọc */
+        align-items: center; /* Căn giữa các mục */
+        gap: 20px; /* Tăng khoảng cách giữa các mục */
+    }
+
+    .region-3-box {
+        width: 100%; /* Đặt chiều rộng 100% để các mục chiếm toàn bộ chiều ngang */
+        text-align: center; /* Căn giữa nội dung */
+    }
+
+    .region-3-box span {
+        font-size: 18px; /* Giảm kích thước chữ để phù hợp với màn hình nhỏ */
+    }
+
+    .region-3-box ul li a {
+        font-size: 14px; /* Giảm kích thước chữ của các liên kết */
+    }
+}

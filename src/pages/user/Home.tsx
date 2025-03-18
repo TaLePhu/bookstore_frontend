@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import '../../assets/styles/Home.css';
-
+import '../../assets/styles/Card.css';
 
 const DATA = [
     {
@@ -74,7 +74,7 @@ const Home = () => {
                 <div key={category.category} className="list">
                     <div className="list-total">
                         <h3>{category.category}</h3>
-                        <Link to="/">Xem thêm</Link>
+                        <Link to="/category">Xem thêm</Link>
                     </div>
                     <div className="list-item">
                         {category.items.slice(0, 10).map(item => (

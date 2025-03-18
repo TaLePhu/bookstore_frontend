@@ -7,6 +7,7 @@ import About from '../pages/user/About';
 import SignIn from '../pages/auth/SignIn';
 import SignUp from '../pages/auth/SignUp';
 import ProductDetails from '../pages/user/ProductDetails';
+import Category from '../pages/user/Category';
 
 const AppRoutes = () => {
     return(
@@ -16,6 +17,7 @@ const AppRoutes = () => {
                 <Route index element={<Home />} />
                 <Route path="gioi-thieu" element={<About />} />
                 <Route path="/detail/:id" element={<ProductDetails />} />
+                <Route path="/category" element={<Category />} />
 
                 <Route path="/auth/dang-nhap" element={<SignIn/>}/>
                 <Route path="/auth/dang-ky" element={<SignUp/>}/>

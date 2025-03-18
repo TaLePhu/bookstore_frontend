@@ -1,0 +1,84 @@
+.box-item {
+    width: 200px;
+    border: 1px solid #ddd;
+    padding: 12px;
+    border-radius: 8px;
+    background: #fff;
+    text-align: left; /* Căn lề trái */
+    transition: 0.3s;
+}
+
+.box-item:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.box-item img {
+    width: 100%;
+    height: 150px;
+    border-radius: 6px;
+}
+
+.box-item h4 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
+.box-item p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.box-item a {
+    text-decoration: none;
+}
+
+.box-item div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.txt-promotional-price {
+    color: red;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.txt-price {
+    color: rgb(184, 184, 184);
+    text-decoration: line-through;
+    font-size: 14px;
+}
+
+.box-button {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+}
+
+.box-item button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.icon-btn {
+    height: 20px;
+    width: 20px;
+}
+
+.box-button img {
+    height: 25px;
+    width: 25px;
+    cursor: pointer;
+}

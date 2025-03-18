@@ -120,8 +120,7 @@
 .navbar-list li:hover::after {
     width: 100%;
     left: 0;
-<<<<<<< HEAD
-=======
+
 }
 
 .menu-toggle {
@@ -192,5 +191,4 @@
     .icon-login {
         display: block; /* Hiển thị icon thay thế */
     }
->>>>>>> aecec93b5b1397826c5adc57d4dc5e8177da722c
 }

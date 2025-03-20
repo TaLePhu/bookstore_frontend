@@ -5,11 +5,8 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import AppRoutes from './routes/routes';
 import { getAllBook } from './api/BookAPI';
 
-// import Navbar from './components/Navbar';
-// import Footer from './components/Footer';
-
 function App() {
-  getAllBook().then().catch();
+  // getAllBook().then().catch();
 
   return (
     <Router>

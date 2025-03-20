@@ -15,6 +15,20 @@ export async function getAllBook(): Promise<Book[]> {
     const responseData = response._embedded.books;
     console.log(responseData);
     
+    for(const key in responseData) {
+        result.push({
+            bookId: responseData[key].bookId,
+            bookName: responseData[key].bookName,
+            authorName: responseData[key].authorName,
+            description: responseData[key].description,
+            isbn: responseData[key].isbn,
+            averageRating: responseData[key].averageRating,
+            listedPrice: responseData[key].listedPrice,
+            quantity: responseData[key].quantity,
+            salePrice: responseData[key].salePrice,
+
+        });
+    }
 
     return result;
 }

@@ -2,7 +2,10 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import '../../assets/styles/Home.css';
 import '../../assets/styles/Card.css';
+import { getAllBook } from "../../api/BookAPI";
 
+
+//data
 const DATA = [
     {
         category: "Truyện tranh",
@@ -29,6 +32,7 @@ const BANNER_IMAGES = [
 ];
 
 const Home = () => {
+
 
     const [currentBanner, setCurrentBanner] = useState(0);
 

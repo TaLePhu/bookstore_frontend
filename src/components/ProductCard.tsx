@@ -1,23 +1,16 @@
 import '../assets/styles/ProductCard.css';
 import { Link } from "react-router-dom";
-
-interface Book {
-    id: number;
-    title: string;
-    price: number;
-    description: string;
-    image: string;
-}
+import { Book } from "../types"; // Import từ types.ts
 
 const ProductCard = ({ item }: { item: Book }) => (
     <div key={item.id} className="box-item">
         <Link to={`/detail/${item.id}`} state={{ product: item }}>
-            <img src={item.image} alt={item.title} />
+            <img src={item.image || "/default-book.jpg"} alt={item.title} />
             <h4>{item.title}</h4>
             <p>{item.description}</p>
             <div>
-                <span className="txt-promotional-price">300đ</span>
-                <span className="txt-price">{item.price}</span>
+                <span className="txt-promotional-price">{item.salePrice}đ</span>
+                <span className="txt-price">{item.price}đ</span>
             </div>
         </Link>
         <div className="box-button">

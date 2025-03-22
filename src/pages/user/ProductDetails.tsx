@@ -174,7 +174,7 @@ const ProductDetails = () => {
                             </div>
                             <div className="info-product1-item info-right">
                                 <p className="info-product1-label">Tác giả: 
-                                    <span className="info-product1-value"> aaaa</span>
+                                    <span className="info-product1-value">{product.authorName}</span>
                                 </p>
                                 <p className="info-product1-label">Hình thức bìa: 
                                     <span className="info-product1-value"> bbbb</span>
@@ -200,8 +200,8 @@ const ProductDetails = () => {
                             </div>
                         </div>
                         <div className="price">
-                            <p>61.300 đ</p>
-                            <span>109.000 đ</span>
+                            <p>{product.salePrice}</p>
+                            <span>{product.price}</span>
                         </div>
                     </div>
                     <div className="info-ship">

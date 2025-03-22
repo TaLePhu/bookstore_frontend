@@ -1,19 +1,7 @@
 import { Link } from "react-router-dom";
 import '../assets/styles/ProductCard.css';
 import ProductCard from "./ProductCard";
-
-interface Book {
-    id: number;
-    title: string;
-    price: number;
-    description: string;
-    image: string;
-}
-
-interface Category {
-    category: string;
-    items: Book[];
-}
+import { Book, Category } from "../types"; // Import từ types.ts
 
 const CategorySection = ({ category }: { category: Category }) => (
     <div className="list">
@@ -23,7 +11,8 @@ const CategorySection = ({ category }: { category: Category }) => (
         </div>
         <div className="list-item">
             {category.items.slice(0, 10).map((item) => (
-                <ProductCard key={item.id} item={item} />
+                <ProductCard key={item.id} item={{ ...item }} /> 
+                // Đảm bảo dữ liệu phù hợp với ProductCard
             ))}
         </div>
     </div>

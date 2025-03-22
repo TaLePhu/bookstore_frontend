@@ -8,6 +8,7 @@ class Book {
     salePrice?: number;
     quantity?: number;
     averageRating?: number;
+    image?: string; // ✅ Thêm image
 
     constructor(
         bookId: number,
@@ -18,7 +19,8 @@ class Book {
         listedPrice?: number,
         salePrice?: number,
         quantity?: number,
-        averageRating?: number
+        averageRating?: number,
+        image?: string // ✅ Thêm vào constructor
     ) {
         this.bookId = bookId;
         this.bookName = bookName;
@@ -29,8 +31,8 @@ class Book {
         this.salePrice = salePrice;
         this.quantity = quantity;
         this.averageRating = averageRating;
+        this.image = image; // ✅ Gán giá trị
     }
-
 }
 
 export default Book;

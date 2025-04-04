@@ -22,5 +22,5 @@ export interface Book {
 
 export interface Category {
     category: string;
-    items: Book[]; // Đảm bảo items chứa kiểu Book chứ không phải ApiBook
+    items: Book[]; 
 }

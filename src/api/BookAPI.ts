@@ -1,37 +1,41 @@
-import Book from "../models/Book";
+import Category from "../interface/Category";
+import Book from "../models/BookModel";
+import Image from "../models/ImageModel"; // Import class Image
 import { my_request } from "./Request";
+
+export async function getCategoriesOfBook(bookId: number): Promise<Category[]> {
+    const url = `http://localhost:8080/books/${bookId}/categories`;
+    const response = await fetch(url);
+    return await response.json();
+}
 
 export async function getAllBook(): Promise<Book[]> {
     const path: string = 'http://localhost:8080/books';
+    const result: Book[] = [];
 
-    try {
-        const response = await my_request(path);
+    const response = await my_request(path);
+    const responseData = response._embedded.books;
 
-        // Kiểm tra dữ liệu từ API có hợp lệ không
-        if (!response || !response._embedded || !Array.isArray(response._embedded.books)) {
-            console.error("❌ API không trả về dữ liệu hợp lệ:", response);
-            return []; // Trả về mảng rỗng nếu API lỗi
-        }
+    
 
-        const books = response._embedded.books;
-        console.log("✅ Dữ liệu API nhận được:", books);
-
-        // Chuyển đổi dữ liệu sang danh sách Book[]
-        return books.map((book: any) => ({
-            bookId: book.bookId,
-            bookName: book.bookName ?? "Chưa có tên",
-            authorName: book.authorName ?? "Không rõ",
-            description: book.description ?? "Không có mô tả",
-            isbn: book.isbn ?? "N/A",
-            averageRating: book.averageRating ?? 0,
-            listedPrice: book.listedPrice ?? 0,
-            quantity: book.quantity ?? 0,
-            salePrice: book.salePrice ?? book.listedPrice, // Nếu không có salePrice, lấy listedPrice
-            image: book.image ?? "/default-book.jpg", // Nếu không có ảnh, dùng ảnh mặc định
-        }));
-
-    } catch (error) {
-        console.error("❌ Lỗi khi gọi API sách:", error);
-        return [];
+    for(const key in responseData) {
+        
+        result.push({
+            bookId: responseData[key].bookId,
+            bookName: responseData[key].bookName ?? "Chưa có tên",
+            authorName: responseData[key].authorName ?? "Không rõ",
+            description: responseData[key].description ?? "Không có mô tả",
+            isbn: responseData[key].isbn ?? "N/A",
+            averageRating: responseData[key].averageRating ?? 0,
+            listedPrice: responseData[key].listedPrice ?? 0,
+            quantity: responseData[key].quantity ?? 0,
+            salePrice: responseData[key].salePrice ?? responseData[key].listedPrice,
+            
+        })
     }
+
+    return result;
+
+ 
 }
+

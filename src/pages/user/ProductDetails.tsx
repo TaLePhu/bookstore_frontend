@@ -119,7 +119,7 @@ const ProductDetails = () => {
                 <div className="img-info">
                     <div className="img-all">
                         <div className="img-main">
-                            <img src={product.image} alt={product.title} className="imgMain"/>
+                            <img src={product.images} alt={product.title} className="imgMain"/>
                         </div>
                         <div className="img-orther">
                             <div className="img-orther-item">

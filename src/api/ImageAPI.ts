@@ -2,62 +2,6 @@ import ImageModel from "../models/ImageModel";
 import { my_request } from "./Request";
 
 
-// export async function getAllImage(bookId: number): Promise<ImageModel[]> {
-    
-//     const result: ImageModel[] = [];
-
-//     //xac dinh endpoint;
-//     const path = `http://localhost:8080/books/${bookId}/list-images`;
-
-//     const response = await my_request(path);
-
-//     // console.log(response);
-    
-//     const responseData = response._embedded.images;
-
-//     // console.log(responseData);
-    
-//     for(const key in responseData) {
-//         result.push({
-//             imageId: responseData[key].imageId,
-//             imageName: responseData[key].imageName,
-//             isIcon: responseData[key].isIcon,
-//             path: responseData[key].path,
-//             imageData: responseData[key].imageData
-//         });
-//     }
-
-
-//     return result;
-// }
-
-// export async function getAllImage(bookId: number): Promise<ImageModel[]> {
-//     const result: ImageModel[] = [];
-
-//     // xác định endpoint
-//     const path = `http://localhost:8080/books/${bookId}/list-images`;
-
-//     try {
-//         const response = await fetch(path);
-//         const responseData = await response.json(); // Lấy dữ liệu từ API
-
-//         const imageLinks = responseData._embedded.images;
-//         for (const key in imageLinks) {
-//             result.push({
-//                 imageId: imageLinks[key].imageId,
-//                 imageName: imageLinks[key].imageName,
-//                 isIcon: imageLinks[key].isIcon,
-//                 path: imageLinks[key].path,
-//                 imageData: imageLinks[key].imageData,
-//             });
-//         }
-//     } catch (error) {
-//         console.error("Lỗi khi lấy hình ảnh:", error);
-//     }
-
-//     return result;
-// }
-
 export async function getAllImage(bookId: number): Promise<ImageModel[]> {
     const result: ImageModel[] = [];
 

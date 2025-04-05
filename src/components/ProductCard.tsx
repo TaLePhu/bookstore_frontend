@@ -51,21 +51,41 @@ const ProductCard: React.FC<ProductCardInterface> = (props) => {
     ? listImage[0].imageData 
     : "https://cdn.pixabay.com/photo/2023/12/29/18/23/daisy-8476666_1280.jpg";
 
+    const iconImages = listImage.filter(image => image.isIcon === true);
+    
+    const imageSmall = iconImages.length > 0 && iconImages[0].imageData 
+    ? iconImages[0].imageData 
+    : "https://cdn.pixabay.com/photo/2023/12/29/18/23/daisy-8476666_1280.jpg";
+
+    
     return (
-        <div className="box-item">
-            <img src={imageSrc} alt={props.book.bookName} />
-            <h4>{props.book.bookName}</h4>
-            <p>{props.book.description}</p>
-            <div>
-                <span className="txt-promotional-price">{props.book.salePrice}đ</span>
-                <span className="txt-price">{props.book.listedPrice}đ</span>
-            </div>
-            <div className="box-button">
-                <img src="/icons/icons8-heart-32.png" alt="like" />
-                <img src="/icons/icons8-cart-red-24.png" alt="cart" />
-            </div>
-        </div>
+        <Link 
+            to={`/detail/${props.book.bookId}`}
+            state={{ 
+                product: props.book,
+                imageSrc: imageSrc,
+                imageSmall: imageSmall,
+                 iconImages: iconImages 
+             }}
+            className="box-item"
+        >
+            
+            {/* <div className="box-item"> */}
+                <img src={imageSrc} alt={props.book.bookName} />
+                <h4>{props.book.bookName}</h4>
+                <p>{props.book.description}</p>
+                <div>
+                    <span className="txt-promotional-price">{props.book.salePrice}đ</span>
+                    <span className="txt-price">{props.book.listedPrice}đ</span>
+                </div>
+                <div className="box-button">
+                    <img src="/icons/icons8-heart-32.png" alt="like" />
+                    <img src="/icons/icons8-cart-red-24.png" alt="cart" />
+                </div>
+            {/* </div> */}
+        </Link>
     );
+   
 }
 
 export default ProductCard;

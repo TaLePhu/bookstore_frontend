@@ -8,6 +8,8 @@ export interface Book {
     quantity?: number;
     description: string;
     imageUrl?: string;
+    averageRating?: number;
+    isbn?: string;
 }
 
 export default Book;

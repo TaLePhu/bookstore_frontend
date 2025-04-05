@@ -23,6 +23,7 @@ const AppRoutes = () => {
                 <Route path="/cart" element={<ShoppingCart />} />
                 <Route path="/auth/dang-nhap" element={<SignIn/>}/>
                 <Route path="/auth/dang-ky" element={<SignUp/>}/>
+                
             </Route>
 
             {/* Layout cho trang quản trị */}

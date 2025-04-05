@@ -28,7 +28,9 @@ const Navbar = () => {
                 <img className='icon-search' src="/icons/icons8-search-48.png" alt="icon-search" />
             </div>
             <div className='region'>
-                <img className='size-icon' src="/icons/icons8-cart-24.png" alt="icon-cart" />
+                <Link to="/cart" className="icon-cart">
+                    <img className='size-icon' src="/icons/icons8-cart-24.png" alt="icon-cart" />
+                </Link>
                 <ul className='navbar-list-1'>
                     <li><Link to="/auth/dang-nhap">Đăng nhập</Link></li>
                     <li><Link to="/auth/dang-ky">Đăng ký</Link></li>

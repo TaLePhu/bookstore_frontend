@@ -1,0 +1,159 @@
+.container-shopping-cart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0 30px;   
+}
+p{
+    margin: 0;
+    padding: 0;
+}
+.container-shopping-cart span {
+    font-size: 25px;
+    font-weight: 600;
+    color: #000;
+    margin: 20px 0;
+    width: 100%;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+.rigon{
+    display: flex;
+    gap: 15px;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%; 
+}
+.total-item {
+    flex: 2; 
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.payment{
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.total-item-title {
+    display: grid;
+    grid-template-columns: 40% 25% 25% 10%; /* Chia cột theo % */
+    align-items: center;
+    text-align: center; /* Căn giữa nội dung trong mỗi cột */
+    background-color: white;
+    border-radius: 5px;
+    padding: 5px 10px; /* Thêm khoảng cách trên và dưới */
+}
+
+.title-1 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: left; /* Căn trái để checkbox + text hiển thị đúng */
+}
+
+.title-2, .title-3, .title-4 {
+    display: flex;
+    justify-content: center; /* Căn giữa nội dung */
+}
+
+.total-item-title span {
+    font-size: 15px;
+    font-weight: 400;
+    color: #000;
+    text-align: left;
+    text-transform: none;
+    padding: 0;
+    margin: 0;
+}
+
+.list-item {
+    background-color: white;
+    border-radius: 5px;
+    padding-left: 10px;
+    padding: 15px 10px 0px 10px; /* Thêm khoảng cách trên và dưới */
+}
+
+.info-item {
+    display: grid;
+    grid-template-columns: 40% 25% 25% 10%; /* Chia cột theo % */
+    text-align: center; /* Căn giữa nội dung trong mỗi cột */
+    width: 100%;
+    align-items: center;
+    padding-bottom: 15px; /* Thêm khoảng cách trên và dưới */
+    border-bottom: 1px solid #ccc; /* Thêm đường viền dưới mỗi hàng */
+}
+
+.name-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: left; /* Căn trái để checkbox + text hiển thị đúng */
+}
+
+.item-img-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.item-img-info .img-size {
+    width: 90px;
+    height: 120px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.name-info p {
+    font-size: 15px;
+    font-weight: 400;
+    color: #000;
+    text-align: left;
+    text-transform: none;
+    padding: 0;
+    margin: 0;
+}
+.icon-bin {
+    cursor: pointer;
+}
+.so-luong {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-self: center;
+  }
+  
+  .btn-so-luong {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 5px 10px;
+  }
+
+  .payment-address{
+    width: 100%;
+    display: flex;
+    background-color: white;
+    border-radius: 5px;
+    padding: 15px 10px 15px 10px; /* Thêm khoảng cách trên và dưới */
+  }
+.total-payment{
+    width: 100%;
+    display: flex;
+    background-color: white;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    padding: 15px 10px 15px 10px; /* Thêm khoảng cách trên và dưới */
+}
+  

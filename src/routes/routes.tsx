@@ -12,18 +12,17 @@ import CartPage from '../pages/user/CartPage';
 import ShoppingCart from '../pages/user/ShoppingCart';
 
 const AppRoutes = () => {
-    return(
+    return (
         <Routes>
             {/* Layout chính (Navbar + Footer) */}
             <Route path="/" element={<MainLayout />}>
                 <Route index element={<Home />} />
-                <Route path="gioi-thieu" element={<About />} />
+                <Route path="/about" element={<About />} />
                 <Route path="/detail/:id" element={<ProductDetails />} />
                 <Route path="/category" element={<Category />} />
                 <Route path="/cart" element={<ShoppingCart />} />
-                <Route path="/auth/dang-nhap" element={<SignIn/>}/>
-                <Route path="/auth/dang-ky" element={<SignUp/>}/>
-                
+                <Route path="/auth/dang-nhap" element={<SignIn />} />
+                <Route path="/auth/dang-ky" element={<SignUp />} />
             </Route>
 
             {/* Layout cho trang quản trị */}

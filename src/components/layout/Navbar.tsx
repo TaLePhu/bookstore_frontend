@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import '../../assets/styles/Navbar.css';
-import { useCart } from "../../context/CartContext"; 
+import { useCart } from '../../context/CartContext';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -13,35 +13,49 @@ const Navbar = () => {
 
     return (
         <header className="navbar">
-            <div className='region'>
-                <Link to='/'><img className='img-size' src="/logoTeam.png" alt="Logo" /></Link>
+            <div className="region">
+                <Link to="/">
+                    <img className="img-size" src="/logoTeam.png" alt="Logo" />
+                </Link>
                 <button className="menu-toggle" onClick={toggleMenu}>
-                    <img className='size-icon' src="/icons/icons8-menu-24.png" alt="menu-icon" />
+                    <img className="size-icon" src="/icons/icons8-menu-24.png" alt="menu-icon" />
                 </button>
                 <ul className={`navbar-list ${isMenuOpen ? 'open' : ''}`}>
-                    <li><Link to="/">Trang chủ</Link></li>
-                    <li><Link to="/Gioi-thieu">Giới thiệu</Link></li>
-                    <li><Link to="/kho-sach">Kho sách</Link></li>
-                    <li><Link to="/the-loai">Thể loại</Link></li>
+                    <li>
+                        <Link to="/">Trang chủ</Link>
+                    </li>
+                    <li>
+                        <Link to="/about">Giới thiệu</Link>
+                    </li>
+                    <li>
+                        <Link to="/">Kho sách</Link>
+                    </li>
+                    <li>
+                        <Link to="/category">Thể loại</Link>
+                    </li>
                 </ul>
             </div>
-            <div className='search'>
-                <input className='input-search' placeholder='Tìm kiếm...' />
-                <img className='icon-search' src="/icons/icons8-search-48.png" alt="icon-search" />
+            <div className="search">
+                <input className="input-search" placeholder="Tìm kiếm..." />
+                <img className="icon-search" src="/icons/icons8-search-48.png" alt="icon-search" />
             </div>
-            <div className='region'>
+            <div className="region">
                 <Link to="/cart" className="cart-container">
-                    <img className='size-icon' src="/icons/icons8-cart-24.png" alt="icon-cart" />
+                    <img className="size-icon" src="/icons/icons8-cart-24.png" alt="icon-cart" />
                     <span className="cart-count">{getTotalItems()}</span>
                 </Link>
-                <ul className='navbar-list-1'>
-                    <li><Link to="/auth/dang-nhap">Đăng nhập</Link></li>
-                    <li><Link to="/auth/dang-ky">Đăng ký</Link></li>
+                <ul className="navbar-list-1">
+                    <li>
+                        <Link to="/auth/dang-nhap">Đăng nhập</Link>
+                    </li>
+                    <li>
+                        <Link to="/auth/dang-ky">Đăng ký</Link>
+                    </li>
                 </ul>
 
                 {/** icon hiện thị ở màn hình nhỏ */}
                 <Link to="/auth/dang-nhap" className="icon-login">
-                    <img className='size-icon' src="/icons/icons8-user-48.png" alt="icon-login" />
+                    <img className="size-icon" src="/icons/icons8-user-48.png" alt="icon-login" />
                 </Link>
             </div>
         </header>
@@ -53,7 +67,7 @@ export default Navbar;
 // import { Link } from 'react-router-dom';
 // import { useState, useEffect } from 'react';
 // import '../../assets/styles/Navbar.css';
-// import { useCart } from "../../context/CartContext"; 
+// import { useCart } from "../../context/CartContext";
 // import Book from '../../models/BookModel';
 // import ImageModel from '../../models/ImageModel';
 // import { getAllImage } from '../../api/ImageAPI';
@@ -68,7 +82,7 @@ export default Navbar;
 //     const [listImage, setListImage] = useState<ImageModel[]>([]);
 //     const [uploadData, setUploadData] = useState(true);
 //     const [error, setError] = useState(null);
-    
+
 //     // State để lưu tên tìm kiếm và bookId
 //     const [searchTerm, setSearchTerm] = useState('');
 //     const [bookId, setBookId] = useState<number | null>(null);
@@ -108,7 +122,7 @@ export default Navbar;
 //     };
 
 //     const imageSrc = listImage.length > 0 && listImage[0].imageData
-//         ? listImage[0].imageData 
+//         ? listImage[0].imageData
 //         : "https://cdn.pixabay.com/photo/2023/12/29/18/23/daisy-8476666_1280.jpg";
 
 //     return (
@@ -161,4 +175,3 @@ export default Navbar;
 // };
 
 // export default Navbar;
-

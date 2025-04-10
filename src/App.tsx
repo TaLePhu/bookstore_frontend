@@ -7,15 +7,15 @@ import { getAllBook } from './api/BookAPI';
 import { CartProvider } from './context/CartContext';
 
 function App() {
-  // getAllBook().then().catch();
+    // getAllBook().then().catch();
 
-  return (
-    <CartProvider>
-      <Router>
-        <AppRoutes/>
-      </Router>
-    </CartProvider>
-  );
+    return (
+        <CartProvider>
+            <Router>
+                <AppRoutes />
+            </Router>
+        </CartProvider>
+    );
 }
 
 export default App;

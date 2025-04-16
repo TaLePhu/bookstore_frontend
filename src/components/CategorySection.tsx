@@ -13,9 +13,11 @@ const CategorySection: React.FC = () => {
     const [trangHienTai, setTrangHienTai] = useState(1);
     const [tongSoTrang, setTongSoTrang] = useState(0);
 
+    console.log('trang hien tai: ', trangHienTai);
+
     useEffect(() => {
         setUploadData(true);
-        layToanBoSach(trangHienTai)
+        layToanBoSach(trangHienTai - 1)
             .then((data) => {
                 setListBook(data.result);
                 setTongSoTrang(data.totalPages);

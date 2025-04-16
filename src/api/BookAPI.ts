@@ -58,6 +58,17 @@ export async function layToanBoSach(trang: number): Promise<ResultInterface> {
     return getBook(duongDan);
 }
 
+export async function findBook(searchKey: string): Promise<ResultInterface> {
+    // Xác định endpoint
+    let duongDan: string = `http://localhost:8080/books?desc&size=8&page=0`;
+
+    if (searchKey !== '') {
+        duongDan = `http://localhost:8080/books/search/findByBookNameContaining?sort=bookId,desc&size=8&bookName=${searchKey}`;
+    }
+
+    return getBook(duongDan);
+}
+
 // export async function getCategoriesOfBook(bookId: number): Promise<Category[]> {
 //     const url = `http://localhost:8080/books/${bookId}/categories`;
 //     const response = await fetch(url);

@@ -1,14 +1,12 @@
-import { useState, useEffect } from "react";
-import "../../assets/styles/Home.css";
-import "../../assets/styles/ProductCard.css";
-import Banner from "../../components/Banner";
-import CategorySection from "../../components/CategorySection";
-import { getAllBook } from "../../api/BookAPI";
+import { useState, useEffect } from 'react';
+import '../../assets/styles/Home.css';
+import '../../assets/styles/ProductCard.css';
+import Banner from '../../components/Banner';
+import CategorySection from '../../components/CategorySection';
 //import { Book, ApiBook, Category } from "../../types"; // Import từ types.ts
-import {Book} from "../../interface/Book";
-import { ApiBook } from "../../interface/ApiBook";
-import { Category } from "../../interface/Category";
-
+import { Book } from '../../interface/Book';
+import { ApiBook } from '../../interface/ApiBook';
+import { Category } from '../../interface/Category';
 
 const Home = () => {
     // const [categories, setCategories] = useState<Category[]>([]);
@@ -17,7 +15,6 @@ const Home = () => {
     //     const fetchBooks = async () => {
     //         try {
     //             const booksFromAPI: ApiBook[] = await getAllBook();
-                
 
     //             if (!Array.isArray(booksFromAPI)) {
     //                 throw new Error("API không trả về mảng");
@@ -28,15 +25,13 @@ const Home = () => {
     //                 id: book.bookId,
     //                 title: book.bookName ?? "Không có tiêu đề",
     //                 price: book.listedPrice ?? 0,
-    //                 salePrice: book.salePrice, 
+    //                 salePrice: book.salePrice,
     //                 authorName: book.authorName ?? "Không rõ",
     //                 description: book.description ?? "Không có mô tả",
     //                 quantity: book.quantity ?? 0,
-                    
+
     //                 images: book.images ?? []
     //             }));
-
-
 
     //             // Phân loại sách thành danh mục
     //             const categorizedBooks: Category[] = [

@@ -2,17 +2,15 @@ import { Outlet } from 'react-router-dom';
 import '../assets/styles/MainLayout.css';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
-import {getAllBook} from "../api/BookAPI";
 
 const MainLayout = () => {
-    
-    return(
+    return (
         <div className="App bg-white">
-            <Navbar/>
+            <Navbar />
             <div className="main-content">
                 <Outlet />
             </div>
-            <Footer/>
+            <Footer />
         </div>
     );
 };

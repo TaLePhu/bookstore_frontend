@@ -1,7 +1,5 @@
-import { Link } from 'react-router-dom';
-import Category from '../interface/Category';
+import { serialize } from 'v8';
 import Book from '../models/BookModel';
-import Image from '../models/ImageModel'; // Import class Image
 import { my_request, phu_request } from './Request';
 
 //phu-add
@@ -58,43 +56,30 @@ export async function layToanBoSach(trang: number): Promise<ResultInterface> {
     return getBook(duongDan);
 }
 
-export async function findBook(searchKey: string): Promise<ResultInterface> {
+/**
+ *
+ * @param searchKey
+ * @description dùng lấy danh sách sách theo tên sách, mã thể loại
+ * @returns result: Danh sách sách, totalPages: Tổng số trang, totalBook: Tổng số sách
+ * @author phu
+ * endpoint:http://localhost:8080/books/search/findByBookNameContainingAndCategories_CategoryId?categoryId=1&bookName=k
+ * endpoint: http://localhost:8080/books/search/findByCategories_CategoryId?categoryId=1
+ */
+export async function findBook(searchKey: string, categoryId: number): Promise<ResultInterface> {
     // Xác định endpoint
     let duongDan: string = `http://localhost:8080/books?desc&size=8&page=0`;
 
-    if (searchKey !== '') {
+    if (searchKey !== '' && categoryId === 0) {
         duongDan = `http://localhost:8080/books/search/findByBookNameContaining?sort=bookId,desc&size=8&bookName=${searchKey}`;
+    }
+
+    if (searchKey === '' && categoryId > 0) {
+        duongDan = `http://localhost:8080/books/search/findByCategories_CategoryId?sort=bookId,desc&size=8&categoryId=${categoryId}`;
+    }
+
+    if (searchKey !== '' && categoryId > 0) {
+        duongDan = `http://localhost:8080/books/search/findByBookNameContainingAndCategories_CategoryId?sort=bookId,desc&size=8&categoryId=${categoryId}&bookName=${searchKey}`;
     }
 
     return getBook(duongDan);
 }
-
-// export async function getCategoriesOfBook(bookId: number): Promise<Category[]> {
-//     const url = `http://localhost:8080/books/${bookId}/categories`;
-//     const response = await fetch(url);
-//     return await response.json();
-// }
-
-// export async function getAllBook(): Promise<Book[]> {
-//     const path: string = 'http://localhost:8080/books';
-//     const result: Book[] = [];
-
-//     const response = await my_request(path);
-//     const responseData = response._embedded.books;
-
-//     for (const key in responseData) {
-//         result.push({
-//             bookId: responseData[key].bookId,
-//             bookName: responseData[key].bookName ?? 'Chưa có tên',
-//             authorName: responseData[key].authorName ?? 'Không rõ',
-//             description: responseData[key].description ?? 'Không có mô tả',
-//             isbn: responseData[key].isbn ?? 'N/A',
-//             averageRating: responseData[key].averageRating ?? 0,
-//             listedPrice: responseData[key].listedPrice ?? 0,
-//             quantity: responseData[key].quantity ?? 0,
-//             salePrice: responseData[key].salePrice ?? responseData[key].listedPrice,
-//         });
-//     }
-
-//     return result;
-// }

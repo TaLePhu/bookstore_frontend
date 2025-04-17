@@ -18,10 +18,11 @@ const AppRoutes = () => {
         <Routes>
             {/* Layout chính (Navbar + Footer) */}
             <Route path="/" element={<MainLayout searchKey={searchKey} setSearchKey={setSearchKey} />}>
-                <Route index element={<Home searchKey={searchKey} />} />
+                <Route path="/" element={<Home searchKey={searchKey} />} />
+                <Route path="/:categoryId" element={<Home searchKey={searchKey} />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/detail/:id" element={<ProductDetails />} />
-                <Route path="/category" element={<Category />} />
+                {/* <Route path="/category" element={<Category />} /> */}
                 <Route path="/cart" element={<ShoppingCart />} />
                 <Route path="/auth/dang-nhap" element={<SignIn />} />
                 <Route path="/auth/dang-ky" element={<SignUp />} />

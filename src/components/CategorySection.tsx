@@ -8,9 +8,10 @@ import Pagination from '../utils/Pagination';
 
 interface CategorySectionProps {
     searchKey: string;
+    categoryId: number;
 }
 
-const CategorySection: React.FC<CategorySectionProps> = ({ searchKey }) => {
+const CategorySection: React.FC<CategorySectionProps> = ({ searchKey, categoryId }) => {
     const [listBook, setListBook] = useState<BookModel[]>([]);
     const [uploadData, setUploadData] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -21,7 +22,8 @@ const CategorySection: React.FC<CategorySectionProps> = ({ searchKey }) => {
 
     useEffect(() => {
         setUploadData(true);
-        if (searchKey === '') {
+        if (searchKey === '' && categoryId === 0) {
+            // Nếu không có từ khóa tìm kiếm và không có categoryId thì lấy tất
             layToanBoSach(trangHienTai - 1)
                 .then((data) => {
                     setListBook(data.result);
@@ -33,7 +35,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({ searchKey }) => {
                     setUploadData(false);
                 });
         } else {
-            findBook(searchKey)
+            findBook(searchKey, categoryId)
                 .then((data) => {
                     setListBook(data.result);
                     setTongSoTrang(data.totalPages);
@@ -44,7 +46,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({ searchKey }) => {
                     setUploadData(false);
                 });
         }
-    }, [trangHienTai, searchKey]);
+    }, [trangHienTai, searchKey, categoryId]);
 
     if (uploadData) {
         return (

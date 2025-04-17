@@ -1,14 +1,24 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import '../../assets/styles/Navbar.css';
 import { useCart } from '../../context/CartContext';
 
-const Navbar = () => {
+interface NavbarProps {
+    searchKey: string;
+    setSearchKey: (key: string) => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { getTotalItems } = useCart(); // dùng hook lấy tổng số lượng sản phẩm trong giỏ hàng
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
+    };
+
+    // Hàm xử lý thay đổi input tìm kiếm
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchKey(event.target.value); // Cập nhật giá trị tìm kiếm
     };
 
     return (
@@ -35,8 +45,9 @@ const Navbar = () => {
                     </li>
                 </ul>
             </div>
+            {/* search by book name */}
             <div className="search">
-                <input className="input-search" placeholder="Tìm kiếm..." />
+                <input className="input-search" placeholder="Tìm kiếm..." onChange={handleChange} />
                 <img className="icon-search" src="/icons/icons8-search-48.png" alt="icon-search" />
             </div>
             <div className="region">

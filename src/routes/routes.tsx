@@ -8,15 +8,17 @@ import SignIn from '../pages/auth/SignIn';
 import SignUp from '../pages/auth/SignUp';
 import ProductDetails from '../pages/user/ProductDetails';
 import Category from '../pages/user/Category';
-import CartPage from '../pages/user/CartPage';
 import ShoppingCart from '../pages/user/ShoppingCart';
+import { useState } from 'react';
 
 const AppRoutes = () => {
+    const [searchKey, setSearchKey] = useState('');
+
     return (
         <Routes>
             {/* Layout chính (Navbar + Footer) */}
-            <Route path="/" element={<MainLayout />}>
-                <Route index element={<Home />} />
+            <Route path="/" element={<MainLayout searchKey={searchKey} setSearchKey={setSearchKey} />}>
+                <Route index element={<Home searchKey={searchKey} />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/detail/:id" element={<ProductDetails />} />
                 <Route path="/category" element={<Category />} />

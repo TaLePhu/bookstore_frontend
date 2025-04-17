@@ -1,6 +1,5 @@
-import ImageModel from "../models/ImageModel";
-import { my_request } from "./Request";
-
+import ImageModel from '../models/ImageModel';
+import { my_request } from './Request';
 
 export async function getAllImage(bookId: number): Promise<ImageModel[]> {
     const result: ImageModel[] = [];
@@ -18,11 +17,11 @@ export async function getAllImage(bookId: number): Promise<ImageModel[]> {
         const responseData = await response.json();
 
         // Log toàn bộ responseData để kiểm tra
-        console.log("Dữ liệu từ API:", responseData);
+        // console.log("Dữ liệu từ API:", responseData);
 
         // Kiểm tra xem dữ liệu trả về có phải là mảng hay không
         if (Array.isArray(responseData) && responseData.length > 0) {
-            responseData.forEach(image => {
+            responseData.forEach((image) => {
                 // Kiểm tra và xử lý từng đối tượng hình ảnh
                 if (image.imageId && image.imageName && image.path && image.imageData) {
                     result.push({
@@ -40,9 +39,8 @@ export async function getAllImage(bookId: number): Promise<ImageModel[]> {
             throw new Error('Dữ liệu hình ảnh không có hoặc không hợp lệ.');
         }
     } catch (error) {
-        console.error("Lỗi khi lấy hình ảnh:", error);
+        console.error('Lỗi khi lấy hình ảnh:', error);
     }
 
     return result;
 }
-

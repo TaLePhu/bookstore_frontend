@@ -3,31 +3,48 @@ import '../assets/styles/ProductCard.css';
 import ProductCard from './ProductCard';
 import React, { useEffect, useState } from 'react';
 import BookModel from '../models/BookModel';
-import { layToanBoSach } from '../api/BookAPI';
+import { findBook, layToanBoSach } from '../api/BookAPI';
 import Pagination from '../utils/Pagination';
 
-const CategorySection: React.FC = () => {
+interface CategorySectionProps {
+    searchKey: string;
+}
+
+const CategorySection: React.FC<CategorySectionProps> = ({ searchKey }) => {
     const [listBook, setListBook] = useState<BookModel[]>([]);
     const [uploadData, setUploadData] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [trangHienTai, setTrangHienTai] = useState(1);
     const [tongSoTrang, setTongSoTrang] = useState(0);
 
-    console.log('trang hien tai: ', trangHienTai);
+    // console.log('trang hien tai: ', trangHienTai);
 
     useEffect(() => {
         setUploadData(true);
-        layToanBoSach(trangHienTai - 1)
-            .then((data) => {
-                setListBook(data.result);
-                setTongSoTrang(data.totalPages);
-                setUploadData(false);
-            })
-            .catch((error) => {
-                setError(error.message);
-                setUploadData(false);
-            });
-    }, [trangHienTai]);
+        if (searchKey === '') {
+            layToanBoSach(trangHienTai - 1)
+                .then((data) => {
+                    setListBook(data.result);
+                    setTongSoTrang(data.totalPages);
+                    setUploadData(false);
+                })
+                .catch((error) => {
+                    setError(error.message);
+                    setUploadData(false);
+                });
+        } else {
+            findBook(searchKey)
+                .then((data) => {
+                    setListBook(data.result);
+                    setTongSoTrang(data.totalPages);
+                    setUploadData(false);
+                })
+                .catch((error) => {
+                    setError(error.message);
+                    setUploadData(false);
+                });
+        }
+    }, [trangHienTai, searchKey]);
 
     if (uploadData) {
         return (

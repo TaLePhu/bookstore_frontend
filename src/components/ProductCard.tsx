@@ -62,6 +62,11 @@ const ProductCard: React.FC<ProductCardInterface> = (props) => {
             ? iconImages[0].imageData
             : 'https://cdn.pixabay.com/photo/2023/12/29/18/23/daisy-8476666_1280.jpg';
 
+    const salePrice = props.book.salePrice ?? 0;
+    const listedPrice = props.book.listedPrice ?? 1; // tránh chia cho 0
+    
+    const discount = Math.round(100 - (salePrice / listedPrice) * 100);
+
     return (
         <Link
             to={`/detail/${props.book.bookId}`}
@@ -75,16 +80,19 @@ const ProductCard: React.FC<ProductCardInterface> = (props) => {
         >
             {/* <div className="box-item"> */}
             <img src={imageSrc} alt={props.book.bookName} />
+            {discount > 0 && (
+                <div className="discount-tag">-{discount}%</div>
+            )}
             <h4>{props.book.bookName}</h4>
             <p>{props.book.description}</p>
             <div>
                 <span className="txt-promotional-price">{props.book.salePrice}đ</span>
                 <span className="txt-price">{props.book.listedPrice}đ</span>
             </div>
-            <div className="box-button">
+            {/* <div className="box-button">
                 <img src="/icons/icons8-heart-32.png" alt="like" />
                 <img src="/icons/icons8-cart-red-24.png" alt="cart" />
-            </div>
+            </div> */}
             {/* </div> */}
         </Link>
     );

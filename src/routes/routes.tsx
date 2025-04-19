@@ -3,13 +3,14 @@ import { Routes, Route } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
 import Home from '../pages/user/Home';
 import About from '../pages/user/About';
-
+import Cart from '../pages/user/ShoppingCart';
 import SignIn from '../pages/auth/SignIn';
 import SignUp from '../pages/auth/SignUp';
 import ProductDetails from '../pages/user/ProductDetails';
 import Category from '../pages/user/Category';
 import ShoppingCart from '../pages/user/ShoppingCart';
 import { useState } from 'react';
+import Checkout from '../pages/user/Checkout';
 
 const AppRoutes = () => {
     const [searchKey, setSearchKey] = useState('');
@@ -26,8 +27,11 @@ const AppRoutes = () => {
                 <Route path="/cart" element={<ShoppingCart />} />
                 <Route path="/auth/dang-nhap" element={<SignIn />} />
                 <Route path="/auth/dang-ky" element={<SignUp />} />
-            </Route>
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<Checkout />} />
 
+            </Route>
+            {/* <Route path="/checkout" element={<Checkout />} /> */}
             {/* Layout cho trang quản trị */}
         </Routes>
     );

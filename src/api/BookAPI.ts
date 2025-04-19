@@ -1,6 +1,8 @@
 import { serialize } from 'v8';
 import Book from '../models/BookModel';
 import { my_request, phu_request } from './Request';
+import Category from '../interface/Category';
+// import { getCategoriesOfBook } from "./CategoryAPI"; 
 
 //phu-add
 interface ResultInterface {
@@ -83,3 +85,42 @@ export async function findBook(searchKey: string, categoryId: number): Promise<R
 
     return getBook(duongDan);
 }
+
+// export async function getAllBookAndCategories(): Promise<Category[]> {
+//     const path = 'http://localhost:8080/books';
+//     const response = await my_request(path);
+//     const responseData = response._embedded.books;
+
+//     const allCategories: { [categoryName: string]: Book[] } = {};
+
+//     for (const bookData of responseData) {
+//         const book: Book = {
+//             bookId: bookData.bookId,
+//             bookName: bookData.bookName ?? "Chưa có tên",
+//             authorName: bookData.authorName ?? "Không rõ",
+//             description: bookData.description ?? "Không có mô tả",
+//             isbn: bookData.isbn ?? "N/A",
+//             averageRating: bookData.averageRating ?? 0,
+//             listedPrice: bookData.listedPrice ?? 0,
+//             quantity: bookData.quantity ?? 0,
+//             salePrice: bookData.salePrice ?? bookData.listedPrice,
+//         };
+
+//         const categories = await getCategoriesOfBook(book.bookId);
+
+//         for (const category of categories) {
+//             const categoryName = category.categoryName;
+
+//             if (!allCategories[categoryName]) {
+//                 allCategories[categoryName] = [];
+//             }
+
+//             allCategories[categoryName].push(book);
+//         }
+//     }
+
+//     return Object.entries(allCategories).map(([categoryName, items]) => ({
+//         categoryName,
+//         items,
+//     }));
+// }

@@ -154,5 +154,21 @@ p{
     border-radius: 5px;
     display: flex;
     flex-direction: column;
-    padding: 15px 10px 15px 10px; /* Thêm khoảng cách trên và dưới */
+    padding: 15px 10px 15px 10px; 
+    align-items: center;
+}
+.btn-payment{
+    padding: 8px 0;
+    margin: 8px 0;
+    font-weight: 700;
+    color: white;
+    background-color: #007bff;
+    margin-top: 20px;
+    border-radius: 5px;
+    width: 245px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
 }

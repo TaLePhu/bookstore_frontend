@@ -1,0 +1,184 @@
+.container-checkout{
+    display: flex;
+    flex-direction: column;
+    padding: 0 30px;   
+    gap: 20px;
+}
+.card-login{
+    display: flex;
+    flex-direction: row;
+    background-color: #fff;
+    margin-top: 20px;
+    height: 46px;
+    align-items: center;
+    gap: 10px;
+    border-radius: 5px;
+}
+.icon-warning{
+    width: 46px;
+    height: 100%;
+    padding: 4px;
+    color: white;
+    background-color: #F39801;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px 0px 0px 5px;
+}
+.icon-warning svg{
+    height: 22px;
+    width: 22px;
+    text-align: center;
+    
+}
+.card-login p{
+    font-size: 14px;
+    color: #000;
+    font-weight: 400;
+    margin: 0px;
+}
+.card-login a{
+    padding-left: 4px;
+    font-weight: 600;
+    color: #F39801;
+    cursor: pointer;
+    user-select: none;
+    text-decoration: underline;
+}
+.title-info{
+    padding: 8px 0;
+    text-transform: uppercase;
+    font-size: 1.1em;
+    font-weight: 700;
+    border-bottom: 1px solid #ced4da;
+    display: flex;
+    justify-items: flex-start;
+    margin-bottom: 20px;
+    margin-top: -10px;
+}
+.select-item {
+    margin-top: -2px; /* hoặc 2px, tuỳ bạn chỉnh cho đẹp */
+}
+
+.select-item__control {
+    min-height: 32px !important;  /* khớp với chiều cao của AntD Input */
+    height: 32px !important;
+    padding: 0 8px;
+    border-radius: 4px;
+    border: 1px solid #d9d9d9; /* giống AntD Input */
+    box-shadow: none;
+}
+.ant-radio-group{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.ant-radio-label{
+    text-align: left;
+}
+.list-item-product  {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.each-item{
+    display: grid;
+    grid-template-columns: 15% 35% 20% 10% 20%; /* Chia cột theo % */
+    text-align: center; /* Căn giữa nội dung trong mỗi cột */
+    width: 100%;
+    align-items: center;
+    padding-bottom: 15px; /* Thêm khoảng cách trên và dưới */
+    border-bottom: 1px solid #ccc; /* Thêm đường viền dưới mỗi hàng */
+}
+.title-table-item{
+    font-size: 14px;
+    font-weight: 600;
+}
+.img-book img{
+    width: 90px;
+    height: 120px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+.title-book, .price-product, .quantity-book, .total-price{
+    font-size: 14px;
+}
+.total-price{
+    font-weight: 600;
+    color: #F39801;
+}
+.footer-checkout{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    border-top: 1px solid #e8e8e8;
+    padding: 16px;
+    text-align: center;
+    z-index: 1000;
+    box-shadow: 0px -4px 10px -4px rgba(0, 0, 0, 0.66)
+}
+.full-price{
+    display: flex;
+    flex-direction: column;
+    padding: 0 30px;   
+    border-bottom: 1px solid #d9d9d9; 
+    padding-bottom: 15px;
+}
+.total, .shipping-fee, .total-amount{
+    display: flex;
+    gap: 15px;
+}
+.total p, .shipping-fee p, .total-amount p{
+    font-size: 1.1em;
+    width: calc(100% - 150px);
+    text-align: right;
+}
+.total span, .shipping-fee span, .total-amount span{
+    width: 150px;
+    text-align: right;
+}
+.total-amount p{
+    font-weight: 500;
+}
+.total-amount span{
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #F39801;
+}
+.footer-btn{
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 30px;
+}
+.btn-checkout{
+    padding: 8px 0;
+    margin: 8px 0;
+    font-weight: 700;
+    color: white;
+    background-color: #007bff;
+    margin-top: 20px;
+    border-radius: 5px;
+    width: 245px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-checkout:hover{
+    background-color: #0056b3;
+    cursor: pointer;
+}
+.title-delivery, .delivery-time, .title-payment{
+    display: flex;
+    gap: 10px;
+}
+.title-payment{
+    align-items: center;
+}
+.title-payment svg{
+    width: 30px;
+    height: 30px;
+    color: #727272;
+}

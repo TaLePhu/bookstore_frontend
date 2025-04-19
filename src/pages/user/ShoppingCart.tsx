@@ -2,12 +2,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useCart } from "../../context/CartContext";
 import '../../assets/styles/ShoppingCart.css';
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 const ShoppingCart = () => {
-  const { cartItems, updateQuantity, removeFromCart, getTotalItems } = useCart();
+  const { cartItems, updateQuantity, removeFromCart, getTotalItems, saveCartToLocalStorage } = useCart();
+  
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
-    const [selectAll, setSelectAll] = useState(false);
+  const [selectAll, setSelectAll] = useState(false);
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   saveCartToLocalStorage(cartItems);
+  // }, [cartItems]);
 
   const handleIncrease = (id: number, currentQty: number) => {
     updateQuantity(id, currentQty + 1);
@@ -44,6 +52,15 @@ const ShoppingCart = () => {
     setSelectedItems([]);
     setSelectAll(false);
   };
+
+  const selectedProducts = cartItems.filter(item =>
+    selectedItems.includes(item.bookId)
+  );
+
+  const handleCheckout = () => {
+    navigate("/checkout", { state: { selectedProducts, totalPrice } });
+
+  }
 
   const totalPrice = cartItems
   .filter(item => selectedItems.includes(item.bookId))
@@ -131,7 +148,7 @@ const ShoppingCart = () => {
                 <span>Tổng tiền:</span>
                 <span>{totalPrice.toLocaleString()}</span>
               </div>
-              <button className='btn-payment'>Thanh toán</button>
+              <button className='btn-payment' onClick={handleCheckout}>Thanh toán</button>
             </div>
           </div>
         </div>

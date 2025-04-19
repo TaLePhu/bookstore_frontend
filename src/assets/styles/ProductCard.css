@@ -36,6 +36,7 @@
     background: #fff;
     text-align: left; /* Căn lề trái */
     transition: 0.3s;
+    position: relative;
 }
 
 .box-item:hover {
@@ -115,4 +116,16 @@
 
 a{
     text-decoration: none;;
+}
+
+.discount-tag {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-weight: bold;
 }

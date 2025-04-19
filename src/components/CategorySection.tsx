@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import BookModel from '../models/BookModel';
 import { findBook, layToanBoSach } from '../api/BookAPI';
 import Pagination from '../utils/Pagination';
+import Category from '../interface/Category';
 
 interface CategorySectionProps {
     searchKey: string;
@@ -85,5 +86,25 @@ const CategorySection: React.FC<CategorySectionProps> = ({ searchKey, categoryId
         </div>
     );
 };
+
+// interface Props {
+//     category: Category;
+// }
+
+// const CategorySection: React.FC<Props> = ({ category }) => {
+//     return (
+//         <div className="list">
+//             <div className="list-total">
+//                 <h3>{category.categoryName}</h3>
+//                 <Link to="/category">Xem thêm</Link>
+//             </div>
+//             <div className="list-item">
+//                 {category.items.slice(0, 10).map((item) => (
+//                     <ProductCard key={item.bookId} book={{ ...item }} />
+//                 ))}
+//             </div>
+//         </div>
+//     );
+// };
 
 export default CategorySection;

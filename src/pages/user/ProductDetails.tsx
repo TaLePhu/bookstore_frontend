@@ -14,6 +14,7 @@ import axios from "axios";
 import Select from "react-select";
 import { SingleValue } from "react-select";
 import { useCart } from "../../context/CartContext";
+import { useNavigate } from "react-router-dom";
 
 // Modal.setAppElement("#root");
 
@@ -49,6 +50,9 @@ const ProductDetails = () => {
     const [selectedProvince, setSelectedProvince] = useState<{ value: number, label: string } | null>(null);
     const [selectedDistrict, setSelectedDistrict] = useState<{ value: number, label: string } | null>(null);
     const [selectedWard, setSelectedWard] = useState<{ value: number, label: string } | null>(null);
+
+    const navigate = useNavigate();
+
 
     // Load danh sách tỉnh
     useEffect(() => {
@@ -116,11 +120,6 @@ const ProductDetails = () => {
     //add to cart
     const { addToCart } = useCart();
 
-    
-    
-
-    
-
       //dinh dang tien 
       const formatCurrency = (value: number) =>
         value.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
@@ -146,6 +145,26 @@ const ProductDetails = () => {
         };
         addToCart(item);
       };
+
+      
+      const handleBuyNow = () => {
+        if (quantity > product.quantity) {
+          alert("Không đủ hàng trong kho.");
+          return;
+        }
+      
+        const item = {
+          bookId: product.bookId,
+          bookName: product.bookName,
+          quantity,
+          salePrice: product.salePrice,
+          stock: product.quantity,
+          image: imageSrc,
+        };
+      
+        addToCart(item);
+        navigate("/cart"); // chuyển sang trang giỏ hàng
+    };
 
     return(
         <div className="container-details">
@@ -175,7 +194,7 @@ const ProductDetails = () => {
                             <img src="/icons/icons8-cart-24.png" alt="icon-cart" />
                             <span onClick={handleAddToCart}>Thêm vào giỏ hàng</span>
                         </div>
-                        <div className="btn-buy">
+                        <div className="btn-buy" onClick={handleBuyNow}>
                             <span>Mua ngay</span>
                         </div>
                     </div>

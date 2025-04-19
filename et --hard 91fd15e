@@ -1,0 +1,146 @@
+[33mcommit 6002b976c6cff092c0391bf361bc1210e5c54a37[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: LAPTOP-LVT6JQM0\nguye <caotri2000mwg@gmail.com>
+Date:   Fri Apr 18 18:22:26 2025 +0700
+
+    update Home page
+
+[33mcommit 9034318653716c4d5ca22e230a70b2301ba56284[m
+Merge: 91fd15e d4d46de
+Author: LAPTOP-LVT6JQM0\nguye <caotri2000mwg@gmail.com>
+Date:   Sat Apr 5 09:35:00 2025 +0700
+
+    recommit
+
+[33mcommit 91fd15e737cb1b6d0b0e856f25d2c064d7dcf473[m
+Author: LAPTOP-LVT6JQM0\nguye <caotri2000mwg@gmail.com>
+Date:   Sat Apr 5 09:32:12 2025 +0700
+
+    add ShoppingCart xu ly
+
+[33mcommit d4d46de2965358c93c276269a9454f829b7462e7[m
+Author: Nhu <quynhnhu18121812@gmail.com>
+Date:   Sat Apr 5 07:06:07 2025 +0700
+
+    GUI shopping cart
+
+[33mcommit 005a95c850e207e5f60959162d051b85d6c87821[m
+Author: LAPTOP-LVT6JQM0\nguye <caotri2000mwg@gmail.com>
+Date:   Sat Apr 5 00:34:00 2025 +0700
+
+    add product card
+
+[33mcommit e0a74f1a13370c1c879eabd10a2d453f206a5718[m
+Author: LAPTOP-LVT6JQM0\nguye <caotri2000mwg@gmail.com>
+Date:   Sat Mar 22 10:41:41 2025 +0700
+
+    add API book
+
+[33mcommit 9b0688e03c6f46560d8ff53e517a87da6a8118fd[m
+Author: Nhu <quynhnhu18121812@gmail.com>
+Date:   Thu Mar 20 22:34:38 2025 +0700
+
+    separate the individual components in home.tsx
+
+[33mcommit 52d529e74b8b630732d302aabd4a5e67a7134e13[m
+Author: TaLePhu <lephu18062@gmail.com>
+Date:   Thu Mar 20 15:45:59 2025 +0700
+
+    completed BookAPI
+
+[33mcommit d7b81bd3d0f5f655f4e9e0649b729795a423ea41[m
+Author: TaLePhu <lephu18062@gmail.com>
+Date:   Thu Mar 20 15:31:00 2025 +0700
+
+    create book  models, tao api getAllBook
+
+[33mcommit ec1655be37ca2f39d167fb9a837d9bfebd4f9f7f[m
+Author: Nhu <quynhnhu18121812@gmail.com>
+Date:   Tue Mar 18 09:24:20 2025 +0700
+
+    fix header
+
+[33mcommit d47781deeecbd77b853c02a16b23695e2dad13e3[m
+Merge: ed566c9 aecec93
+Author: LAPTOP-LVT6JQM0\nguye <caotri2000mwg@gmail.com>
+Date:   Mon Mar 17 21:43:58 2025 +0700
+
+    add responsive and add modal choose place
+
+[33mcommit ed566c9e7de53bf7ee393186e4695310351213dc[m
+Author: LAPTOP-LVT6JQM0\nguye <caotri2000mwg@gmail.com>
+Date:   Mon Mar 17 21:42:39 2025 +0700
+
+    add responsive and add modal choose place
+
+[33mcommit aecec93b5b1397826c5adc57d4dc5e8177da722c[m
+Author: Nhu <quynhnhu18121812@gmail.com>
+Date:   Mon Mar 17 20:48:59 2025 +0700
+
+    Add responsive header, footer
+
+[33mcommit 626ac4ff261562a8e54bba0682c99aa9fcef4034[m
+Author: TaLePhu <lephu18062@gmail.com>
+Date:   Sat Mar 15 09:21:32 2025 +0700
+
+    update folder
+
+[33mcommit 479db0f92ea85d55a9b4cc2e781d90fd1c9cfa8c[m
+Author: LAPTOP-LVT6JQM0\nguye <caotri2000mwg@gmail.com>
+Date:   Fri Mar 14 19:46:45 2025 +0700
+
+    add page ProductDetails v1
+
+[33mcommit 3c631afb118d234ec4b6398a999c2cb6032b3368[m
+Merge: 3656356 13f70ad
+Author: nguyenvanthach052 <nguyenvanthach052@gmail.com>
+Date:   Fri Mar 14 14:46:25 2025 +0700
+
+    Merge branch 'master' of https://github.com/TaLePhu/bookstore_frontend
+
+[33mcommit 365635620e0f4c5086db9a22c593cf9d3bdf5504[m
+Author: nguyenvanthach052 <nguyenvanthach052@gmail.com>
+Date:   Fri Mar 14 14:46:20 2025 +0700
+
+    Sign In , Sign up
+
+[33mcommit 13f70ad29a5083347c1f75f74735f1c7c85889a0[m
+Author: LAPTOP-LVT6JQM0\nguye <caotri2000mwg@gmail.com>
+Date:   Thu Mar 13 23:21:06 2025 +0700
+
+    add banner vao pageHome
+
+[33mcommit 4516e6306ace6e862595c02dd78b9e40bc3392e0[m
+Author: Nhu <quynhnhu18121812@gmail.com>
+Date:   Thu Mar 13 22:31:23 2025 +0700
+
+    render static data into item
+
+[33mcommit 4d16b79f194dfdf3655deab3e00a26e4e6983c14[m
+Author: Nhu <quynhnhu18121812@gmail.com>
+Date:   Thu Mar 13 15:42:54 2025 +0700
+
+    Add page transition
+
+[33mcommit e2d3933f8b5a41ba89dcf466b3dffca92d5510d8[m
+Author: Nhu <quynhnhu18121812@gmail.com>
+Date:   Wed Mar 12 21:11:39 2025 +0700
+
+    update
+
+[33mcommit 4f30ef90cd97945939524bf74cad5c1e5f56e46d[m
+Author: Nhu <quynhnhu18121812@gmail.com>
+Date:   Wed Mar 12 14:51:46 2025 +0700
+
+    add 50% header
+
+[33mcommit 38ab0a3e42ef508d7e8d0b45e66c6bd6e4d3cbc3[m
+Author: TaLePhu <lephu18062@gmail.com>
+Date:   Mon Mar 10 21:14:57 2025 +0700
+
+    update App.tsx
+
+[33mcommit e75adf0bdbf82022a934e10888ce3d0eb09e48d1[m
+Author: TaLePhu <lephu18062@gmail.com>
+Date:   Mon Mar 10 21:11:03 2025 +0700
+
+    init project

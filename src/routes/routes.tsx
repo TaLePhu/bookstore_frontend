@@ -7,12 +7,12 @@ import Cart from '../pages/user/ShoppingCart';
 import SignIn from '../pages/auth/SignIn';
 import SignUp from '../pages/auth/SignUp';
 import ProductDetails from '../pages/user/ProductDetails';
-import Category from '../pages/user/Category';
 import ShoppingCart from '../pages/user/ShoppingCart';
 import { useState } from 'react';
 import Checkout from '../pages/user/Checkout';
 import ActivateAccount from '../pages/auth/ActivateAccount';
 import Test from '../pages/auth/Test';
+import Policy from '../pages/user/Policy';
 
 const AppRoutes = () => {
     const [searchKey, setSearchKey] = useState('');
@@ -25,7 +25,7 @@ const AppRoutes = () => {
                 <Route path="/:categoryId" element={<Home searchKey={searchKey} />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/detail/:id" element={<ProductDetails />} />
-                {/* <Route path="/category" element={<Category />} /> */}
+                <Route path="/policy" element={<Policy />} />
                 <Route path="/cart" element={<ShoppingCart />} />
                 <Route path="/auth/dang-nhap" element={<SignIn />} />
                 <Route path="/auth/dang-ky" element={<SignUp />} />

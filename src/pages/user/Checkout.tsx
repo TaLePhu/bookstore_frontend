@@ -25,6 +25,15 @@ interface PaymentMethod {
     paymentFee: number;
 }
 
+interface Product {
+    bookId: number;
+    quantity: number;
+    salePrice: number;
+    image: string;
+    bookName: string;
+  }
+  
+
 const Checkout: React.FC = () => {
     const [provinces, setProvinces] = useState([]);
     const [districts, setDistricts] = useState([]);
@@ -62,14 +71,20 @@ const Checkout: React.FC = () => {
     console.log("Danh sách phương thức vận chuyển:", shippingMethods);
 
     useEffect(() => {
-        axios.get<PaymentMethod[]>("http://localhost:8080/api/payment-methods") 
+        const token = localStorage.getItem("token"); // lấy JWT từ localStorage
+      
+        axios.get<PaymentMethod[]>("http://localhost:8080/api/payment-methods", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
           .then(response => {
             setPaymentMethods(response.data);
           })
           .catch(error => {
-            console.error("Lỗi khi lấy danh sách phương thức thanh toán:", error);
+            console.error("Lỗi khi lấy danh sách phương thức thanh toán:", error.response?.status, error.response?.data);
           });
-    }, []);
+      }, []);
 
 
     // Load danh sách tỉnh
@@ -157,6 +172,9 @@ const Checkout: React.FC = () => {
         return total;
     };
 
+    const selectedShipping = shippingMethods.find(method => method.shippingMethodId === deliveryMethod);
+    const selectedPayment = paymentMethods.find(method => method.paymentMethodId === paymentMethod);
+
     const calculateTotalDelivery = () => {
         const selectedShipping = shippingMethods.find(method => method.shippingMethodId === deliveryMethod);
         const selectedPayment = paymentMethods.find(method => method.paymentMethodId === paymentMethod);
@@ -167,6 +185,69 @@ const Checkout: React.FC = () => {
         const total = shippingCost + paymentFee;
         return total;
     }
+
+    const [form] = Form.useForm();
+
+    const handleCheckoutReal = async () => {
+        try {
+          // Lấy dữ liệu từ form (các input địa chỉ người nhận)
+          const values = await form.validateFields();
+      
+          // Kiểm tra các trường bắt buộc khác
+          if (!selectedProvince || !selectedDistrict || !selectedWard) {
+            message.error("Vui lòng chọn đầy đủ địa chỉ giao hàng!");
+            return;
+          }
+      
+          if (!deliveryMethod) {
+            message.error("Vui lòng chọn phương thức vận chuyển!");
+            return;
+          }
+      
+          if (!paymentMethod) {
+            message.error("Vui lòng chọn phương thức thanh toán!");
+            return;
+          }
+      
+          if (selectedProducts.length === 0) {
+            message.error("Bạn chưa chọn sản phẩm nào!");
+            return;
+          }
+      
+          // Tạo object đơn hàng
+          const orderData = {
+            userId: 0, // hoặc lấy từ context nếu có đăng nhập
+            billingAddress: `${values.address}, ${selectedWard}, ${selectedDistrict}, ${selectedProvince}`,
+            shippingAddress: `${values.address}, ${selectedWard}, ${selectedDistrict}, ${selectedProvince}`,
+            shippingMethodId: deliveryMethod,
+            paymentMethodId: paymentMethod,
+            totalProductPrice: totalPrice, // hoặc tính riêng nếu cần
+            shippingFee: selectedShipping, // hoặc truyền giá trị thực
+            paymentFee: selectedPayment,
+            totalPrice: totalPrice,
+            orderDetails: selectedProducts.map((product: Product) => ({
+              bookId: product.bookId,
+              quantity: product.quantity,
+              salePrice: product.salePrice,
+            }))
+          };
+      
+          console.log("Đơn hàng gửi đi:", orderData);
+      
+          // Gọi API gửi đơn hàng
+          const response = await axios.post('http://localhost:8080/api/orders', orderData);
+      
+          if (response.status === 200) {
+            message.success("Đặt hàng thành công!");
+            // Có thể redirect hoặc reset form tại đây
+          } else {
+            message.error("Đặt hàng thất bại!");
+          }
+        } catch (error) {
+          console.error("Lỗi khi đặt hàng:", error);
+          message.error("Vui lòng kiểm tra lại thông tin đơn hàng!");
+        }
+      };
 
 
 	return (
@@ -189,6 +270,7 @@ const Checkout: React.FC = () => {
                     className="checkout-form"
                     initialValues={{ remember: true }}
                     labelCol={{ style: { width: 150 } }}
+                    form={form} onFinish={handleCheckoutReal}
                 >
                     <Form.Item
                         label="Họ người nhận"
@@ -297,6 +379,7 @@ const Checkout: React.FC = () => {
                     className="checkout-form"
                     initialValues={{ remember: true }}
                     labelCol={{ style: { width: 150 } }}
+                    form={form} onFinish={handleCheckoutReal}
                 >   
                     {/* <Form.Item 
                     labelCol={{ span: 24 }}
@@ -361,6 +444,7 @@ const Checkout: React.FC = () => {
                     className="checkout-form"
                     initialValues={{ remember: true }}
                     labelCol={{ style: { width: 150 } }}
+                    form={form} onFinish={handleCheckoutReal}
                 >   
                     <Form.Item 
                     labelCol={{ span: 24 }}
@@ -473,7 +557,7 @@ const Checkout: React.FC = () => {
                     </div>
                 </div>
                 <div className="footer-btn">
-                    <div className="btn-checkout" onClick={handleCheckout}>
+                    <div className="btn-checkout" onClick={handleCheckoutReal}>
                         <p>Xác nhận thanh toán</p>
                     </div>
                 </div>

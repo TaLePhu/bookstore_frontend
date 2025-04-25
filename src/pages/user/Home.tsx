@@ -12,12 +12,12 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ searchKey }) => {
-    const { categoryId } = useParams(); // get categoryId từ url gán vào categoryId
+    const { categoryId } = useParams();
 
     let categoryIdNumber = 0;
 
     try {
-        categoryIdNumber = parseInt(categoryId + ''); // NaN
+        categoryIdNumber = parseInt(categoryId + ''); 
     } catch (error) {
         categoryIdNumber = 0;
         console.log('error categoryId: ', error);

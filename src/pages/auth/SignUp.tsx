@@ -98,6 +98,8 @@ function SignUp() {
                         lastName: lastName,
                         firstName: firstName,
                         phoneNumber: phoneNumber,
+                        isActivated: 0,
+                        activationCode: '',
                     }),
                 });
                 if (response.ok) {

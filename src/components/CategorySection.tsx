@@ -5,7 +5,6 @@ import React, { useEffect, useState } from 'react';
 import BookModel from '../models/BookModel';
 import { findBook, layToanBoSach } from '../api/BookAPI';
 import Pagination from '../utils/Pagination';
-import Category from '../interface/Category';
 
 interface CategorySectionProps {
     searchKey: string;

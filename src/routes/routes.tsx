@@ -11,6 +11,7 @@ import Category from '../pages/user/Category';
 import ShoppingCart from '../pages/user/ShoppingCart';
 import { useState } from 'react';
 import Checkout from '../pages/user/Checkout';
+import ActivateAccount from '../pages/auth/ActivateAccount';
 
 const AppRoutes = () => {
     const [searchKey, setSearchKey] = useState('');
@@ -29,7 +30,7 @@ const AppRoutes = () => {
                 <Route path="/auth/dang-ky" element={<SignUp />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout" element={<Checkout />} />
-
+                <Route path="/activate/:email/:activationCode" element={<ActivateAccount />} />
             </Route>
             {/* <Route path="/checkout" element={<Checkout />} /> */}
             {/* Layout cho trang quản trị */}

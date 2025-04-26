@@ -53,7 +53,7 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                         <Link to="/about">Giới thiệu</Link>
                     </li>
                     <li>
-                        <Link to="/">Kho sách</Link>
+                        <Link to="/policy">Chính sách</Link>
                     </li>
                     <li className="has-submenu">
                         <Link to="" className="submenu-toggle" onClick={toggleSubmenu}>

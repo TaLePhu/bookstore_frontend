@@ -1,0 +1,49 @@
+.about-container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.about-card,
+.map-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.about-card h2,
+.map-card h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.about-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.about-info {
+    flex: 1;
+    min-width: 280px;
+}
+
+.about-logo {
+    text-align: center;
+    flex: 1;
+    min-width: 200px;
+}
+
+.about-logo img {
+    width: 150px;
+    margin-bottom: 10px;
+}
+
+.map-container iframe {
+    width: 100%;
+    border-radius: 8px;
+}

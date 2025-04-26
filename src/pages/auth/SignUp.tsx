@@ -17,57 +17,6 @@ function SignUp() {
     const [errorConfirmPassword, setErrorConfirmPassword] = useState('');
     const [errorPhoneNumber, setErrorPhoneNumber] = useState('');
 
-    //---------XỬ LÝ SUMIT-------------
-    // const handleSubmit = async (e: React.FormEvent) => {
-    //     // Clear any previous error messages
-    //     setErrorTenDangNhap('');
-    //     setErrorEmail('');
-    //     setErrorMatKhau('');
-    //     setErrorMatKhauLapLai('');
-
-    //     // Tránh click liên tục
-    //     e.preventDefault();
-
-    //     // Kiểm tra các điều kiện và gán kết quả vào biến
-    //     const isTenDangNhapValid = !await kiemTraTenDangNhapDaTonTai(tenDangNhap);
-    //     const isEmailValid = !await kiemTraEmailDaTonTai(email);
-    //     const isMatKhauValid = !kiemTraMatKhau(matKhau);
-    //     const isMatKhauLapLaiValid = !kiemTraMatKhauLapLai(matKhauLapLai);
-
-    //     // Kiểm tra tất cả các điều kiện
-    //     if (isTenDangNhapValid && isEmailValid && isMatKhauValid && isMatKhauLapLaiValid) {
-    //         try {
-    //             const url = 'http://localhost:8080/tai-khoan/dang-ky';
-
-    //             const response = await fetch(url, {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     'Content-type' : 'application/json',
-    //                 },
-    //                 body: JSON.stringify({
-    //                     tenDangNhap: tenDangNhap,
-    //                     email: email,
-    //                     matKhau: matKhau,
-    //                     hoDem: hoDem,
-    //                     ten: ten,
-    //                     soDienThoai: soDienThoai,
-    //                     gioiTinh: gioiTinh
-    //                 })
-    //             }
-    //             );
-
-    //             if(response.ok){
-    //                 setThongBao("Đăng ký thành công, vui lòng kiểm tra email để kích hoạt!");
-    //             }else{
-    //                 console.log(response.json());
-    //                 setThongBao("Đã xảy ra lỗi trong quá trình đăng ký tài khoản.")
-    //             }
-    //         } catch (error) {
-    //             setThongBao("Đã xảy ra lỗi trong quá trình đăng ký tài khoản.")
-    //         }
-    //     }
-    // }
-
     const handleSumit = async (e: React.FormEvent) => {
         setErrorUserName('');
         setErrorEmail('');

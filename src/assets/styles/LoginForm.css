@@ -1,25 +1,26 @@
 .login-container {
     max-width: 400px;
     margin: 0 auto;
-  }
-  
-  .form-group {
+    background-color: rgb(255, 255, 255);
+}
+
+.form-group {
     display: flex;
     flex-direction: column;
     margin-bottom: 15px;
-  }
-  
-  .form-group label {
+}
+
+.form-group label {
     margin-bottom: 5px;
-  }
-  
-  .form-group input {
+}
+
+.form-group input {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-  }
-  
-  .login-btn {
+}
+
+.login-btn {
     padding: 10px 0;
     background-color: #fff;
     color: #007bff;
@@ -28,15 +29,14 @@
     cursor: pointer;
     margin-top: 10px;
     width: 100%;
-  }
-  
-  .footer-links {
+}
+
+.footer-links {
     margin-top: 20px;
     text-align: right;
-  }
-  
-  .footer-links a {
+}
+
+.footer-links a {
     color: #007bff;
     text-decoration: none;
-  }
-  
+}

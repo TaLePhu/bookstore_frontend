@@ -172,3 +172,7 @@ p{
     justify-content: center;
     border: none;
 }
+.btn-payment:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }

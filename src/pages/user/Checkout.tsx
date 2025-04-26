@@ -1,4 +1,4 @@
-import { Form, Input, Button, message, Card, Radio , Alert } from 'antd';
+import { Form, Input, Button, message, Card, Radio , Alert, Modal } from 'antd';
 import { faCreditCard, faMoneyBill, faWarning } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from 'react';
 import "../../assets/styles/Checkout.css";
@@ -10,6 +10,8 @@ import { SingleValue } from "react-select";
 import axios from 'axios';
 import { useLocation } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
+import { NavigateFunction } from 'react-router-dom';
+
 
 interface ShippingMethod {
     shippingMethodId: number;
@@ -55,6 +57,8 @@ const Checkout: React.FC = () => {
 
     const [shippingMethods, setShippingMethods] = useState<ShippingMethod[]>([]);
     const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
+
+    const navigate = useNavigate();
 
     // axios.get<ShippingMethod[]>("http://localhost:8080/api/shipping-methods")
 
@@ -186,6 +190,29 @@ const Checkout: React.FC = () => {
         return total;
     }
 
+    const handleSuccessModal = (navigate: NavigateFunction) => {
+        let secondsToGo = 5;
+        const modal = Modal.success({
+          title: 'Đặt hàng thành công!',
+          content: `Bạn sẽ được chuyển về trang chủ sau ${secondsToGo} giây.`,
+          centered: true,
+          okButtonProps: { style: { display: 'none' } }, // Ẩn nút OK nếu muốn
+        });
+      
+        const interval = setInterval(() => {
+          secondsToGo -= 1;
+          modal.update({
+            content: `Bạn sẽ được chuyển về trang chủ sau ${secondsToGo} giây.`,
+          });
+        }, 1000);
+      
+        setTimeout(() => {
+          clearInterval(interval);
+          modal.destroy();
+          navigate('/');
+        }, secondsToGo * 1000);
+    };
+
     const [form] = Form.useForm();
 
     const handleCheckoutReal = async () => {
@@ -217,13 +244,13 @@ const Checkout: React.FC = () => {
           // Tạo object đơn hàng
           const orderData = {
             userId: 0, // hoặc lấy từ context nếu có đăng nhập
-            billingAddress: `${values.address}, ${selectedWard}, ${selectedDistrict}, ${selectedProvince}`,
-            shippingAddress: `${values.address}, ${selectedWard}, ${selectedDistrict}, ${selectedProvince}`,
+            billingAddress: `${values.address}, ${selectedWard.label}, ${selectedDistrict.label}, ${selectedProvince.label}`,
+            shippingAddress: `${values.address}, ${selectedWard.label}, ${selectedDistrict.label}, ${selectedProvince.label}`,
             shippingMethodId: deliveryMethod,
             paymentMethodId: paymentMethod,
             totalProductPrice: totalPrice, // hoặc tính riêng nếu cần
-            shippingFee: selectedShipping, // hoặc truyền giá trị thực
-            paymentFee: selectedPayment,
+            shippingFee: selectedShipping?.shippingCost, // hoặc truyền giá trị thực
+            paymentFee: selectedPayment?.paymentFee,
             totalPrice: totalPrice,
             orderDetails: selectedProducts.map((product: Product) => ({
               bookId: product.bookId,
@@ -239,6 +266,9 @@ const Checkout: React.FC = () => {
       
           if (response.status === 200) {
             message.success("Đặt hàng thành công!");
+            const bookIdsToRemove = selectedProducts.map((item: { bookId: number }) => item.bookId);
+            removeMultipleFromCart(bookIdsToRemove);
+            handleSuccessModal(navigate);
             // Có thể redirect hoặc reset form tại đây
           } else {
             message.error("Đặt hàng thất bại!");
@@ -247,6 +277,9 @@ const Checkout: React.FC = () => {
           console.error("Lỗi khi đặt hàng:", error);
           message.error("Vui lòng kiểm tra lại thông tin đơn hàng!");
         }
+        
+
+
       };
 
 

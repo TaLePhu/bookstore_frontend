@@ -148,7 +148,7 @@ const ShoppingCart = () => {
                 <span>Tổng tiền:</span>
                 <span>{totalPrice.toLocaleString()}</span>
               </div>
-              <button className='btn-payment' onClick={handleCheckout}>Thanh toán</button>
+              <button className='btn-payment' onClick={handleCheckout} disabled={selectedItems.length === 0}>Thanh toán</button>
             </div>
           </div>
         </div>

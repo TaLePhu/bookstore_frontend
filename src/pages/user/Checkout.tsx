@@ -13,6 +13,7 @@ import { useCart } from "../../context/CartContext";
 import { NavigateFunction } from 'react-router-dom';
 
 
+
 interface ShippingMethod {
     shippingMethodId: number;
     shippingMethodName: string;
@@ -59,6 +60,15 @@ const Checkout: React.FC = () => {
     const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
 
     const navigate = useNavigate();
+
+    const [user, setUser] = useState<any | null>(null);
+
+    useEffect(() => {
+        const userData = localStorage.getItem('user');
+        if (userData) {
+            setUser(JSON.parse(userData));
+        }
+    }, []);
 
     // axios.get<ShippingMethod[]>("http://localhost:8080/api/shipping-methods")
 
@@ -191,13 +201,15 @@ const Checkout: React.FC = () => {
     }
 
     const handleSuccessModal = (navigate: NavigateFunction) => {
-        let secondsToGo = 5;
+        let secondsToGo = 2;
+        console.log("Gọi modal");
         const modal = Modal.success({
           title: 'Đặt hàng thành công!',
           content: `Bạn sẽ được chuyển về trang chủ sau ${secondsToGo} giây.`,
           centered: true,
           okButtonProps: { style: { display: 'none' } }, // Ẩn nút OK nếu muốn
         });
+
       
         const interval = setInterval(() => {
           secondsToGo -= 1;
@@ -243,7 +255,8 @@ const Checkout: React.FC = () => {
       
           // Tạo object đơn hàng
           const orderData = {
-            userId: 0, // hoặc lấy từ context nếu có đăng nhập
+            //userId: 0,
+            userId: JSON.parse(localStorage.getItem('user') || '{}').userId || 0,
             billingAddress: `${values.address}, ${selectedWard.label}, ${selectedDistrict.label}, ${selectedProvince.label}`,
             shippingAddress: `${values.address}, ${selectedWard.label}, ${selectedDistrict.label}, ${selectedProvince.label}`,
             shippingMethodId: deliveryMethod,
@@ -258,6 +271,7 @@ const Checkout: React.FC = () => {
               salePrice: product.salePrice,
             }))
           };
+          
       
           console.log("Đơn hàng gửi đi:", orderData);
       
@@ -266,6 +280,7 @@ const Checkout: React.FC = () => {
       
           if (response.status === 200) {
             message.success("Đặt hàng thành công!");
+            alert("Đặt hàng thành công!");
             const bookIdsToRemove = selectedProducts.map((item: { bookId: number }) => item.bookId);
             removeMultipleFromCart(bookIdsToRemove);
             handleSuccessModal(navigate);
@@ -282,16 +297,38 @@ const Checkout: React.FC = () => {
 
       };
 
+    const users = JSON.parse(localStorage.getItem('user') || '{}');
+
+    const initialValues = {
+    lastName: users.lastName || '',
+    firstName: users.firstName || '',
+    email: users.email || '',
+    phone: users.phone || '',
+    };
+
+    
 
 	return (
 		<div className='container-checkout'>
-			<div className='card-login'>
+			{/* <div className='card-login'>
                 <div className="icon-warning">
                     <FontAwesomeIcon icon={faWarning} />
                 </div>
                 <p>Bạn đã là thành viên ?</p>
                 <a href="">Đăng nhập ngay</a>
-            </div>
+            </div> */}
+            {user ?  (
+                <div >
+                </div>
+            ) : (
+                <div className='card-login'>
+                    <div className="icon-warning">
+                        <FontAwesomeIcon icon={faWarning} />
+                    </div>
+                    <p>Bạn đã là thành viên ?</p>
+                    <a href="/auth/dang-nhap">Đăng nhập ngay</a>
+                </div>
+            )}
 
             <Card className='card-checkout'>
                 <div className="title-info">
@@ -301,7 +338,8 @@ const Checkout: React.FC = () => {
                     requiredMark={false}
                     name="checkout"
                     className="checkout-form"
-                    initialValues={{ remember: true }}
+                    // initialValues={{ remember: true }}
+                    initialValues={initialValues}
                     labelCol={{ style: { width: 150 } }}
                     form={form} onFinish={handleCheckoutReal}
                 >

@@ -28,15 +28,27 @@
     justify-content: center;
 }
 
-.box-item {
+/* .box-item {
     width: 200px;
     border: 1px solid #ddd;
     padding: 12px;
     border-radius: 8px;
     background: #fff;
-    text-align: left; /* Căn lề trái */
+    text-align: left; 
     transition: 0.3s;
     position: relative;
+} */
+.box-item {
+    width: calc(25% - 16px); /* 4 sản phẩm một hàng, trừ khoảng cách gap */
+    min-width: 200px; /* đảm bảo không quá nhỏ ở màn nhỏ */
+    border: 1px solid #ddd;
+    padding: 12px;
+    border-radius: 8px;
+    background: #fff;
+    text-align: left;
+    transition: 0.3s;
+    position: relative;
+    box-sizing: border-box;
 }
 
 .box-item:hover {

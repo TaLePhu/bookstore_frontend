@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../../assets/styles/LoginForm.css';
+import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [notify, setNotify] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
         const loginRequest = {
-            username: username,
-            password: password,
+            username: username.trim(),
+            password: password.trim(),
         };
 
         fetch('http://localhost:8080/account/sign-in', {
@@ -34,6 +37,13 @@ const LoginForm = () => {
                 const { jwt } = data;
                 // Lưu token vào localStorage hoặc cookie
                 localStorage.setItem('token', jwt);
+                const decoded: any = jwtDecode(jwt);
+                localStorage.setItem('user', JSON.stringify(decoded));
+
+                // chuyển sang trang chủ hoặc profile
+                navigate('/profile'); // hoặc '/home', tùy bạn
+                window.location.reload();
+
                 // Điều hướng đến trang chính hoặc thực hiện các tác vụ sau đăng nhập thành công
                 setNotify('Đăng nhập thành công!');
             })

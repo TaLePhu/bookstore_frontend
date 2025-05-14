@@ -318,9 +318,22 @@ const ProductDetails = () => {
                         <div className="quantity">
                             <p className="quantity-label">Số lượng:</p>
                             <div className="quantity-controls">
-                                <button className="quantity-btn" onClick={decreaseQuantity}><p>-</p></button>
-                                <span className="quantity-value">{quantity}</span>
-                                <button className="quantity-btn" onClick={increaseQuantity}><p>+</p></button>
+                                <button className="quantity-btn" onClick={() => setQuantity(prev => Math.max(1, prev - 1))}><p>-</p></button>
+                                {/* <span className="quantity-value">{quantity}</span> */}
+                                <input
+                                    type="number"
+                                    value={quantity}
+                                    min={1}
+                                    max={product.quantity}
+                                    readOnly
+                                    className="quantity-value"
+
+                                    onChange={(e) => {
+                                    const value = parseInt(e.target.value);
+                                    setQuantity(isNaN(value) ? 1 : Math.min(value, product.quantity));
+                                }}
+                                />
+                                <button className="quantity-btn" onClick={() => setQuantity(prev => Math.min(product.quantity, prev + 1))}><p>+</p></button>
                             </div>
                         </div>
                     </div>

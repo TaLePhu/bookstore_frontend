@@ -14,6 +14,7 @@ import ActivateAccount from '../pages/auth/ActivateAccount';
 import Test from '../pages/auth/Test';
 import Policy from '../pages/user/Policy';
 import AdminLayout from '../layouts/AdminLayout';
+import ProductManagement from '../pages/Admin/ProductManagement';
 const AppRoutes = () => {
     const [searchKey, setSearchKey] = useState('');
 
@@ -36,7 +37,9 @@ const AppRoutes = () => {
             </Route>
             {/* <Route path="/checkout" element={<Checkout />} /> */}
             {/* Layout cho trang quản trị */}
-            <Route path="/admin" element={<AdminLayout />}></Route>
+            <Route path="/admin" element={<AdminLayout />}>
+                <Route path="product-management" element={<ProductManagement />} />
+            </Route>
         </Routes>
     );
 };

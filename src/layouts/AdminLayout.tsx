@@ -1,6 +1,15 @@
+import { Outlet } from 'react-router-dom';
+import AdmNavbar from '../components/admLayout/AdmNavbar';
+import '../assets/styles/AdminLayout.css';
+
 const AdminLayout = () => {
-    return(
-        <h1>Đây là AdminLayout</h1>
+    return (
+        <div className="admin-layout">
+            <AdmNavbar />
+            <div className="admin-content">
+                <Outlet />
+            </div>
+        </div>
     );
 };
 

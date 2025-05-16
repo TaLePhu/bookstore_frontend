@@ -1,0 +1,39 @@
+.adm-navbar {
+    width: 220px;
+    height: 100vh;
+    background-color: #1e1e2f;
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+}
+
+.adm-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.adm-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.adm-menu a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.adm-menu a:hover {
+    background-color: #333355;
+}

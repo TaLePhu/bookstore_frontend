@@ -1,0 +1,32 @@
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: #E8E8E8;
+}
+
+.admin-content {
+    flex: 1;
+    margin-left: 220px; /* Width of AdmNavbar */
+    padding: 20px;
+    height: 100vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+/* Customize scrollbar */
+.admin-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.admin-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.admin-content::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.admin-content::-webkit-scrollbar-thumb:hover {
+    background: #555;
+} 

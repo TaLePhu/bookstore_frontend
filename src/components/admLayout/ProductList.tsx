@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { layToanBoSach } from '../../api/BookAPI';
+import { layToanBoSach, deleteBook } from '../../api/BookAPI';
 import BookModel from '../../models/BookModel';
 import { getAllImage } from '../../api/ImageAPI';
 import ImageModel from '../../models/ImageModel';
@@ -12,6 +12,7 @@ const ProductList = () => {
     const [loading, setLoading] = useState(true);
     const [bookImages, setBookImages] = useState<{ [key: number]: string }>({});
     const [pageInput, setPageInput] = useState('');
+    const [deleteLoading, setDeleteLoading] = useState<number | null>(null);
 
     useEffect(() => {
         loadBooks();
@@ -74,6 +75,26 @@ const ProductList = () => {
         }
     };
 
+    const handleDelete = async (bookId: number) => {
+        if (window.confirm('Bạn có chắc chắn muốn xóa cuốn sách này?')) {
+            try {
+                setDeleteLoading(bookId);
+                const success = await deleteBook(bookId);
+                if (success) {
+                    // Nếu xóa thành công, tải lại danh sách sách
+                    await loadBooks();
+                } else {
+                    alert('Không thể xóa sách. Vui lòng thử lại sau.');
+                }
+            } catch (error) {
+                console.error('Error deleting book:', error);
+                alert('Có lỗi xảy ra khi xóa sách.');
+            } finally {
+                setDeleteLoading(null);
+            }
+        }
+    };
+
     const formatCurrency = (price?: number) => {
         if (!price) return '0đ';
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
@@ -128,7 +149,13 @@ const ProductList = () => {
                                 <td>
                                     <div className="action-buttons">
                                         <button className="edit-btn">Sửa</button>
-                                        <button className="delete-btn">Xóa</button>
+                                        <button 
+                                            className="delete-btn"
+                                            onClick={() => handleDelete(book.bookId)}
+                                            disabled={deleteLoading === book.bookId}
+                                        >
+                                            {deleteLoading === book.bookId ? 'Đang xóa...' : 'Xóa'}
+                                        </button>
                                     </div>
                                 </td>
                             </tr>

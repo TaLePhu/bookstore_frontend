@@ -86,6 +86,31 @@ export async function findBook(searchKey: string, categoryId: number): Promise<R
     return getBook(duongDan);
 }
 
+/**
+ * Xóa một cuốn sách theo ID
+ * @param bookId ID của cuốn sách cần xóa
+ * @returns Promise<boolean> true nếu xóa thành công, false nếu thất bại
+ */
+export async function deleteBook(bookId: number): Promise<boolean> {
+    try {
+        const response = await fetch(`http://localhost:8080/books/${bookId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return true;
+    } catch (error) {
+        console.error('Error deleting book:', error);
+        return false;
+    }
+}
+
 // export async function getAllBookAndCategories(): Promise<Category[]> {
 //     const path = 'http://localhost:8080/books';
 //     const response = await my_request(path);

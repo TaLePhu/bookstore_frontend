@@ -1,4 +1,4 @@
-import { Form, Input, Button, message, Card, Radio , Alert, Modal } from 'antd';
+import { Form, Input, Button, message, Card, Radio , Alert, Modal, notification } from 'antd';
 import { faCreditCard, faMoneyBill, faWarning } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from 'react';
 import "../../assets/styles/Checkout.css";
@@ -11,6 +11,7 @@ import axios from 'axios';
 import { useLocation } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { NavigateFunction } from 'react-router-dom';
+// import 'antd/dist/reset.css';
 
 
 
@@ -63,6 +64,8 @@ const Checkout: React.FC = () => {
 
     const [user, setUser] = useState<any | null>(null);
 
+    const [estimatedDeliveryDate, setEstimatedDeliveryDate] = useState<string>("");
+
     useEffect(() => {
         const userData = localStorage.getItem('user');
         if (userData) {
@@ -85,13 +88,8 @@ const Checkout: React.FC = () => {
     console.log("Danh sách phương thức vận chuyển:", shippingMethods);
 
     useEffect(() => {
-        const token = localStorage.getItem("token"); // lấy JWT từ localStorage
-      
-        axios.get<PaymentMethod[]>("http://localhost:8080/api/payment-methods", {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
+        
+        axios.get<PaymentMethod[]>("http://localhost:8080/api/payment-methods")
           .then(response => {
             setPaymentMethods(response.data);
           })
@@ -225,7 +223,27 @@ const Checkout: React.FC = () => {
         }, secondsToGo * 1000);
     };
 
+    const orderDate = new Date().toISOString();
+
+    // Hàm tính ngày làm việc (bỏ qua thứ 7, CN)
+    function addBusinessDays(date: Date, days: number): Date {
+    let result = new Date(date);
+    let addedDays = 0;
+    while (addedDays < days) {
+        result.setDate(result.getDate() + 1);
+        // Nếu là ngày thứ 7 (6) hoặc Chủ nhật (0) thì không tính
+        if (result.getDay() !== 0 && result.getDay() !== 6) {
+        addedDays++;
+        }
+    }
+    return result;
+    }
+
     const [form] = Form.useForm();
+
+    function formatLocalDateTime(date: Date): string {
+        return date.toISOString().split('.')[0]; // bỏ phần milli giây và Z
+    }
 
     const handleCheckoutReal = async () => {
         try {
@@ -252,6 +270,19 @@ const Checkout: React.FC = () => {
             message.error("Bạn chưa chọn sản phẩm nào!");
             return;
           }
+
+        const orderDate = new Date();
+        let deliveryDays = 2; // mặc định 2 ngày làm việc
+
+        if (deliveryMethod === 1) {
+            deliveryDays = 4;
+        } else if (deliveryMethod === 2) {
+            deliveryDays = 8;
+        } else if (deliveryMethod === 3) {
+            deliveryDays = 2;
+        }
+
+        const deliveryDate = addBusinessDays(orderDate, deliveryDays);
       
           // Tạo object đơn hàng
           const orderData = {
@@ -269,7 +300,14 @@ const Checkout: React.FC = () => {
               bookId: product.bookId,
               quantity: product.quantity,
               salePrice: product.salePrice,
-            }))
+            })),
+            email: values.email,         
+            phoneNumber: values.phone,   
+            firstName: values.firstName,
+            lastName: values.lastName,
+
+            orderDate: formatLocalDateTime(orderDate),
+            deliveryDate: formatLocalDateTime(deliveryDate),
           };
           
       
@@ -279,23 +317,41 @@ const Checkout: React.FC = () => {
           const response = await axios.post('http://localhost:8080/api/orders', orderData);
       
           if (response.status === 200) {
-            message.success("Đặt hàng thành công!");
-            alert("Đặt hàng thành công!");
+           //message.success("Đặt hàng thành công!");
+            //alert("Đặt hàng thành công!");
+            //const wait = (ms: number) => new Promise(res => setTimeout(res, ms));
+
+            notification.success({
+            message: 'Đặt hàng thành công!',
+            description: 'Đơn hàng của bạn đã được đặt thành công.',
+            placement: 'topRight',
+            duration: 2,
+            onClose: () => {
+                navigate('/');
+            },
+            style: { marginTop: '20vh' },
+            });
+
+            //await wait(2000);
+            //navigate('/');
             const bookIdsToRemove = selectedProducts.map((item: { bookId: number }) => item.bookId);
             removeMultipleFromCart(bookIdsToRemove);
-            handleSuccessModal(navigate);
+            //handleSuccessModal(navigate);
+            navigate('/');
             // Có thể redirect hoặc reset form tại đây
           } else {
             message.error("Đặt hàng thất bại!");
           }
         } catch (error) {
           console.error("Lỗi khi đặt hàng:", error);
-          message.error("Vui lòng kiểm tra lại thông tin đơn hàng!");
+          if (axios.isAxiosError(error) && error.response?.status === 429) {
+            message.warning("Bạn đã đặt hàng quá nhiều lần. Vui lòng thử lại sau 1 phút!");
+             
+        } else {
+            message.error("Vui lòng kiểm tra lại thông tin đơn hàng!");
         }
-        
-
-
-      };
+        }
+    };
 
     const users = JSON.parse(localStorage.getItem('user') || '{}');
 
@@ -305,6 +361,26 @@ const Checkout: React.FC = () => {
     email: users.email || '',
     phone: users.phone || '',
     };
+
+    useEffect(() => {
+        if (deliveryMethod !== undefined) {
+            let deliveryDays = 2; // mặc định
+
+            if (deliveryMethod === 1) deliveryDays = 4;
+            else if (deliveryMethod === 2) deliveryDays = 8;
+            else if (deliveryMethod === 3) deliveryDays = 2;
+
+            const deliveryDate = addBusinessDays(new Date(), deliveryDays);
+
+            const formatter = new Intl.DateTimeFormat('vi-VN', {
+                weekday: 'long',
+                day: '2-digit',
+                month: '2-digit'
+            });
+
+            setEstimatedDeliveryDate(formatter.format(deliveryDate)); // VD: "Thứ hai, 14/04"
+        }
+    }, [deliveryMethod]);
 
     
 
@@ -482,23 +558,47 @@ const Checkout: React.FC = () => {
                             onChange={(e) => setDeliveryMethod(e.target.value)}
                             value={deliveryMethod}
                         >
-                            {shippingMethods.map((method) => (
-                            <Radio key={method.shippingMethodId} value={method.shippingMethodId}>
-                                <div className="delivery-home">
-                                <div className="title-delivery">
-                                    <span>{method.shippingMethodName}:</span>
-                                    <span>{method.shippingCost.toLocaleString()} đ</span>
-                                </div>
+                            {shippingMethods.map((method) => {
+                                let deliveryDays = 3;
+                                if (method.shippingMethodId === 1) deliveryDays = 4;       
+                                    else if (method.shippingMethodId === 3) deliveryDays = 2;  
+                                        else if (method.shippingMethodId === 2) deliveryDays = 8;
 
-                                {method.shippingMethodId !== 2 && (
-                                    <div className="delivery-time">
-                                    <span>Dự kiến giao:</span>
-                                    <span>Thứ hai - 14/04</span>
-                                    </div>
-                                )}
-                                </div>
-                            </Radio>
-                            ))}
+                                const estimatedDate = addBusinessDays(new Date(), deliveryDays);
+                                const formattedDate = new Intl.DateTimeFormat('vi-VN', {
+                                    weekday: 'long',
+                                    day: '2-digit',
+                                    month: '2-digit'
+                                }).format(estimatedDate);
+
+                                return (
+                                    <Radio key={method.shippingMethodId} value={method.shippingMethodId}>
+                                        <div className="delivery-home">
+                                            <div className="title-delivery">
+                                                <span>{method.shippingMethodName}:</span>
+                                                <span>{method.shippingCost.toLocaleString()} đ</span>
+                                            </div>
+                                            {(method.shippingMethodId == 2) ? (
+                                                <div className="delivery-time">
+                                                <span>Vui lòng đến cửa hàng trước:</span>
+                                                <span>{formattedDate}</span>
+                                                </div>
+                                            ) : (method.shippingMethodId == 1) ? (
+                                                <div className="delivery-time">
+                                                    <span>Giao hàng tiết kiệm:</span>
+                                                    <span>{formattedDate}</span>
+                                                </div>
+                                            ) : (
+                                                <div className="delivery-time">
+                                                    <span>Giao hàng nhanh:</span>
+                                                    <span>{formattedDate}</span>
+                                                </div>
+                                            )
+                                            }
+                                        </div>
+                                    </Radio>
+                                );
+                            })}
                         </Radio.Group>
                         </Form.Item>
                 </Form>

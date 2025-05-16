@@ -13,6 +13,7 @@ import Checkout from '../pages/user/Checkout';
 import ActivateAccount from '../pages/auth/ActivateAccount';
 import Test from '../pages/auth/Test';
 import Policy from '../pages/user/Policy';
+import OrderConfirmSuccess from '../pages/user/OrderConfirmSuccess';
 
 const AppRoutes = () => {
     const [searchKey, setSearchKey] = useState('');
@@ -33,6 +34,7 @@ const AppRoutes = () => {
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/activate/:email/:activationCode" element={<ActivateAccount />} />
+                <Route path="/order-confirm-success" element={<OrderConfirmSuccess />} />
             </Route>
             {/* <Route path="/checkout" element={<Checkout />} /> */}
             {/* Layout cho trang quản trị */}

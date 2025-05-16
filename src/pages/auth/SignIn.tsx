@@ -3,6 +3,13 @@ import { Link } from 'react-router-dom';
 import '../../assets/styles/LoginForm.css';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
+import { Alert, notification, message } from 'antd';
+import axios from 'axios';
+import 'antd/dist/reset.css';
+
+notification.config({
+  top: 100, // điều chỉnh sao cho thấp hơn navbar
+});
 
 const LoginForm = () => {
     const [username, setUsername] = useState('');
@@ -18,40 +25,29 @@ const LoginForm = () => {
             password: password.trim(),
         };
 
-        fetch('http://localhost:8080/account/sign-in', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(loginRequest),
+        axios.post('http://localhost:8080/account/sign-in', loginRequest, {
+            headers: { 'Content-Type': 'application/json' },
         })
-            .then((response) => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Đăng nhập thất bại!');
-                }
-            })
-            .then((data) => {
-                // Xử lý đăng nhập thành công
-                const { jwt } = data;
-                // Lưu token vào localStorage hoặc cookie
-                localStorage.setItem('token', jwt);
-                const decoded: any = jwtDecode(jwt);
-                localStorage.setItem('user', JSON.stringify(decoded));
+        .then((response) => {
+            const { jwt } = response.data;
+            console.log('Token nhận được sau login:', jwt);
+            localStorage.setItem('token', jwt);
+            const decoded: any = jwtDecode(jwt);
+            localStorage.setItem('user', JSON.stringify(decoded));
 
-                // chuyển sang trang chủ hoặc profile
-                navigate('/profile'); // hoặc '/home', tùy bạn
-                window.location.reload();
+            setNotify('Đăng nhập thành công!');
+            navigate('/profile');
+            window.location.reload();
+        })
+        .catch((error) => {
+            console.error('Đăng nhập thất bại:', error);
+            setNotify('Đăng nhập thất bại. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.');
 
-                // Điều hướng đến trang chính hoặc thực hiện các tác vụ sau đăng nhập thành công
-                setNotify('Đăng nhập thành công!');
-            })
-            .catch((error) => {
-                // Xử lý lỗi đăng nhập
-                console.error('Đăng nhập thất bại: ', error);
-                setNotify('Đăng nhập thất bại. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.');
-            });
+            if (axios.isAxiosError(error) && error.response?.status === 429) {
+                setNotify('Bạn đã nhập sai quá nhiều lần. Vui lòng thử lại sau ít phút.');
+            }
+        });
+
     };
 
     return (

@@ -111,6 +111,33 @@ export async function deleteBook(bookId: number): Promise<boolean> {
     }
 }
 
+/**
+ * Cập nhật thông tin một cuốn sách theo ID
+ * @param bookId ID của cuốn sách cần cập nhật
+ * @param bookData Dữ liệu cập nhật của cuốn sách
+ * @returns Promise<boolean> true nếu cập nhật thành công, false nếu thất bại
+ */
+export async function updateBook(bookId: number, bookData: Book): Promise<boolean> {
+    try {
+        const response = await fetch(`http://localhost:8080/books/${bookId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(bookData),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return true;
+    } catch (error) {
+        console.error('Error updating book:', error);
+        return false;
+    }
+}
+
 // export async function getAllBookAndCategories(): Promise<Category[]> {
 //     const path = 'http://localhost:8080/books';
 //     const response = await my_request(path);

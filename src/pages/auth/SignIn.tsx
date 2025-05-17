@@ -29,14 +29,18 @@ const LoginForm = () => {
             headers: { 'Content-Type': 'application/json' },
         })
         .then((response) => {
-            const { jwt } = response.data;
+            const { jwt, role } = response.data;
             console.log('Token nhận được sau login:', jwt);
             localStorage.setItem('token', jwt);
             const decoded: any = jwtDecode(jwt);
             localStorage.setItem('user', JSON.stringify(decoded));
 
             setNotify('Đăng nhập thành công!');
-            navigate('/profile');
+            if (role === 'ADMIN') {
+                navigate('/admin');
+            } else {
+                navigate('/');
+            }
             window.location.reload();
         })
         .catch((error) => {

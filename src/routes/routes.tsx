@@ -14,6 +14,7 @@ import ActivateAccount from '../pages/auth/ActivateAccount';
 import Test from '../pages/auth/Test';
 import Policy from '../pages/user/Policy';
 import OrderConfirmSuccess from '../pages/user/OrderConfirmSuccess';
+import OrderConfirmFalse from '../pages/user/OrderConfirmFalse';
 
 
 import AdminLayout from '../layouts/AdminLayout';
@@ -38,6 +39,7 @@ const AppRoutes = () => {
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/activate/:email/:activationCode" element={<ActivateAccount />} />
                 <Route path="/order-confirm-success" element={<OrderConfirmSuccess />} />
+                <Route path="/order-confirm-false" element={<OrderConfirmFalse />} />
             </Route>
             {/* <Route path="/checkout" element={<Checkout />} /> */}
             {/* Layout cho trang quản trị */}

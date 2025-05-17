@@ -1,10 +1,16 @@
 export async function my_request(path: string, method: string = 'GET', body?: any) {
     try {
+        // Lấy token từ localStorage (hoặc nơi bạn lưu trữ)
+        const token = localStorage.getItem('token');
+
+        const headers: HeadersInit = {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+        };
+
         const options: RequestInit = {
             method,
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers,
         };
 
         if (body) {
@@ -22,7 +28,7 @@ export async function my_request(path: string, method: string = 'GET', body?: an
         return await response.json();
     } catch (error) {
         console.error('⚠️ Lỗi khi gửi request:', error);
-        throw error; // Ném lỗi để xử lý ở nơi gọi hàm
+        throw error;
     }
 }
 
@@ -33,6 +39,5 @@ export async function phu_request(duongDan: string) {
     if (!response.ok) {
         throw new Error(`không thể truy cập ${duongDan}`);
     }
-
     return response.json();
 }

@@ -93,15 +93,25 @@ export async function findBook(searchKey: string, categoryId: number): Promise<R
  */
 export async function deleteBook(bookId: number): Promise<boolean> {
     try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('No authentication token found');
+            return false;
+        }
+
         const response = await fetch(`http://localhost:8080/books/${bookId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorText = await response.text();
+            console.error('Delete failed with status:', response.status);
+            console.error('Error response:', errorText);
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
         }
 
         return true;
@@ -119,21 +129,21 @@ export async function deleteBook(bookId: number): Promise<boolean> {
  */
 export async function updateBook(bookId: number, bookData: Book): Promise<boolean> {
     try {
-        console.log('Starting book update process...');
-        console.log('Book ID:', bookId);
-        console.log('Update data:', JSON.stringify(bookData, null, 2));
-        
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('No authentication token found');
+            return false;
+        }
+
+        console.log('Updating book with data:', bookData);
         const response = await fetch(`http://localhost:8080/books/${bookId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(bookData),
         });
-
-        console.log('Response status:', response.status);
-        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
 
         if (!response.ok) {
             const errorText = await response.text();
@@ -154,42 +164,3 @@ export async function updateBook(bookId: number, bookData: Book): Promise<boolea
         return false;
     }
 }
-
-// export async function getAllBookAndCategories(): Promise<Category[]> {
-//     const path = 'http://localhost:8080/books';
-//     const response = await my_request(path);
-//     const responseData = response._embedded.books;
-
-//     const allCategories: { [categoryName: string]: Book[] } = {};
-
-//     for (const bookData of responseData) {
-//         const book: Book = {
-//             bookId: bookData.bookId,
-//             bookName: bookData.bookName ?? "Chưa có tên",
-//             authorName: bookData.authorName ?? "Không rõ",
-//             description: bookData.description ?? "Không có mô tả",
-//             isbn: bookData.isbn ?? "N/A",
-//             averageRating: bookData.averageRating ?? 0,
-//             listedPrice: bookData.listedPrice ?? 0,
-//             quantity: bookData.quantity ?? 0,
-//             salePrice: bookData.salePrice ?? bookData.listedPrice,
-//         };
-
-//         const categories = await getCategoriesOfBook(book.bookId);
-
-//         for (const category of categories) {
-//             const categoryName = category.categoryName;
-
-//             if (!allCategories[categoryName]) {
-//                 allCategories[categoryName] = [];
-//             }
-
-//             allCategories[categoryName].push(book);
-//         }
-//     }
-
-//     return Object.entries(allCategories).map(([categoryName, items]) => ({
-//         categoryName,
-//         items,
-//     }));
-// }

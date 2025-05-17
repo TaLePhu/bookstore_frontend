@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { layToanBoSach, deleteBook, updateBook } from '../../api/BookAPI';
 import BookModel from '../../models/BookModel';
-import { getAllImage } from '../../api/ImageAPI';
+import { getAllImage, uploadImage } from '../../api/ImageAPI';
 import ImageModel from '../../models/ImageModel';
 import '../../assets/styles/ProductList.css';
 
@@ -14,28 +14,65 @@ interface EditBookModalProps {
 }
 
 const EditBookModal = ({ isOpen, onClose, book, currentImage, onUpdate }: EditBookModalProps) => {
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string>(currentImage);
+    const [isUploading, setIsUploading] = useState(false);
+
     if (!isOpen || !book) return null;
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+            const file = event.target.files[0];
+            setSelectedFile(file);
+            // Tạo URL preview cho ảnh mới
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreviewUrl(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const formData = new FormData(e.target as HTMLFormElement);
-        const updatedBook = {
-            ...book,
-            bookName: formData.get('bookName') as string,
-            authorName: formData.get('authorName') as string,
-            isbn: formData.get('isbn') as string,
-            quantity: parseInt(formData.get('quantity') as string),
-            listedPrice: parseFloat(formData.get('listedPrice') as string),
-            salePrice: parseFloat(formData.get('salePrice') as string),
-            description: formData.get('description') as string,
-        };
-        const success = await updateBook(book.bookId, updatedBook);
-        if (success) {
-            alert('Cập nhật sách thành công!');
-            onClose();
-            onUpdate();
-        } else {
-            alert('Cập nhật sách thất bại. Vui lòng thử lại sau.');
+        setIsUploading(true);
+        
+        try {
+            const formData = new FormData(e.target as HTMLFormElement);
+            const updatedBook = {
+                ...book,
+                bookName: formData.get('bookName') as string,
+                authorName: formData.get('authorName') as string,
+                isbn: formData.get('isbn') as string,
+                quantity: parseInt(formData.get('quantity') as string),
+                listedPrice: parseFloat(formData.get('listedPrice') as string),
+                salePrice: parseFloat(formData.get('salePrice') as string),
+                description: formData.get('description') as string,
+            };
+
+            // Cập nhật thông tin sách
+            const success = await updateBook(book.bookId, updatedBook);
+            
+            // Nếu có ảnh mới, cập nhật ảnh
+            if (selectedFile) {
+                const imageSuccess = await uploadImage(book.bookId, selectedFile, false);
+                if (!imageSuccess) {
+                    throw new Error('Failed to upload image');
+                }
+            }
+
+            if (success) {
+                alert('Cập nhật sách thành công!');
+                onClose();
+                onUpdate(); // Cập nhật lại danh sách sách
+            } else {
+                throw new Error('Failed to update book');
+            }
+        } catch (error) {
+            console.error('Error updating book:', error);
+            alert('Có lỗi xảy ra khi cập nhật sách.');
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -46,8 +83,19 @@ const EditBookModal = ({ isOpen, onClose, book, currentImage, onUpdate }: EditBo
                 <form onSubmit={handleSubmit} className="edit-book-form">
                     <div className="form-group">
                         <div className="book-image-preview">
-                            <img src={currentImage} alt={book.bookName} />
-                            <button type="button" className="change-image-btn">Thay đổi ảnh</button>
+                            <img src={previewUrl} alt={book.bookName} />
+                            <div style={{ display: 'flex', gap: '8px' }}>
+                                <input
+                                    type="file"
+                                    id="imageInput"
+                                    accept="image/*"
+                                    onChange={handleFileChange}
+                                    style={{ display: 'none' }}
+                                />
+                                <label htmlFor="imageInput" className="change-image-btn">
+                                    Chọn ảnh mới
+                                </label>
+                            </div>
                         </div>
                     </div>
 
@@ -119,17 +167,16 @@ const EditBookModal = ({ isOpen, onClose, book, currentImage, onUpdate }: EditBo
                         <textarea 
                             id="description" 
                             name="description"
-                            rows={4}
                             defaultValue={book.description}
                         />
                     </div>
 
                     <div className="modal-buttons">
-                        <button type="button" onClick={onClose} className="cancel-btn">
+                        <button type="button" className="cancel-btn" onClick={onClose}>
                             Hủy
                         </button>
-                        <button type="submit" className="save-btn">
-                            Lưu thay đổi
+                        <button type="submit" className="save-btn" disabled={isUploading}>
+                            {isUploading ? 'Đang lưu...' : 'Lưu thay đổi'}
                         </button>
                     </div>
                 </form>

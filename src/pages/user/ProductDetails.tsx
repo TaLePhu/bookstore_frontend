@@ -53,6 +53,9 @@ const ProductDetails = () => {
 
     const navigate = useNavigate();
 
+    const [user, setUser] = useState<any | null>(null);
+    
+
 
     // Load danh sách tỉnh
     useEffect(() => {
@@ -125,12 +128,21 @@ const ProductDetails = () => {
         value.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
     
     //Lấy dữ liệu từ trang Home
+    useEffect(() => {
+        const userData = localStorage.getItem('user');
+        if (userData) {
+            setUser(JSON.parse(userData));
+        }
+    }, []);
+    console.log("User trong detail: ",user);
+    const token = localStorage.getItem("token");
+        console.log("token: ", token);
     const location = useLocation();
     const { product, imageSrc, imageSmall } = location.state;
     if (!product) return <p>Không tìm thấy sản phẩm</p>;
-    console.log("imageSrc", imageSrc);
+    //console.log("imageSrc", imageSrc);
 
-    const handleAddToCart = () => {
+    const handleAddToCart = async () => {
         if (quantity > product.quantity) {
             alert("Không đủ hàng trong kho.");
             return;
@@ -143,6 +155,18 @@ const ProductDetails = () => {
           stock: product.quantity, // số lượng còn trong kho
           image: imageSrc,
         };
+        // try {
+        //     const jwt = localStorage.getItem("jwt");
+        //     await axios.post("http://localhost:8080/api/cart/add", item, {
+        //     headers: {
+        //         Authorization: `Bearer ${jwt}`,
+        //     },
+        //     });
+        //     alert("Đã thêm vào giỏ hàng!");
+        // } catch (err) {
+        //     console.error("Lỗi thêm giỏ hàng:", err);
+        //     alert("Lỗi khi thêm giỏ hàng");
+        // }
         addToCart(item);
       };
 

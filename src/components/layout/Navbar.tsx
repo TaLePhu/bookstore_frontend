@@ -69,10 +69,10 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        window.location.reload();
+        console.log('Token sau khi logout:', localStorage.getItem('token')); // phải là null
         navigate('/auth/dang-nhap');
-        
-      };
+        window.location.reload();
+    };
 
     return (
         <header className="navbar">

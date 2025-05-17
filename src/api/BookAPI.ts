@@ -119,21 +119,38 @@ export async function deleteBook(bookId: number): Promise<boolean> {
  */
 export async function updateBook(bookId: number, bookData: Book): Promise<boolean> {
     try {
+        console.log('Starting book update process...');
+        console.log('Book ID:', bookId);
+        console.log('Update data:', JSON.stringify(bookData, null, 2));
+        
         const response = await fetch(`http://localhost:8080/books/${bookId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             body: JSON.stringify(bookData),
         });
 
+        console.log('Response status:', response.status);
+        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorText = await response.text();
+            console.error('Update failed with status:', response.status);
+            console.error('Error response:', errorText);
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
         }
 
+        const responseData = await response.json();
+        console.log('Update successful. Response:', responseData);
         return true;
     } catch (error) {
         console.error('Error updating book:', error);
+        if (error instanceof Error) {
+            console.error('Error details:', error.message);
+            console.error('Error stack:', error.stack);
+        }
         return false;
     }
 }

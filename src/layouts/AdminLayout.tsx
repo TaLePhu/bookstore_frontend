@@ -7,7 +7,9 @@ const AdminLayout = () => {
         <div className="admin-layout">
             <AdmNavbar />
             <div className="admin-content">
-                <Outlet />
+                <div className="admin-container">
+                    <Outlet />
+                </div>
             </div>
         </div>
     );

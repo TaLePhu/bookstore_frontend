@@ -1,9 +1,142 @@
 import { useEffect, useState } from 'react';
-import { layToanBoSach, deleteBook } from '../../api/BookAPI';
+import { layToanBoSach, deleteBook, updateBook } from '../../api/BookAPI';
 import BookModel from '../../models/BookModel';
 import { getAllImage } from '../../api/ImageAPI';
 import ImageModel from '../../models/ImageModel';
 import '../../assets/styles/ProductList.css';
+
+interface EditBookModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    book: BookModel | null;
+    currentImage: string;
+    onUpdate: () => void;
+}
+
+const EditBookModal = ({ isOpen, onClose, book, currentImage, onUpdate }: EditBookModalProps) => {
+    if (!isOpen || !book) return null;
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const formData = new FormData(e.target as HTMLFormElement);
+        const updatedBook = {
+            ...book,
+            bookName: formData.get('bookName') as string,
+            authorName: formData.get('authorName') as string,
+            isbn: formData.get('isbn') as string,
+            quantity: parseInt(formData.get('quantity') as string),
+            listedPrice: parseFloat(formData.get('listedPrice') as string),
+            salePrice: parseFloat(formData.get('salePrice') as string),
+            description: formData.get('description') as string,
+        };
+        const success = await updateBook(book.bookId, updatedBook);
+        if (success) {
+            alert('Cập nhật sách thành công!');
+            onClose();
+            onUpdate();
+        } else {
+            alert('Cập nhật sách thất bại. Vui lòng thử lại sau.');
+        }
+    };
+
+    return (
+        <div className="modal-overlay">
+            <div className="modal-content">
+                <h2>Sửa thông tin sách</h2>
+                <form onSubmit={handleSubmit} className="edit-book-form">
+                    <div className="form-group">
+                        <div className="book-image-preview">
+                            <img src={currentImage} alt={book.bookName} />
+                            <button type="button" className="change-image-btn">Thay đổi ảnh</button>
+                        </div>
+                    </div>
+
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="bookName">Tên sách:</label>
+                            <input 
+                                type="text" 
+                                id="bookName" 
+                                name="bookName"
+                                defaultValue={book.bookName}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="authorName">Tác giả:</label>
+                            <input 
+                                type="text" 
+                                id="authorName" 
+                                name="authorName"
+                                defaultValue={book.authorName}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="isbn">ISBN:</label>
+                            <input 
+                                type="text" 
+                                id="isbn" 
+                                name="isbn"
+                                defaultValue={book.isbn}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="quantity">Số lượng:</label>
+                            <input 
+                                type="number" 
+                                id="quantity" 
+                                name="quantity"
+                                defaultValue={book.quantity}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="listedPrice">Giá gốc:</label>
+                            <input 
+                                type="number" 
+                                id="listedPrice" 
+                                name="listedPrice"
+                                defaultValue={book.listedPrice}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="salePrice">Giá bán:</label>
+                            <input 
+                                type="number" 
+                                id="salePrice" 
+                                name="salePrice"
+                                defaultValue={book.salePrice}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="description">Mô tả:</label>
+                        <textarea 
+                            id="description" 
+                            name="description"
+                            rows={4}
+                            defaultValue={book.description}
+                        />
+                    </div>
+
+                    <div className="modal-buttons">
+                        <button type="button" onClick={onClose} className="cancel-btn">
+                            Hủy
+                        </button>
+                        <button type="submit" className="save-btn">
+                            Lưu thay đổi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};
 
 const ProductList = () => {
     const [books, setBooks] = useState<BookModel[]>([]);
@@ -13,6 +146,7 @@ const ProductList = () => {
     const [bookImages, setBookImages] = useState<{ [key: number]: string }>({});
     const [pageInput, setPageInput] = useState('');
     const [deleteLoading, setDeleteLoading] = useState<number | null>(null);
+    const [editingBook, setEditingBook] = useState<BookModel | null>(null);
 
     useEffect(() => {
         loadBooks();
@@ -95,6 +229,10 @@ const ProductList = () => {
         }
     };
 
+    const handleEdit = (book: BookModel) => {
+        setEditingBook(book);
+    };
+
     const formatCurrency = (price?: number) => {
         if (!price) return '0đ';
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
@@ -148,7 +286,12 @@ const ProductList = () => {
                                 <td>{book.averageRating?.toFixed(1) || '0.0'}</td>
                                 <td>
                                     <div className="action-buttons">
-                                        <button className="edit-btn">Sửa</button>
+                                        <button 
+                                            className="edit-btn"
+                                            onClick={() => handleEdit(book)}
+                                        >
+                                            Sửa
+                                        </button>
                                         <button 
                                             className="delete-btn"
                                             onClick={() => handleDelete(book.bookId)}
@@ -189,6 +332,16 @@ const ProductList = () => {
                     Sau
                 </button>
             </div>
+
+            {editingBook && (
+                <EditBookModal
+                    isOpen={true}
+                    onClose={() => setEditingBook(null)}
+                    book={editingBook}
+                    currentImage={bookImages[editingBook.bookId] || 'https://cdn.pixabay.com/photo/2023/12/29/18/23/daisy-8476666_1280.jpg'}
+                    onUpdate={loadBooks}
+                />
+            )}
         </div>
     );
 };

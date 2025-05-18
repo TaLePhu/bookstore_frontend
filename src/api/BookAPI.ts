@@ -164,3 +164,46 @@ export async function updateBook(bookId: number, bookData: Book): Promise<boolea
         return false;
     }
 }
+
+/**
+ * Thêm một cuốn sách mới
+ * @param bookData Dữ liệu của cuốn sách cần thêm
+ * @returns Promise<Book | null> Dữ liệu sách đã tạo nếu thành công, null nếu thất bại
+ */
+export async function createBook(bookData: Book): Promise<Book | null> {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('No authentication token found');
+            return null;
+        }
+
+        console.log('Creating book with data:', bookData);
+        const response = await fetch('http://localhost:8080/books', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(bookData),
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Create failed with status:', response.status);
+            console.error('Error response:', errorText);
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        }
+
+        const responseData = await response.json();
+        console.log('Create successful. Response:', responseData);
+        return responseData;
+    } catch (error) {
+        console.error('Error creating book:', error);
+        if (error instanceof Error) {
+            console.error('Error details:', error.message);
+            console.error('Error stack:', error.stack);
+        }
+        return null;
+    }
+}

@@ -3,6 +3,7 @@ import { layToanBoSach, deleteBook, updateBook } from '../../api/BookAPI';
 import BookModel from '../../models/BookModel';
 import { getAllImage, uploadImage } from '../../api/ImageAPI';
 import ImageModel from '../../models/ImageModel';
+import AddBook from './AddBook';
 import '../../assets/styles/ProductList.css';
 
 interface EditBookModalProps {
@@ -24,7 +25,6 @@ const EditBookModal = ({ isOpen, onClose, book, currentImage, onUpdate }: EditBo
         if (event.target.files && event.target.files[0]) {
             const file = event.target.files[0];
             setSelectedFile(file);
-            // Tạo URL preview cho ảnh mới
             const reader = new FileReader();
             reader.onloadend = () => {
                 setPreviewUrl(reader.result as string);
@@ -50,10 +50,8 @@ const EditBookModal = ({ isOpen, onClose, book, currentImage, onUpdate }: EditBo
                 description: formData.get('description') as string,
             };
 
-            // Cập nhật thông tin sách
             const success = await updateBook(book.bookId, updatedBook);
             
-            // Nếu có ảnh mới, cập nhật ảnh
             if (selectedFile) {
                 const imageSuccess = await uploadImage(book.bookId, selectedFile, false);
                 if (!imageSuccess) {
@@ -64,7 +62,7 @@ const EditBookModal = ({ isOpen, onClose, book, currentImage, onUpdate }: EditBo
             if (success) {
                 alert('Cập nhật sách thành công!');
                 onClose();
-                onUpdate(); // Cập nhật lại danh sách sách
+                onUpdate();
             } else {
                 throw new Error('Failed to update book');
             }
@@ -77,12 +75,15 @@ const EditBookModal = ({ isOpen, onClose, book, currentImage, onUpdate }: EditBo
     };
 
     return (
-        <div className="modal-overlay">
-            <div className="modal-content">
-                <h2>Sửa thông tin sách</h2>
+        <div className="edit-book-modal-overlay">
+            <div className="edit-book-modal-content">
+                <div className="edit-book-modal-header">
+                    <h2>Sửa thông tin sách</h2>
+                    <button className="edit-book-close-btn" onClick={onClose}>&times;</button>
+                </div>
                 <form onSubmit={handleSubmit} className="edit-book-form">
-                    <div className="form-group">
-                        <div className="book-image-preview">
+                    <div className="edit-book-form-group">
+                        <div className="edit-book-image-preview">
                             <img src={previewUrl} alt={book.bookName} />
                             <div style={{ display: 'flex', gap: '8px' }}>
                                 <input
@@ -92,15 +93,15 @@ const EditBookModal = ({ isOpen, onClose, book, currentImage, onUpdate }: EditBo
                                     onChange={handleFileChange}
                                     style={{ display: 'none' }}
                                 />
-                                <label htmlFor="imageInput" className="change-image-btn">
+                                <label htmlFor="imageInput" className="edit-book-change-image-btn">
                                     Chọn ảnh mới
                                 </label>
                             </div>
                         </div>
                     </div>
 
-                    <div className="form-row">
-                        <div className="form-group">
+                    <div className="edit-book-form-row">
+                        <div className="edit-book-form-group">
                             <label htmlFor="bookName">Tên sách:</label>
                             <input 
                                 type="text" 
@@ -109,7 +110,7 @@ const EditBookModal = ({ isOpen, onClose, book, currentImage, onUpdate }: EditBo
                                 defaultValue={book.bookName}
                             />
                         </div>
-                        <div className="form-group">
+                        <div className="edit-book-form-group">
                             <label htmlFor="authorName">Tác giả:</label>
                             <input 
                                 type="text" 
@@ -120,8 +121,8 @@ const EditBookModal = ({ isOpen, onClose, book, currentImage, onUpdate }: EditBo
                         </div>
                     </div>
 
-                    <div className="form-row">
-                        <div className="form-group">
+                    <div className="edit-book-form-row">
+                        <div className="edit-book-form-group">
                             <label htmlFor="isbn">ISBN:</label>
                             <input 
                                 type="text" 
@@ -130,7 +131,7 @@ const EditBookModal = ({ isOpen, onClose, book, currentImage, onUpdate }: EditBo
                                 defaultValue={book.isbn}
                             />
                         </div>
-                        <div className="form-group">
+                        <div className="edit-book-form-group">
                             <label htmlFor="quantity">Số lượng:</label>
                             <input 
                                 type="number" 
@@ -141,8 +142,8 @@ const EditBookModal = ({ isOpen, onClose, book, currentImage, onUpdate }: EditBo
                         </div>
                     </div>
 
-                    <div className="form-row">
-                        <div className="form-group">
+                    <div className="edit-book-form-row">
+                        <div className="edit-book-form-group">
                             <label htmlFor="listedPrice">Giá gốc:</label>
                             <input 
                                 type="number" 
@@ -151,7 +152,7 @@ const EditBookModal = ({ isOpen, onClose, book, currentImage, onUpdate }: EditBo
                                 defaultValue={book.listedPrice}
                             />
                         </div>
-                        <div className="form-group">
+                        <div className="edit-book-form-group">
                             <label htmlFor="salePrice">Giá bán:</label>
                             <input 
                                 type="number" 
@@ -162,7 +163,7 @@ const EditBookModal = ({ isOpen, onClose, book, currentImage, onUpdate }: EditBo
                         </div>
                     </div>
 
-                    <div className="form-group">
+                    <div className="edit-book-form-group">
                         <label htmlFor="description">Mô tả:</label>
                         <textarea 
                             id="description" 
@@ -171,11 +172,11 @@ const EditBookModal = ({ isOpen, onClose, book, currentImage, onUpdate }: EditBo
                         />
                     </div>
 
-                    <div className="modal-buttons">
-                        <button type="button" className="cancel-btn" onClick={onClose}>
+                    <div className="edit-book-modal-buttons">
+                        <button type="button" className="edit-book-cancel-btn" onClick={onClose}>
                             Hủy
                         </button>
-                        <button type="submit" className="save-btn" disabled={isUploading}>
+                        <button type="submit" className="edit-book-save-btn" disabled={isUploading}>
                             {isUploading ? 'Đang lưu...' : 'Lưu thay đổi'}
                         </button>
                     </div>
@@ -265,6 +266,7 @@ const ProductList = () => {
     const [deleteLoading, setDeleteLoading] = useState<number | null>(null);
     const [editingBook, setEditingBook] = useState<BookModel | null>(null);
     const [selectedBook, setSelectedBook] = useState<BookModel | null>(null);
+    const [showAddBook, setShowAddBook] = useState(false);
 
     useEffect(() => {
         loadBooks();
@@ -368,98 +370,112 @@ const ProductList = () => {
         <div className="product-list-container">
             <div className="product-list-header">
                 <h2>Danh sách Sách</h2>
-                <button className="add-product-btn">Thêm sản phẩm</button>
-            </div>
-
-            <div className="product-table-container">
-                <table className="product-table">
-                    <thead>
-                        <tr>
-                            <th>Ảnh</th>
-                            <th>ID</th>
-                            <th>Tên sách</th>
-                            <th>Tác giả</th>
-                            <th>ISBN</th>
-                            <th>Giá gốc</th>
-                            <th>Giá bán</th>
-                            <th>Số lượng</th>
-                            <th>Đánh giá</th>
-                            <th>Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {books.map((book) => (
-                            <tr key={book.bookId} onClick={() => handleBookClick(book)} style={{ cursor: 'pointer' }}>
-                                <td>
-                                    <div className="product-image">
-                                        <img 
-                                            src={bookImages[book.bookId] || 'https://cdn.pixabay.com/photo/2023/12/29/18/23/daisy-8476666_1280.jpg'} 
-                                            alt={book.bookName || 'Book image'} 
-                                        />
-                                    </div>
-                                </td>
-                                <td>{book.bookId}</td>
-                                <td>{book.bookName}</td>
-                                <td>{book.authorName}</td>
-                                <td>{book.isbn}</td>
-                                <td>{formatCurrency(book.listedPrice)}</td>
-                                <td>{formatCurrency(book.salePrice)}</td>
-                                <td>{book.quantity}</td>
-                                <td>{book.averageRating?.toFixed(1) || '0.0'}</td>
-                                <td>
-                                    <div className="action-buttons">
-                                        <button 
-                                            className="edit-btn"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleEdit(book);
-                                            }}
-                                        >
-                                            Sửa
-                                        </button>
-                                        <button 
-                                            className="delete-btn"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleDelete(book.bookId);
-                                            }}
-                                            disabled={deleteLoading === book.bookId}
-                                        >
-                                            {deleteLoading === book.bookId ? 'Đang xóa...' : 'Xóa'}
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-
-            <div className="pagination">
                 <button 
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
+                    className="add-product-btn"
+                    onClick={() => setShowAddBook(!showAddBook)}
                 >
-                    Trước
-                </button>
-                <form onSubmit={handlePageInputSubmit} className="page-input-form">
-                    <input
-                        type="text"
-                        value={pageInput || currentPage}
-                        onChange={handlePageInputChange}
-                        className="page-input"
-                        aria-label="Page number"
-                    />
-                    <span className="page-separator">/</span>
-                    <span className="total-pages">{totalPages}</span>
-                </form>
-                <button 
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                >
-                    Sau
+                    {showAddBook ? 'Đóng form thêm sách' : 'Thêm sách mới'}
                 </button>
             </div>
+
+            {showAddBook ? (
+                <AddBook onSuccess={() => {
+                    setShowAddBook(false);
+                    loadBooks();
+                }} />
+            ) : (
+                <>
+                    <div className="product-table-container">
+                        <table className="product-table">
+                            <thead>
+                                <tr>
+                                    <th>Ảnh</th>
+                                    <th>ID</th>
+                                    <th>Tên sách</th>
+                                    <th>Tác giả</th>
+                                    <th>ISBN</th>
+                                    <th>Giá gốc</th>
+                                    <th>Giá bán</th>
+                                    <th>Số lượng</th>
+                                    <th>Đánh giá</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {books.map((book) => (
+                                    <tr key={book.bookId} onClick={() => handleBookClick(book)} style={{ cursor: 'pointer' }}>
+                                        <td>
+                                            <div className="product-image">
+                                                <img 
+                                                    src={bookImages[book.bookId] || 'https://cdn.pixabay.com/photo/2023/12/29/18/23/daisy-8476666_1280.jpg'} 
+                                                    alt={book.bookName || 'Book image'} 
+                                                />
+                                            </div>
+                                        </td>
+                                        <td>{book.bookId}</td>
+                                        <td>{book.bookName}</td>
+                                        <td>{book.authorName}</td>
+                                        <td>{book.isbn}</td>
+                                        <td>{formatCurrency(book.listedPrice)}</td>
+                                        <td>{formatCurrency(book.salePrice)}</td>
+                                        <td>{book.quantity}</td>
+                                        <td>{book.averageRating?.toFixed(1) || '0.0'}</td>
+                                        <td>
+                                            <div className="action-buttons">
+                                                <button 
+                                                    className="edit-btn"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleEdit(book);
+                                                    }}
+                                                >
+                                                    Sửa
+                                                </button>
+                                                <button 
+                                                    className="delete-btn"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleDelete(book.bookId);
+                                                    }}
+                                                    disabled={deleteLoading === book.bookId}
+                                                >
+                                                    {deleteLoading === book.bookId ? 'Đang xóa...' : 'Xóa'}
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div className="pagination">
+                        <button 
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                        >
+                            Trước
+                        </button>
+                        <form onSubmit={handlePageInputSubmit} className="page-input-form">
+                            <input
+                                type="text"
+                                value={pageInput || currentPage}
+                                onChange={handlePageInputChange}
+                                className="page-input"
+                                aria-label="Page number"
+                            />
+                            <span className="page-separator">/</span>
+                            <span className="total-pages">{totalPages}</span>
+                        </form>
+                        <button 
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                        >
+                            Sau
+                        </button>
+                    </div>
+                </>
+            )}
 
             {editingBook && (
                 <EditBookModal

@@ -276,7 +276,7 @@
 
 .detail-item span {
     color: #333;
-    flex: 1; /* ✨ Để span tự co giãn và không đẩy phần còn lại */
+    flex: 1; /* Để span tự co giãn và không đẩy phần còn lại */
 }
 
 .detail-item.description {
@@ -327,5 +327,226 @@
 
     .detail-item label {
         min-width: auto;
+    }
+}
+
+/* Edit Book Modal Styles */
+.edit-book-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.edit-book-modal-content {
+    background: white;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-book-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.edit-book-modal-header h2 {
+    margin: 0;
+    color: #333;
+    font-size: 1.25rem;
+}
+
+.edit-book-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+    padding: 0.25rem;
+    line-height: 1;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.edit-book-close-btn:hover {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.edit-book-form {
+    padding: 1.5rem;
+    overflow-y: auto;
+    max-height: calc(90vh - 60px);
+}
+
+.edit-book-form-group {
+    margin-bottom: 1rem;
+}
+
+.edit-book-image-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.edit-book-image-preview img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.edit-book-form-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.edit-book-form-row .edit-book-form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.edit-book-form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: 500;
+}
+
+.edit-book-form-group input,
+.edit-book-form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.edit-book-form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.edit-book-change-image-btn {
+    padding: 0.5rem 1rem;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+}
+
+.edit-book-change-image-btn:hover {
+    background-color: #357abd;
+}
+
+.edit-book-modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.edit-book-cancel-btn,
+.edit-book-save-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.edit-book-cancel-btn {
+    background-color: #f44336;
+    color: white;
+}
+
+.edit-book-cancel-btn:hover {
+    background-color: #da190b;
+}
+
+.edit-book-save-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.edit-book-save-btn:hover {
+    background-color: #45a049;
+}
+
+.edit-book-save-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Custom scrollbar for the form */
+.edit-book-form::-webkit-scrollbar {
+    width: 8px;
+}
+
+.edit-book-form::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.edit-book-form::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.edit-book-form::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+@media (max-width: 768px) {
+    .edit-book-modal-content {
+        width: 95%;
+        max-height: 95vh;
+    }
+
+    .edit-book-form-row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .edit-book-modal-buttons {
+        flex-direction: column;
+    }
+
+    .edit-book-cancel-btn,
+    .edit-book-save-btn {
+        width: 100%;
     }
 }

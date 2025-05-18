@@ -3,9 +3,7 @@
 import { Book } from "../types";
 
 export interface Category {
-    // categoryId: number;
-    // categoryName: string;
+    categoryId: number;
     categoryName: string;
     items: Book[]; 
-}
-export default Category;
+}export default Category;

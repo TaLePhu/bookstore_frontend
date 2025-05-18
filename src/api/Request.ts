@@ -2,15 +2,25 @@ export async function my_request(path: string, method: string = 'GET', body?: an
     try {
         // Lấy token từ localStorage (hoặc nơi bạn lưu trữ)
         const token = localStorage.getItem('token');
+        console.log('Request path:', path); // Debug log
+        console.log('Request method:', method); // Debug log
+        console.log('Request token:', token); // Debug log
 
         const headers: HeadersInit = {
             'Content-Type': 'application/json',
-            ...(token ? { Authorization: `Bearer ${token}` } : {})
         };
+
+        // Thêm token vào header nếu có
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        console.log('Request headers:', headers); // Debug log
 
         const options: RequestInit = {
             method,
             headers,
+            mode: 'cors', // Thêm mode CORS
         };
 
         if (body) {
@@ -18,6 +28,7 @@ export async function my_request(path: string, method: string = 'GET', body?: an
         }
 
         const response = await fetch(path, options);
+        console.log('Response status:', response.status); // Debug log
 
         if (!response.ok) {
             const errorMessage = `❌ Lỗi ${response.status}: ${response.statusText}`;

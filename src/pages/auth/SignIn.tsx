@@ -36,7 +36,7 @@ const LoginForm = () => {
             localStorage.setItem('user', JSON.stringify(decoded));
 
             setNotify('Đăng nhập thành công!');
-            if (role === 'ADMIN') {
+            if (role === 'ADMIN' || role === 'STAFF') {
                 navigate('/admin');
             } else {
                 navigate('/');

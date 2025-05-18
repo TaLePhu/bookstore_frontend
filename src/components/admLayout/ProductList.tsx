@@ -185,6 +185,76 @@ const EditBookModal = ({ isOpen, onClose, book, currentImage, onUpdate }: EditBo
     );
 };
 
+interface BookDetailModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    book: BookModel | null;
+    bookImage: string;
+}
+
+const BookDetailModal = ({ isOpen, onClose, book, bookImage }: BookDetailModalProps) => {
+    if (!isOpen || !book) return null;
+
+    const formatCurrency = (price?: number) => {
+        if (!price) return '0đ';
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+    };
+
+    return (
+        <div className="modal-overlay">
+            <div className="modal-content">
+                <div className="modal-header">
+                    <h2>Chi tiết sách</h2>
+                    <button className="close-btn" onClick={onClose}>&times;</button>
+                </div>
+                <div className="modal-body">
+                    <div className="book-image">
+                        <img src={bookImage} alt={book.bookName} />
+                    </div>
+                    <div className="book-details">
+                        <div className="detail-item">
+                            <label>ID:</label>
+                            <span>{book.bookId}</span>
+                        </div>
+                        <div className="detail-item">
+                            <label>Tên sách:</label>
+                            <span>{book.bookName}</span>
+                        </div>
+                        <div className="detail-item">
+                            <label>Tác giả:</label>
+                            <span>{book.authorName}</span>
+                        </div>
+                        <div className="detail-item">
+                            <label>ISBN:</label>
+                            <span>{book.isbn}</span>
+                        </div>
+                        <div className="detail-item">
+                            <label>Giá gốc:</label>
+                            <span>{formatCurrency(book.listedPrice)}</span>
+                        </div>
+                        <div className="detail-item">
+                            <label>Giá bán:</label>
+                            <span>{formatCurrency(book.salePrice)}</span>
+                        </div>
+                        <div className="detail-item">
+                            <label>Số lượng:</label>
+                            <span>{book.quantity}</span>
+                        </div>
+                        <div className="detail-item">
+                            <label>Đánh giá:</label>
+                            <span>{book.averageRating?.toFixed(1) || '0.0'}</span>
+                        </div>
+                        <div className="detail-item description">
+                            <label>Mô tả:</label>
+                            <p>{book.description}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const ProductList = () => {
     const [books, setBooks] = useState<BookModel[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -194,6 +264,7 @@ const ProductList = () => {
     const [pageInput, setPageInput] = useState('');
     const [deleteLoading, setDeleteLoading] = useState<number | null>(null);
     const [editingBook, setEditingBook] = useState<BookModel | null>(null);
+    const [selectedBook, setSelectedBook] = useState<BookModel | null>(null);
 
     useEffect(() => {
         loadBooks();
@@ -280,6 +351,10 @@ const ProductList = () => {
         setEditingBook(book);
     };
 
+    const handleBookClick = (book: BookModel) => {
+        setSelectedBook(book);
+    };
+
     const formatCurrency = (price?: number) => {
         if (!price) return '0đ';
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
@@ -292,7 +367,7 @@ const ProductList = () => {
     return (
         <div className="product-list-container">
             <div className="product-list-header">
-                <h2>Danh sách sản phẩm</h2>
+                <h2>Danh sách Sách</h2>
                 <button className="add-product-btn">Thêm sản phẩm</button>
             </div>
 
@@ -314,7 +389,7 @@ const ProductList = () => {
                     </thead>
                     <tbody>
                         {books.map((book) => (
-                            <tr key={book.bookId}>
+                            <tr key={book.bookId} onClick={() => handleBookClick(book)} style={{ cursor: 'pointer' }}>
                                 <td>
                                     <div className="product-image">
                                         <img 
@@ -335,13 +410,19 @@ const ProductList = () => {
                                     <div className="action-buttons">
                                         <button 
                                             className="edit-btn"
-                                            onClick={() => handleEdit(book)}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleEdit(book);
+                                            }}
                                         >
                                             Sửa
                                         </button>
                                         <button 
                                             className="delete-btn"
-                                            onClick={() => handleDelete(book.bookId)}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDelete(book.bookId);
+                                            }}
                                             disabled={deleteLoading === book.bookId}
                                         >
                                             {deleteLoading === book.bookId ? 'Đang xóa...' : 'Xóa'}
@@ -387,6 +468,15 @@ const ProductList = () => {
                     book={editingBook}
                     currentImage={bookImages[editingBook.bookId] || 'https://cdn.pixabay.com/photo/2023/12/29/18/23/daisy-8476666_1280.jpg'}
                     onUpdate={loadBooks}
+                />
+            )}
+
+            {selectedBook && (
+                <BookDetailModal
+                    isOpen={true}
+                    onClose={() => setSelectedBook(null)}
+                    book={selectedBook}
+                    bookImage={bookImages[selectedBook.bookId] || 'https://cdn.pixabay.com/photo/2023/12/29/18/23/daisy-8476666_1280.jpg'}
                 />
             )}
         </div>

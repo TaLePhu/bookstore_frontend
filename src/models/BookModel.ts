@@ -1,4 +1,7 @@
-
+interface Category {
+    categoryId: number;
+    categoryName: string;
+}
 
 class Book {
     bookId: number;
@@ -10,6 +13,7 @@ class Book {
     salePrice?: number;
     quantity?: number;
     averageRating?: number;
+    category?: Category;
 
     constructor(
         bookId: number,
@@ -21,6 +25,7 @@ class Book {
         salePrice?: number,
         quantity?: number,
         averageRating?: number,
+        category?: Category
     ) {
         this.bookId = bookId;
         this.bookName = bookName;
@@ -31,8 +36,8 @@ class Book {
         this.salePrice = salePrice;
         this.quantity = quantity;
         this.averageRating = averageRating;
-      }
-
+        this.category = category;
+    }
 }
 
 export default Book;

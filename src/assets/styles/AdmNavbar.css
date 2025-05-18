@@ -24,6 +24,7 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+    flex-grow: 1;
 }
 
 .adm-menu a {
@@ -46,4 +47,61 @@
 
 .adm-menu a.active:hover {
     background-color: #45a049;
+}
+
+.adm-user {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #333355;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: white;
+}
+
+.username {
+    font-weight: 500;
+    text-align: center;
+    font-size: 16px;
+}
+
+.user-role {
+    text-align: center;
+    color: #4CAF50;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.logout-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.logout-btn:hover {
+    background-color: #c0392b;
+}
+
+.login-btn {
+    display: block;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.login-btn:hover {
+    background-color: #2980b9;
 }

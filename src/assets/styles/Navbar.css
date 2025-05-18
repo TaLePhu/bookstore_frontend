@@ -181,6 +181,7 @@
 
     .search {
         width: auto;
+        position: relative;
     }
 
     .navbar-list-1 {
@@ -280,4 +281,42 @@
     background-color: #d6d6d6;
 }
 
+.search-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid #ccc;
+    z-index: 999;
+    max-height: 300px;
+    overflow-y: auto;
+}
 
+.search-item {
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    display: flex;
+    text-decoration: none;
+    color: black;
+    align-items: center;
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+.search-item:hover {
+    background-color: #f1f1f1;
+}
+.img-search {
+  width: 40px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.search-item span{
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    text-align: left;
+}

@@ -9,9 +9,10 @@ import Pagination from '../utils/Pagination';
 interface CategorySectionProps {
     searchKey: string;
     categoryId: number;
+    categoryName: string;
 }
 
-const CategorySection: React.FC<CategorySectionProps> = ({ searchKey, categoryId }) => {
+const CategorySection: React.FC<CategorySectionProps> = ({ searchKey, categoryId, categoryName }) => {
     const [listBook, setListBook] = useState<BookModel[]>([]);
     const [uploadData, setUploadData] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -22,9 +23,11 @@ const CategorySection: React.FC<CategorySectionProps> = ({ searchKey, categoryId
 
     useEffect(() => {
         setUploadData(true);
+        const pageSize = 5;
+
         if (searchKey === '' && categoryId === 0) {
             // Nếu không có từ khóa tìm kiếm và không có categoryId thì lấy tất
-            layToanBoSach(trangHienTai - 1)
+            layToanBoSach(trangHienTai - 1, pageSize)
                 .then((data) => {
                     setListBook(data.result);
                     setTongSoTrang(data.totalPages);
@@ -35,7 +38,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({ searchKey, categoryId
                     setUploadData(false);
                 });
         } else {
-            findBook(searchKey, categoryId)
+            findBook(searchKey, categoryId, trangHienTai - 1, pageSize)
                 .then((data) => {
                     setListBook(data.result);
                     setTongSoTrang(data.totalPages);
@@ -71,7 +74,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({ searchKey, categoryId
     return (
         <div className="list">
             <div className="list-total">
-                <h3>Danh sách sản phẩm</h3>
+                <h3>{categoryName}</h3>
                 <Link to="/category">Xem thêm</Link>
             </div>
             <div className="list-item">
@@ -85,25 +88,5 @@ const CategorySection: React.FC<CategorySectionProps> = ({ searchKey, categoryId
         </div>
     );
 };
-
-// interface Props {
-//     category: Category;
-// }
-
-// const CategorySection: React.FC<Props> = ({ category }) => {
-//     return (
-//         <div className="list">
-//             <div className="list-total">
-//                 <h3>{category.categoryName}</h3>
-//                 <Link to="/category">Xem thêm</Link>
-//             </div>
-//             <div className="list-item">
-//                 {category.items.slice(0, 10).map((item) => (
-//                     <ProductCard key={item.bookId} book={{ ...item }} />
-//                 ))}
-//             </div>
-//         </div>
-//     );
-// };
 
 export default CategorySection;

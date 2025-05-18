@@ -5,14 +5,16 @@ import Banner from '../../components/Banner';
 import CategorySection from '../../components/CategorySection';
 // import { getAllBookAndCategories } from "../../api/BookAPI";
 import { useEffect, useState } from 'react';
-import Category from '../../interface/Category';
+import Category from '../../models/Category';
+import { getAllCategories } from '../../api/CategoryAPI';
 
 interface HomeProps {
     searchKey: string;
 }
 
 const Home: React.FC<HomeProps> = ({ searchKey }) => {
-    const { categoryId } = useParams();
+    const { categoryId, categoryName } = useParams();
+    const [categories, setCategories] = useState<Category[]>([]);
 
     let categoryIdNumber = 0;
 
@@ -26,47 +28,29 @@ const Home: React.FC<HomeProps> = ({ searchKey }) => {
     if (Number.isNaN(categoryIdNumber)) {
         categoryIdNumber = 0;
     }
+     useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const data = await getAllCategories();
+                setCategories(data);
+            } catch (error) {
+                console.error('Lỗi khi lấy danh sách thể loại:', error);
+            }
+        };
+
+        fetchCategories();
+    }, []);
+
     return (
         <div className="container-home">
             <Banner />
-            <CategorySection searchKey={searchKey} categoryId={categoryIdNumber} />
+            {/* <CategorySection searchKey={searchKey} categoryId={categoryIdNumber} /> */}
+            {searchKey === '' && categories.map((category) => (
+                <div key={category.categoryId} className="category-block">
+                    <CategorySection searchKey={searchKey} categoryId={category.categoryId}  categoryName={category.categoryName} />
+                </div>
+            ))}
         </div>
     );
 };
-// const Home = () => {
-//     const [categories, setCategories] = useState<Category[]>([]);
-//     const [isLoading, setIsLoading] = useState(true);
-//     const [error, setError] = useState<string | null>(null);
-
-//     useEffect(() => {
-//         const fetchData = async () => {
-//             try {
-//                 const data = await getAllBookAndCategories();
-//                 setCategories(data);
-//             } catch (err: any) {
-//                 setError(err.message);
-//             } finally {
-//                 setIsLoading(false);
-//             }
-//         };
-
-//         fetchData();
-//     }, []);
-
-//     return (
-//         <div className="container-home">
-//             <Banner />
-//             {isLoading ? (
-//                 <p>Đang tải dữ liệu...</p>
-//             ) : error ? (
-//                 <p>Lỗi: {error}</p>
-//             ) : (
-//                 categories.map((cat) => (
-//                     <CategorySection key={cat.categoryName} category={cat} />
-//                 ))
-//             )}
-//         </div>
-//     );
-// };
-
 export default Home;

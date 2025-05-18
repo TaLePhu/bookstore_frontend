@@ -3,6 +3,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import '../../assets/styles/Navbar.css';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
+import BookModel from '../../models/BookModel';
+import ImageModel from '../../models/ImageModel';
+import { findBook } from '../../api/BookAPI';
+import { getAllImage } from '../../api/ImageAPI';
 
 interface NavbarProps {
     searchKey: string;
@@ -20,7 +24,13 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
 
     const [showDropdown, setShowDropdown] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    
+
+    const [searchResults, setSearchResults] = useState<BookModel[]>([]);
+    const [isSearching, setIsSearching] = useState(false);
+
+    const [imageMap, setImageMap] = useState<{ [key: number]: string }>({});
+    const [error, setError] = useState(null);
+
 
 
     useEffect(() => {
@@ -29,6 +39,30 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
           setUser(JSON.parse(userData));
         }
       }, []);
+
+    useEffect(() => {
+        const fetchImages = async () => {
+            const map: { [key: number]: string } = {};
+            for (const book of searchResults) {
+            try {
+                const imageList = await getAllImage(book.bookId);
+                if (imageList.length > 0) {
+                    if (imageList.length > 0 && imageList[0].imageData) {
+                        map[book.bookId] = imageList[0].imageData;
+                    }
+                }
+            } catch (error) {
+                console.error(`Lỗi lấy ảnh cho sách ${book.bookId}:`, error);
+            }
+            }
+            setImageMap(map);
+        };
+
+        if (searchResults.length > 0) {
+            fetchImages();
+        }
+        }, [searchResults]);
+
 
       console.log("User: ",user);
 
@@ -56,15 +90,15 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
     };
 
     // Hàm xử lý thay đổi input tìm kiếm
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setTemporarySearchKey(event.target.value); // Cập nhật giá trị tìm kiếm
-    };
+    // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     setTemporarySearchKey(event.target.value); // Cập nhật giá trị tìm kiếm
+    // };
 
-    const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault(); // Ngăn chặn hành vi mặc định của form
-        setSearchKey(temporarySearchKey); // Cập nhật giá trị tìm kiếm trong context
-        setTemporarySearchKey(''); // Reset giá trị tạm thời
-    };
+    // const handleSearch = (e: React.FormEvent) => {
+    //     e.preventDefault(); // Ngăn chặn hành vi mặc định của form
+    //     setSearchKey(temporarySearchKey); // Cập nhật giá trị tìm kiếm trong context
+    //     setTemporarySearchKey(''); // Reset giá trị tạm thời
+    // };
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -72,6 +106,48 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
         console.log('Token sau khi logout:', localStorage.getItem('token')); // phải là null
         navigate('/auth/dang-nhap');
         window.location.reload();
+    };
+
+    let debounceTimeout: NodeJS.Timeout;
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        setTemporarySearchKey(value);
+
+        if (debounceTimeout) {
+            clearTimeout(debounceTimeout);
+        }
+
+        debounceTimeout = setTimeout(() => {
+            if (value.trim() !== '') {
+                setIsSearching(true);
+                findBook(value, 0)
+                    .then((data) => {
+                        setSearchResults(data.result || []);
+                        setIsSearching(false);
+                    })
+                    .catch((error) => {
+                        console.error('Lỗi tìm kiếm:', error);
+                        setSearchResults([]);
+                        setIsSearching(false);
+                    });
+            } else {
+                setSearchResults([]);
+            }
+        }, 300);
+    };
+
+    const handleSearch = (e?: React.FormEvent) => {
+        if (e) e.preventDefault();
+        const trimmed = temporarySearchKey.trim();
+        if (trimmed !== '') {
+            setSearchKey(trimmed);
+            navigate(`/search/${trimmed}`);
+        }
+
+        setShowDropdown(false);
+        setSearchResults([]); // Thêm dòng này để xoá kết quả
+        setTemporarySearchKey('');
     };
 
     return (
@@ -85,10 +161,18 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                 </button>
                 <ul className={`navbar-list ${isMenuOpen ? 'open' : ''}`}>
                     <li>
-                        <Link to="/">Trang chủ</Link>
+                        <Link to="/"
+                            onClick={() => {
+                                setSearchKey('');
+                                setTemporarySearchKey('');
+                                setSearchResults([]);
+                            }}
+                        >
+                            Trang chủ
+                        </Link>
                     </li>
                     <li>
-                        <Link to="/about">Giới thiệu</Link>
+                        <Link to="/about" >Giới thiệu</Link>
                     </li>
                     <li>
                         <Link to="/policy">Chính sách</Link>
@@ -127,10 +211,10 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                     onChange={handleChange}
                     value={temporarySearchKey}
                     onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                            handleSearch(e); // Gọi hàm tìm kiếm khi nhấn Enter
-                        }
-                    }}
+                    if (e.key === 'Enter') {
+                        handleSearch(e);
+                    }
+                }}
                 />
                 <img
                     className="icon-search"
@@ -138,6 +222,38 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                     alt="icon-search"
                     onClick={handleSearch}
                 />
+                
+                {(searchResults.length > 0 || isSearching) && (
+                    <div className="search-dropdown">
+                        {isSearching ? (
+                            <div className="search-item">Đang tìm kiếm...</div>
+                        ) : (
+                            searchResults.map((book) => (
+                                <Link
+                                    to={`/detail/${book.bookId}`} 
+                                    key={book.bookId}
+                                    className="search-item"
+                                    onClick={() => {
+                                        setTemporarySearchKey('');
+                                        setSearchResults([]);
+                                    }}
+                                >
+                                    <img
+                                        className="img-search"
+                                        src={
+                                            imageMap[book.bookId]
+                                            ? imageMap[book.bookId]
+                                            : 'https://cdn.pixabay.com/photo/2023/12/29/18/23/daisy-8476666_1280.jpg'
+                                        }
+                                        alt={book.bookName}
+                                    />
+                                    <span>{book.bookName}</span>
+                                </Link>
+                            ))
+                        )}
+                    </div>
+                )}
+
             </div>
             <div className="region">
                 <Link to="/cart" className="cart-container">
@@ -158,10 +274,10 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                         <span className="username">{user.fullName}</span>
                         <div className="dropdown">
                             <img
-                            className="size-icon"
-                            src="/icons/icons8-user-48.png"
-                            alt="icon-login"
-                            onClick={() => setShowDropdown((prev) => !prev)}
+                                className="size-icon"
+                                src="/icons/icons8-user-48.png"
+                                alt="icon-login"
+                                onClick={() => setShowDropdown((prev) => !prev)}
                             />
                             {showDropdown && (
                             <div className="dropdown-content">

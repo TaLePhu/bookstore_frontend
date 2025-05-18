@@ -57,10 +57,10 @@ const ProductCard: React.FC<ProductCardInterface> = (props) => {
 
     const iconImages = listImage.filter((image) => image.isIcon === true);
 
-    const imageSmall =
-        iconImages.length > 0 && iconImages[0].imageData
-            ? iconImages[0].imageData
-            : 'https://cdn.pixabay.com/photo/2023/12/29/18/23/daisy-8476666_1280.jpg';
+    // const imageSmall =
+    //     iconImages.length > 0 && iconImages[0].imageData
+    //         ? iconImages[0].imageData
+    //         : 'https://cdn.pixabay.com/photo/2023/12/29/18/23/daisy-8476666_1280.jpg';
 
     const salePrice = props.book.salePrice ?? 0;
     const listedPrice = props.book.listedPrice ?? 1; // tránh chia cho 0
@@ -70,12 +70,12 @@ const ProductCard: React.FC<ProductCardInterface> = (props) => {
     return (
         <Link
             to={`/detail/${props.book.bookId}`}
-            state={{
-                product: props.book,
-                imageSrc: imageSrc,
-                imageSmall: imageSmall,
-                iconImages: iconImages,
-            }}
+            // state={{
+            //     product: props.book,
+            //     imageSrc: imageSrc,
+            //     //imageSmall: imageSmall,
+            //     iconImages: iconImages,
+            // }}
             className="box-item"
         >
             {/* <div className="box-item"> */}

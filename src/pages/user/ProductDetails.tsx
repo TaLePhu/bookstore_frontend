@@ -4,7 +4,7 @@
 // npm install --save @fortawesome/react-fontawesome
 //npm install react-modal
 
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import '../../assets/styles/ProductDetails.css';
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,15 +15,56 @@ import Select from "react-select";
 import { SingleValue } from "react-select";
 import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
+import BookModel from '../../models/BookModel';
+import ImageModel from '../../models/ImageModel';
+import { getBookById } from '../../api/BookAPI';
+import { getAllImage } from '../../api/ImageAPI';
 
 // Modal.setAppElement("#root");
 
 const ProductDetails = () => {
     const [quantity, setQuantity] = useState(1); 
 
+    //Thêm modal chọn địa chỉ
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [provinces, setProvinces] = useState([]);
+    const [districts, setDistricts] = useState([]);
+    const [wards, setWards] = useState([]);
+
+    const [selectedAddress, setSelectedAddress] = useState("Chưa chọn địa chỉ");
+    const [selectedProvince, setSelectedProvince] = useState<{ value: number, label: string } | null>(null);
+    const [selectedDistrict, setSelectedDistrict] = useState<{ value: number, label: string } | null>(null);
+    const [selectedWard, setSelectedWard] = useState<{ value: number, label: string } | null>(null);
+
+    const navigate = useNavigate();
+
+    const [user, setUser] = useState<any | null>(null);
+
+    const location = useLocation();
+    //const { product, imageSrc } = location.state;
+
+    const { id } = useParams();
+    const [product, setProduct] = useState<BookModel | null>(null);
+    const [images, setImages] = useState<ImageModel[]>([]);
+
+    useEffect(() => {
+        const fetchBook = async () => {
+            if (!id) return;
+            try {
+                const fetchedBook = await getBookById(Number(id));
+                const fetchedImages = await getAllImage(Number(id));
+                setProduct(fetchedBook);
+                setImages(fetchedImages);
+            } catch (error) {
+                console.error("Lỗi tải dữ liệu:", error);
+            }
+        };
+        fetchBook();
+    }, [id]);
+    
     // Hàm tăng số lượng
     const increaseQuantity = () => {
-        if (quantity < product.quantity) {
+        if (product && quantity < (product.quantity ?? 0)) {
             setQuantity(prev => prev + 1);
         } else {
             alert("Vượt quá số lượng có sẵn trong kho.");
@@ -36,26 +77,6 @@ const ProductDetails = () => {
             setQuantity(quantity - 1);
         }
     };
-
-    //Thêm modal chọn địa chỉ
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [provinces, setProvinces] = useState([]);
-    const [districts, setDistricts] = useState([]);
-    const [wards, setWards] = useState([]);
-
-    // const [selectedProvince, setSelectedProvince] = useState(null);
-    // const [selectedDistrict, setSelectedDistrict] = useState(null);
-    // const [selectedWard, setSelectedWard] = useState(null);
-    const [selectedAddress, setSelectedAddress] = useState("Chưa chọn địa chỉ");
-    const [selectedProvince, setSelectedProvince] = useState<{ value: number, label: string } | null>(null);
-    const [selectedDistrict, setSelectedDistrict] = useState<{ value: number, label: string } | null>(null);
-    const [selectedWard, setSelectedWard] = useState<{ value: number, label: string } | null>(null);
-
-    const navigate = useNavigate();
-
-    const [user, setUser] = useState<any | null>(null);
-    
-
 
     // Load danh sách tỉnh
     useEffect(() => {
@@ -136,54 +157,42 @@ const ProductDetails = () => {
     }, []);
     console.log("User trong detail: ",user);
     const token = localStorage.getItem("token");
-        console.log("token: ", token);
-    const location = useLocation();
-    const { product, imageSrc, imageSmall } = location.state;
+    console.log("token: ", token);
+    
     if (!product) return <p>Không tìm thấy sản phẩm</p>;
     //console.log("imageSrc", imageSrc);
 
     const handleAddToCart = async () => {
-        if (quantity > product.quantity) {
+        if (quantity > (product.quantity ?? 0)) {
             alert("Không đủ hàng trong kho.");
             return;
         }
         const item = {
-          bookId: product.bookId,
-          bookName: product.bookName,
-          quantity,
-          salePrice: product.salePrice,
-          stock: product.quantity, // số lượng còn trong kho
-          image: imageSrc,
+            bookId: product.bookId,
+            bookName: product.bookName ?? "", 
+            quantity,
+            salePrice: product.salePrice ?? 0,
+            stock: product.quantity ?? 0,
+            image: images[0]?.imageData || "",
         };
-        // try {
-        //     const jwt = localStorage.getItem("jwt");
-        //     await axios.post("http://localhost:8080/api/cart/add", item, {
-        //     headers: {
-        //         Authorization: `Bearer ${jwt}`,
-        //     },
-        //     });
-        //     alert("Đã thêm vào giỏ hàng!");
-        // } catch (err) {
-        //     console.error("Lỗi thêm giỏ hàng:", err);
-        //     alert("Lỗi khi thêm giỏ hàng");
-        // }
+
         addToCart(item);
-      };
+    };
 
       
       const handleBuyNow = () => {
-        if (quantity > product.quantity) {
+        if (quantity > (product.quantity ?? 0)) {
           alert("Không đủ hàng trong kho.");
           return;
         }
       
         const item = {
-          bookId: product.bookId,
-          bookName: product.bookName,
-          quantity,
-          salePrice: product.salePrice,
-          stock: product.quantity,
-          image: imageSrc,
+            bookId: product.bookId,
+            bookName: product.bookName ?? "", 
+            quantity,
+            salePrice: product.salePrice ?? 0,
+            stock: product.quantity ?? 0,
+            image: images[0]?.imageData || "",
         };
       
         addToCart(item);
@@ -196,20 +205,20 @@ const ProductDetails = () => {
                 <div className="img-info">
                     <div className="img-all">
                         <div className="img-main">
-                            <img src={imageSrc} alt={product.title} className="imgMain"/>
+                            <img src={images[0]?.imageData} alt={product.bookName} className="imgMain"/>
                         </div>
                         <div className="img-orther">
                             <div className="img-orther-item">
-                                <img src={imageSmall} alt={product.title} className="imgOrther"/>
+                                <img src={images[0]?.imageData} alt={product.bookName} className="imgOrther"/>
                             </div>
                             <div className="img-orther-item">
-                                <img src={product.image} alt={product.title} className="imgOrther"/>
+                                <img src={images[0]?.imageData} alt={product.bookName} className="imgOrther"/>
                             </div>
                             <div className="img-orther-item">
-                                <img src={product.image} alt={product.title} className="imgOrther"/>
+                                <img src={images[0]?.imageData} alt={product.bookName} className="imgOrther"/>
                             </div>
                             <div className="img-orther-item">
-                                <img src={product.image} alt={product.title} className="imgOrther"/>
+                                <img src={images[0]?.imageData} alt={product.bookName} className="imgOrther"/>
                             </div>
                         </div>
                     </div>
@@ -277,8 +286,8 @@ const ProductDetails = () => {
                             </div>
                         </div>
                         <div className="price">
-                            <p>{formatCurrency(product.salePrice)}</p>
-                            <span>{formatCurrency(product.listedPrice)}</span>
+                            <p>{formatCurrency(product.salePrice ?? 0)}</p>
+                            <span>{formatCurrency(product.listedPrice ?? 0)}</span>
                         </div>
                     </div>
                     <div className="info-ship">
@@ -354,10 +363,11 @@ const ProductDetails = () => {
 
                                     onChange={(e) => {
                                     const value = parseInt(e.target.value);
-                                    setQuantity(isNaN(value) ? 1 : Math.min(value, product.quantity));
+                                    setQuantity(isNaN(value) ? 1 : Math.min(value, product.quantity ?? value));
+                                        
                                 }}
                                 />
-                                <button className="quantity-btn" onClick={() => setQuantity(prev => Math.min(product.quantity, prev + 1))}><p>+</p></button>
+                                <button className="quantity-btn" onClick={() => setQuantity(prev => Math.min(product.quantity ?? prev + 1, prev + 1))}><p>+</p></button>
                             </div>
                         </div>
                     </div>

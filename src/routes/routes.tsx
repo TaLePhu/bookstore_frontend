@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 
 import MainLayout from '../layouts/MainLayout';
 import Home from '../pages/user/Home';
+import SearchResult from '../pages/user/SearchResult';
 import About from '../pages/user/About';
 import Cart from '../pages/user/ShoppingCart';
 import SignIn from '../pages/auth/SignIn';
@@ -27,7 +28,7 @@ const AppRoutes = () => {
             {/* Layout chính (Navbar + Footer) */}
             <Route path="/" element={<MainLayout searchKey={searchKey} setSearchKey={setSearchKey} />}>
                 <Route path="/" element={<Home searchKey={searchKey} />} />
-                <Route path="/:categoryId" element={<Home searchKey={searchKey} />} />
+                {/* <Route path="/:categoryId" element={<Home searchKey={searchKey} />} /> */}
                 <Route path="/about" element={<About />} />
                 <Route path="/detail/:id" element={<ProductDetails />} />
                 <Route path="/policy" element={<Policy />} />
@@ -40,6 +41,7 @@ const AppRoutes = () => {
                 <Route path="/activate/:email/:activationCode" element={<ActivateAccount />} />
                 <Route path="/order-confirm-success" element={<OrderConfirmSuccess />} />
                 <Route path="/order-confirm-false" element={<OrderConfirmFalse />} />
+                <Route path="/search/:keyword" element={<SearchResult />} />
             </Route>
             {/* <Route path="/checkout" element={<Checkout />} /> */}
             {/* Layout cho trang quản trị */}

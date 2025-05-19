@@ -12,6 +12,9 @@ import { Category } from "./Category";
         quantity?: number;
         averageRating?: number;
         categories?: Category[];
+        supplier?: string;         
+        numberOfPages?: number;   
+        publisher?: string; 
 
         constructor(
             bookId: number,
@@ -23,7 +26,10 @@ import { Category } from "./Category";
             salePrice?: number,
             quantity?: number,
             averageRating?: number,
-            categories?: Category[]
+            categories?: Category[],
+            supplier?: string,
+            numberOfPages?: number,
+            publisher?: string,
         ) {
             this.bookId = bookId;
             this.bookName = bookName;
@@ -35,6 +41,9 @@ import { Category } from "./Category";
             this.quantity = quantity;
             this.averageRating = averageRating;
             this.categories = categories;
+            this.supplier = supplier;
+            this.numberOfPages = numberOfPages;
+            this.publisher = publisher;
         }
 
     }

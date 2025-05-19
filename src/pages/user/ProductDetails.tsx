@@ -8,7 +8,8 @@ import { useLocation, useParams } from "react-router-dom";
 import '../../assets/styles/ProductDetails.css';
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTruck, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faTruck, faStar as faStarSolid, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
+import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 import Modal from "react-modal";
 import axios from "axios";
 import Select from "react-select";
@@ -61,6 +62,8 @@ const ProductDetails = () => {
         };
         fetchBook();
     }, [id]);
+
+    console.log("Product trong detail: ", product);
     
     // Hàm tăng số lượng
     const increaseQuantity = () => {
@@ -199,6 +202,33 @@ const ProductDetails = () => {
         navigate("/cart"); // chuyển sang trang giỏ hàng
     };
 
+    function renderStars(averageRating: any) {
+        const stars = [];
+        // Lấy số nguyên phần sao đầy đủ
+        const fullStars = Math.floor(averageRating);
+        // Kiểm tra có sao nửa không
+        const hasHalfStar = averageRating - fullStars >= 0.5;
+        // Số sao trống
+        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+        // Thêm sao đầy đủ
+        for (let i = 0; i < fullStars; i++) {
+            stars.push(<FontAwesomeIcon key={'full-' + i} icon={faStarSolid} style={{ color: '#f8ce0b' }} />);
+        }
+
+        // Thêm sao nửa
+        if (hasHalfStar) {
+            stars.push(<FontAwesomeIcon key="half" icon={faStarHalfAlt} style={{ color: '#f8ce0b' }} />);
+        }
+
+        // Thêm sao trống (màu xám)
+        for (let i = 0; i < emptyStars; i++) {
+            stars.push(<FontAwesomeIcon key={'empty-' + i} icon={faStarRegular} style={{ color: '#ccc' }} />);
+        }
+
+        return stars;
+        }
+
     return(
         <div className="container-details">
             <div className="details">
@@ -252,10 +282,10 @@ const ProductDetails = () => {
                         <div className="info-product1">
                             <div className="info-product1-item info-left">
                                 <p className="info-product1-label">Nhà cung cấp: 
-                                    <span className="info-product1-value"> CÔNG TY CỔ PHẦN SBOOKS</span>
+                                    <span className="info-product1-value"> {product.supplier}</span>
                                 </p>
                                 <p className="info-product1-label">Nhà xuất bản: 
-                                    <span className="info-product1-value"> Dân trí</span>
+                                    <span className="info-product1-value"> {product.publisher}</span>
                                 </p>
                             </div>
                             <div className="info-product1-item info-right">
@@ -270,11 +300,7 @@ const ProductDetails = () => {
                         <div className="info-product2">
                             <div className="info-product2-review">
                                 <div className="star-reviews">
-                                    <FontAwesomeIcon icon={faStar} />
-                                    <FontAwesomeIcon icon={faStar} />
-                                    <FontAwesomeIcon icon={faStar} />
-                                    <FontAwesomeIcon icon={faStar} />
-                                    <FontAwesomeIcon icon={faStar} />
+                                    {renderStars(product.averageRating)}
                                 </div>
                                 <p className="info-product2-reviews-label">({product.averageRating} đánh giá)</p>
                             </div>
@@ -389,20 +415,12 @@ const ProductDetails = () => {
                             </div>
                             <div className="info-details-item">
                                 <p className="info-details-label">Nhà xuất bản: </p>
-                                <p className="info-details-value"> Dân trí</p>
-                            </div>
-                            {/* <div className="info-details-item">
-                                <p className="info-details-label">Năm xuất bản: </p>
-                                <p className="info-details-value"> 2019</p>
+                                <p className="info-details-value"> {product.publisher}</p>
                             </div>
                             <div className="info-details-item">
                                 <p className="info-details-label">Số trang: </p>
-                                <p className="info-details-value">123</p>
+                                <p className="info-details-value"> {product.numberOfPages}</p>
                             </div>
-                            <div className="info-details-item">
-                                <p className="info-details-label">Hình thức: </p>
-                                <p className="info-details-value">123456789</p>
-                            </div> */}
                         </div>
                         <p className="add-info">Giá sản phẩm trên Website đã bao gồm thuế theo luật hiện hành. Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như Phụ phí đóng gói, phí vận chuyển, phụ phí hàng cồng kềnh,...</p>
                     </div>

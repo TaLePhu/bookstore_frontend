@@ -76,7 +76,7 @@ p{
     margin: 0;
 }
 
-.list-item {
+.list-item-cart {
     background-color: white;
     border-radius: 5px;
     padding-left: 10px;
@@ -175,4 +175,7 @@ p{
 .btn-payment:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+  }
+  .so-luong-number{
+    margin-bottom: 0;
   }

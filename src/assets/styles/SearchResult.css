@@ -172,7 +172,6 @@ a{
     justify-content: space-between;
 }
 .search-result-secsion{
-    background-color: #007bff;
     width: 75%;
 }
 
@@ -226,7 +225,7 @@ a{
     transition: all 0.2s ease-in-out;
 }
 
-.item-filter input[type="checkbox"] {
+.item-filter input[type="checkbox"], .item-filter input[type="radio"] {
     margin-right: 10px;
     width: 16px;
     height: 16px;

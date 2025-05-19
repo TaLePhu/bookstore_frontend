@@ -11,6 +11,14 @@ interface ResultInterface {
     totalBook: number;
 }
 
+interface ResultBookCategoryInterface {
+    result: Book[];
+    totalPages: number;
+    totalElements: number;
+    size: number;
+    number: number;
+}
+
 /**
  *
  * @param link
@@ -23,10 +31,10 @@ async function getBook(link: string): Promise<ResultInterface> {
 
     const res = await phu_request(link);
 
-    const responseData = res._embedded.books;
+    const responseData = res._embedded?.books ?? res.content ?? [];
+    const totalPages = res.page?.totalPages ?? res.totalPages ?? 0;
+    const totalBook = res.page?.totalElements ?? res.totalElements ?? 0;
 
-    const totalPages = res.page.totalPages;
-    const totalBook = res.page.totalElements;
 
     for (const key in responseData) {
         result.push({
@@ -39,8 +47,13 @@ async function getBook(link: string): Promise<ResultInterface> {
             salePrice: responseData[key].salePrice,
             quantity: responseData[key].quantity,
             averageRating: responseData[key].averageRating,
+            supplier: responseData[key].supplier,             
+            numberOfPages: responseData[key].numberOfPages,  
+            publisher: responseData[key].publisher,          
         });
     }
+
+     console.log("📦 Dữ liệu trả về từ API:", responseData); 
 
     return { result: result, totalPages: totalPages, totalBook: totalBook };
 }
@@ -190,6 +203,10 @@ export async function getBookById(bookId: number): Promise<Book | null> {
             salePrice: data.salePrice,
             quantity: data.quantity,
             averageRating: data.averageRating,
+            supplier: data.supplier,
+            numberOfPages: data.numberOfPages,
+            publisher: data.publisher,
+
         };
 
         return book;
@@ -207,13 +224,40 @@ export async function getBookById(bookId: number): Promise<Book | null> {
  * @param size Kích thước trang (mặc định là 5)
  * @returns Promise<ResultInterface> Kết quả tìm kiếm
  */
+// export async function findBookCategory(
+//     searchKey: string,
+//     categoryIds: number[],
+//     trang: number = 0,
+//     size: number = 5
+// ): Promise<ResultInterface> {
+//     const categoryParams = categoryIds.map(id => `categoryIds=${id}`).join('&');
+//     const duongDan = `http://localhost:8080/books/search/findByBookNameContainingAndCategoryIds?sort=bookId,desc&size=${size}&page=${trang}&${categoryParams}&bookName=${searchKey}`;
+//     return getBook(duongDan);
+// }
+
+// export const findBookCategory = (keyword: string, categoryIds: number[], page: number, size: number) => {
+//     const categoriesQuery = categoryIds.length > 0 ? categoryIds.map(id => `categoryIds=${id}`).join('&') : '';
+//     return fetch(`/books/search?keyword=${keyword}&${categoriesQuery}&page=${page}&size=${size}`)
+//         .then(res => res.json());
+// };
+
 export async function findBookCategory(
-    searchKey: string,
+    keyword: string,
     categoryIds: number[],
-    trang: number = 0,
-    size: number = 5
+    page: number,
+    size: number
 ): Promise<ResultInterface> {
-    const categoryParams = categoryIds.map(id => `categoryId=${id}`).join('&');
-    const duongDan = `http://localhost:8080/books/search/findByBookNameContainingAndCategoryIds?sort=bookId,desc&size=${size}&page=${trang}&${categoryParams}&bookName=${searchKey}`;
+    const params = new URLSearchParams();
+
+    if (keyword.trim() !== '') {
+        params.append('keyword', keyword);
+    }
+
+    categoryIds.forEach(id => params.append('categoryIds', id.toString()));
+    params.append('page', page.toString());
+    params.append('size', size.toString());
+
+    const duongDan = `http://localhost:8080/books/search?${params.toString()}`;
+     console.log("🌐 URL gửi tới BE:", duongDan);
     return getBook(duongDan);
 }

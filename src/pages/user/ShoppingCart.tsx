@@ -91,7 +91,7 @@ const ShoppingCart = () => {
               </div>
             </div>
 
-            <div className='list-item'>
+            <div className='list-item-cart'>
               {cartItems.map((item) => (
                 <div className='info-item' key={item.bookId}>
                   <div className='name-item'>

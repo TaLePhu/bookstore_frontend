@@ -1,0 +1,165 @@
+.content-management{
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 6px;
+}
+.category-list-container{
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.category-list-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.add-catogory-btn{
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+.add-catogory-btn:hover {
+    background-color: #45a049;
+}
+
+.add-category-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.add-category-input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 200px;
+}
+
+.add-category-input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.25);
+}
+
+.category-table {
+    width: 100%;
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
+.category-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.category-table th,
+.category-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.category-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+}
+
+.category-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+.btn-edit,
+.btn-delete {
+    padding: 6px 12px;
+    margin: 0 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-edit {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-delete {
+    background-color: #f44336;
+    color: white;
+}
+
+.btn-edit:hover {
+    background-color: #45a049;
+}
+
+.btn-delete:hover {
+    background-color: #da190b;
+}
+
+.edit-category {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.edit-input {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 200px;
+}
+
+.edit-input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.edit-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-save,
+.btn-cancel {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-save {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-cancel {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-save:hover {
+    background-color: #45a049;
+}
+
+.btn-cancel:hover {
+    background-color: #5a6268;
+}
+
+.btn-edit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

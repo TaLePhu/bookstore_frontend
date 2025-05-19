@@ -20,6 +20,9 @@ import OrderConfirmFalse from '../pages/user/OrderConfirmFalse';
 
 import AdminLayout from '../layouts/AdminLayout';
 import ProductManagement from '../pages/Admin/ProductManagement';
+import AdminDashboard from '../components/admLayout/AdminDashboard';
+import OrderList from '../components/admLayout/OrderList';
+
 const AppRoutes = () => {
     const [searchKey, setSearchKey] = useState('');
 
@@ -46,7 +49,9 @@ const AppRoutes = () => {
             {/* <Route path="/checkout" element={<Checkout />} /> */}
             {/* Layout cho trang quản trị */}
             <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<AdminDashboard />} />
                 <Route path="product-management" element={<ProductManagement />} />
+                <Route path='order-management' element={<OrderList/>} />
             </Route>
         </Routes>
     );

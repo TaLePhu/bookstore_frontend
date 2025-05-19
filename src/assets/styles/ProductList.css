@@ -192,126 +192,361 @@
 }
 
 .modal-content {
-    background-color: white;
-    padding: 24px;
-    border-radius: 8px;
+    background: white;
     width: 90%;
     max-width: 800px;
     max-height: 90vh;
-    overflow-y: auto;
+    border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
-.modal-content h2 {
-    margin-top: 0;
-    margin-bottom: 24px;
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-header h2 {
+    margin: 0;
     color: #333;
-    font-size: 24px;
+    font-size: 1.25rem;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+    padding: 0.25rem;
+    line-height: 1;
+}
+
+.close-btn:hover {
+    color: #333;
+}
+
+.modal-body {
+    display: flex;
+    padding: 1.5rem;
+    gap: 2rem;
+    max-height: calc(90vh - 60px);
+    overflow-y: auto;
+    overflow-x: hidden; /* ✨ Ngăn tràn ngang */
+    box-sizing: border-box;
+}
+
+.book-image {
+    flex: 0 0 250px;
+    max-width: 250px; /* ✨ Giới hạn chiều rộng */
+}
+
+.book-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.book-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 0; /* ✨ Cho phép nội dung co lại trong flex */
+}
+
+.detail-item {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap; /* ✨ Cho phép xuống dòng nếu thiếu không gian */
+    word-wrap: break-word;
+    overflow-wrap: anywhere; /* ✨ Bẻ dòng từ bất cứ đâu nếu cần */
+}
+
+.detail-item label {
+    font-weight: 500;
+    color: #666;
+    min-width: 100px;
+    flex-shrink: 0;
+}
+
+.detail-item span {
+    color: #333;
+    flex: 1; /* Để span tự co giãn và không đẩy phần còn lại */
+}
+
+.detail-item.description {
+    flex-direction: column;
+    margin-bottom: 50px;
+}
+
+.detail-item.description p {
+    margin: 0.5rem 0 0;
+    color: #666;
+    line-height: 1.6;
+    max-height: 150px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+/* Custom scrollbar */
+.detail-item.description p::-webkit-scrollbar {
+    width: 4px;
+}
+
+.detail-item.description p::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.detail-item.description p::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+    .modal-body {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1.5rem;
+    }
+
+    .book-image {
+        flex: 0 0 auto;
+        max-width: 200px;
+        margin: 0 auto;
+    }
+
+    .detail-item {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .detail-item label {
+        min-width: auto;
+    }
+}
+
+/* Edit Book Modal Styles */
+.edit-book-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.edit-book-modal-content {
+    background: white;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-book-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.edit-book-modal-header h2 {
+    margin: 0;
+    color: #333;
+    font-size: 1.25rem;
+}
+
+.edit-book-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+    padding: 0.25rem;
+    line-height: 1;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.edit-book-close-btn:hover {
+    background-color: #f5f5f5;
+    color: #333;
 }
 
 .edit-book-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    padding: 1.5rem;
+    overflow-y: auto;
+    max-height: calc(90vh - 60px);
 }
 
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+.edit-book-form-group {
+    margin-bottom: 1rem;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.form-group label {
-    font-weight: 500;
-    color: #333;
-}
-
-.form-group input,
-.form-group textarea {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: #2196F3;
-    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
-}
-
-.form-group textarea {
-    resize: vertical;
-    min-height: 100px;
-}
-
-.book-image-preview {
+.edit-book-image-preview {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
 }
 
-.book-image-preview img {
+.edit-book-image-preview img {
     width: 200px;
-    height: 250px;
+    height: 200px;
     object-fit: cover;
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.change-image-btn {
-    padding: 8px 16px;
-    background-color: #2196F3;
+.edit-book-form-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.edit-book-form-row .edit-book-form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.edit-book-form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: 500;
+}
+
+.edit-book-form-group input,
+.edit-book-form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.edit-book-form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.edit-book-change-image-btn {
+    padding: 0.5rem 1rem;
+    background-color: #4a90e2;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 0.9rem;
     transition: background-color 0.3s;
 }
 
-.change-image-btn:hover {
-    background-color: #1976D2;
+.edit-book-change-image-btn:hover {
+    background-color: #357abd;
 }
 
-.modal-buttons {
+.edit-book-modal-buttons {
     display: flex;
     justify-content: flex-end;
-    gap: 12px;
-    margin-top: 20px;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
 }
 
-.modal-buttons button {
-    padding: 10px 20px;
+.edit-book-cancel-btn,
+.edit-book-save-btn {
+    padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 4px;
+    font-size: 1rem;
     cursor: pointer;
-    font-size: 14px;
     transition: background-color 0.3s;
 }
 
-.cancel-btn {
+.edit-book-cancel-btn {
     background-color: #f44336;
     color: white;
 }
 
-.cancel-btn:hover {
-    background-color: #d32f2f;
+.edit-book-cancel-btn:hover {
+    background-color: #da190b;
 }
 
-.save-btn {
+.edit-book-save-btn {
     background-color: #4CAF50;
     color: white;
 }
 
-.save-btn:hover {
+.edit-book-save-btn:hover {
     background-color: #45a049;
+}
+
+.edit-book-save-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Custom scrollbar for the form */
+.edit-book-form::-webkit-scrollbar {
+    width: 8px;
+}
+
+.edit-book-form::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.edit-book-form::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.edit-book-form::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+@media (max-width: 768px) {
+    .edit-book-modal-content {
+        width: 95%;
+        max-height: 95vh;
+    }
+
+    .edit-book-form-row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .edit-book-modal-buttons {
+        flex-direction: column;
+    }
+
+    .edit-book-cancel-btn,
+    .edit-book-save-btn {
+        width: 100%;
+    }
 }

@@ -133,15 +133,25 @@ export async function findBook(
  */
 export async function deleteBook(bookId: number): Promise<boolean> {
     try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('No authentication token found');
+            return false;
+        }
+
         const response = await fetch(`http://localhost:8080/books/${bookId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorText = await response.text();
+            console.error('Delete failed with status:', response.status);
+            console.error('Error response:', errorText);
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
         }
 
         return true;
@@ -159,26 +169,44 @@ export async function deleteBook(bookId: number): Promise<boolean> {
  */
 export async function updateBook(bookId: number, bookData: Book): Promise<boolean> {
     try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('No authentication token found');
+            return false;
+        }
+
+        console.log('Updating book with data:', bookData);
         const response = await fetch(`http://localhost:8080/books/${bookId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(bookData),
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorText = await response.text();
+            console.error('Update failed with status:', response.status);
+            console.error('Error response:', errorText);
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
         }
 
+        const responseData = await response.json();
+        console.log('Update successful. Response:', responseData);
         return true;
     } catch (error) {
         console.error('Error updating book:', error);
+        if (error instanceof Error) {
+            console.error('Error details:', error.message);
+            console.error('Error stack:', error.stack);
+        }
         return false;
     }
 }
 
 /**
+<<<<<<< HEAD
  * Lấy thông tin một cuốn sách theo ID
  * @param bookId ID của sách cần lấy
  * @returns BookModel nếu tìm thấy, null nếu lỗi
@@ -261,3 +289,45 @@ export async function findBookCategory(
      console.log("🌐 URL gửi tới BE:", duongDan);
     return getBook(duongDan);
 }
+/* Thêm một cuốn sách mới
+ * @param bookData Dữ liệu của cuốn sách cần thêm
+ * @returns Promise<Book | null> Dữ liệu sách đã tạo nếu thành công, null nếu thất bại
+ */
+export async function createBook(bookData: Book): Promise<Book | null> {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('No authentication token found');
+            return null;
+        }
+
+        console.log('Creating book with data:', bookData);
+        const response = await fetch('http://localhost:8080/books', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(bookData),
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Create failed with status:', response.status);
+            console.error('Error response:', errorText);
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        }
+
+        const responseData = await response.json();
+        console.log('Create successful. Response:', responseData);
+        return responseData;
+    } catch (error) {
+        console.error('Error creating book:', error);
+        if (error instanceof Error) {
+            console.error('Error details:', error.message);
+            console.error('Error stack:', error.stack);
+        }
+        return null;
+    }
+}
+

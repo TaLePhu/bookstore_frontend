@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getAllCategories, updateCategory, addCategory } from '../../api/CategoryAPI';
 import { findBook } from '../../api/BookAPI';
-import Category from '../../interface/Category';
+import Category from '../../models/Category';
 import '../../assets/styles/CategoryList.css'
 
 interface CategoryWithCount extends Category {

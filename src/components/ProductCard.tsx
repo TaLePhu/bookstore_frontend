@@ -54,18 +54,15 @@ const ProductCard: React.FC<ProductCardInterface> = (props) => {
     const mainImage = listImage.find(img => !img.isIcon) || listImage[0];
     const imageSrc = mainImage?.imageData || 'https://cdn.pixabay.com/photo/2023/12/29/18/23/daisy-8476666_1280.jpg';
 
-<<<<<<< HEAD
-    const iconImages = listImage.filter((image) => image.isIcon === true);
-
     // const imageSmall =
     //     iconImages.length > 0 && iconImages[0].imageData
     //         ? iconImages[0].imageData
     //         : 'https://cdn.pixabay.com/photo/2023/12/29/18/23/daisy-8476666_1280.jpg';
-=======
+
     // Get icon images
     const iconImages = listImage.filter(img => img.isIcon);
     const imageSmall = iconImages[0]?.imageData || imageSrc;
->>>>>>> 3e5d61a38c50ce4efad7272e9327d38d98a371d2
+
 
     const salePrice = props.book.salePrice ?? 0;
     const listedPrice = props.book.listedPrice ?? 1;

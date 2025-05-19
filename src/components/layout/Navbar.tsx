@@ -260,14 +260,6 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                     <img className="size-icon" src="/icons/icons8-cart-24.png" alt="icon-cart" />
                     <span className="cart-count">{getTotalItems()}</span>
                 </Link>
-                {/* <ul className="navbar-list-1">
-                    <li>
-                        <Link to="/auth/dang-nhap">Đăng nhập</Link>
-                    </li>
-                    <li>
-                        <Link to="/auth/dang-ky">Đăng ký</Link>
-                    </li>
-                </ul> */}
                 {user ? (
                     // Khi đã đăng nhập
                     <div className="user-menu">

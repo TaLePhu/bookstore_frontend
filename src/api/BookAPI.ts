@@ -224,22 +224,7 @@ export async function getBookById(bookId: number): Promise<Book | null> {
  * @param size Kích thước trang (mặc định là 5)
  * @returns Promise<ResultInterface> Kết quả tìm kiếm
  */
-// export async function findBookCategory(
-//     searchKey: string,
-//     categoryIds: number[],
-//     trang: number = 0,
-//     size: number = 5
-// ): Promise<ResultInterface> {
-//     const categoryParams = categoryIds.map(id => `categoryIds=${id}`).join('&');
-//     const duongDan = `http://localhost:8080/books/search/findByBookNameContainingAndCategoryIds?sort=bookId,desc&size=${size}&page=${trang}&${categoryParams}&bookName=${searchKey}`;
-//     return getBook(duongDan);
-// }
 
-// export const findBookCategory = (keyword: string, categoryIds: number[], page: number, size: number) => {
-//     const categoriesQuery = categoryIds.length > 0 ? categoryIds.map(id => `categoryIds=${id}`).join('&') : '';
-//     return fetch(`/books/search?keyword=${keyword}&${categoriesQuery}&page=${page}&size=${size}`)
-//         .then(res => res.json());
-// };
 
 export async function findBookCategory(
     keyword: string,
@@ -261,3 +246,4 @@ export async function findBookCategory(
      console.log("🌐 URL gửi tới BE:", duongDan);
     return getBook(duongDan);
 }
+

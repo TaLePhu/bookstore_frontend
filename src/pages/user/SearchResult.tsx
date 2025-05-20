@@ -25,6 +25,12 @@ const SearchResult: React.FC = () => {
 
     const [selectedPriceRange, setSelectedPriceRange] = useState<string>('');
 
+    const [sortOption, setSortOption] = useState<string>('default');
+
+    const [allBooks, setAllBooks] = useState<BookModel[]>([]);
+
+
+
 
     // useEffect(() => {
     //     const pageSize = 20;
@@ -68,7 +74,7 @@ const SearchResult: React.FC = () => {
 
             if (selectedPriceRange === '>500000') {
                 return books.filter(
-                    (book) => typeof book.salePrice === 'number' && book.salePrice > 500000 
+                    (book) => typeof book.salePrice === 'number' && book.salePrice > 500000
                 );
             }
 
@@ -78,48 +84,36 @@ const SearchResult: React.FC = () => {
             );
         };
 
-        if (!keyword || keyword === '') {
-            console.log('🔎 Không có keyword → Lấy toàn bộ sách');
-            layToanBoSach(currentPage - 1, pageSize)
-                .then((data) => {
-                    const filteredBooks = filterByPrice(data.result);
-                    setBooks(filteredBooks);
-                    setTotalPages(data.totalPages);
-                })
-                .catch((error) => {
-                    setError(error.message);
-                });
-        } else {
-            if (selectedCategories.length === 0) {
-                console.log('🔍 Có keyword, không có category → Tìm theo keyword');
-                findBook(keyword, 0, currentPage - 1, pageSize)
-                    .then((data) => {
-                        const filteredBooks = filterByPrice(data.result);
-                        setBooks(filteredBooks);
-                        setTotalPages(data.totalPages);
-                    })
-                    .catch((error) => setError(error.message));
-            } else if (selectedCategories.length === 1) {
-                console.log('📁 Có keyword + 1 category → Tìm theo keyword + category');
-                findBook(keyword, selectedCategories[0], currentPage - 1, pageSize)
-                    .then((data) => {
-                        const filteredBooks = filterByPrice(data.result);
-                        setBooks(filteredBooks);
-                        setTotalPages(data.totalPages);
-                    })
-                    .catch((error) => setError(error.message));
-            } else {
-                console.log('🎯 Tìm nâng cao với nhiều category', selectedCategories);
-                findBookCategory(keyword, selectedCategories, currentPage - 1, pageSize)
-                    .then((data) => {
-                        const filteredBooks = filterByPrice(data.result);
-                        setBooks(filteredBooks);
-                        setTotalPages(data.totalPages);
-                    })
-                    .catch((error) => setError(error.message));
+        const fetchData = async () => {
+            try {
+                let data: BookModel[] = [];
+
+                if (!keyword || keyword === '') {
+                    const result = await layToanBoSach(0, 1000); // lấy nhiều sách
+                    data = result.result;
+                } else if (selectedCategories.length === 0) {
+                    const result = await findBook(keyword, 0, 0, 1000);
+                    data = result.result;
+                } else if (selectedCategories.length === 1) {
+                    const result = await findBook(keyword, selectedCategories[0], 0, 1000);
+                    data = result.result;
+                } else {
+                    const result = await findBookCategory(keyword, selectedCategories, 0, 1000);
+                    data = result.result;
+                }
+
+                const filtered = filterByPrice(data);
+                setAllBooks(filtered); // lưu toàn bộ
+                setTotalPages(Math.ceil(filtered.length / pageSize));
+                setCurrentPage(1); // reset về trang 1
+            } catch (err: any) {
+                setError(err.message);
             }
-        }
-    }, [keyword, selectedCategories, currentPage, selectedPriceRange]);
+        };
+
+        fetchData();
+    }, [keyword, selectedCategories, selectedPriceRange]);
+
 
 
 
@@ -145,11 +139,47 @@ const SearchResult: React.FC = () => {
         });
     };
 
+    const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSortOption(e.target.value);
+    };
 
+    const sortBooks = () => {
+        let sorted = [...allBooks];
+
+        switch (sortOption) {
+            case 'price-asc':
+                sorted.sort((a, b) => (a.salePrice ?? 0) - (b.salePrice ?? 0));
+                break;
+            case 'price-desc':
+                sorted.sort((a, b) => (b.salePrice ?? 0) - (a.salePrice ?? 0));
+                break;
+            case 'name-asc':
+                sorted.sort((a, b) => (a.bookName ?? '').localeCompare(b.bookName ?? ''));
+                break;
+            case 'name-desc':
+                sorted.sort((a, b) => (b.bookName ?? '').localeCompare(a.bookName ?? ''));
+                break;
+            case 'rating-asc':
+                sorted.sort((a, b) => (a.averageRating ?? 0) - (b.averageRating ?? 0));
+                break;
+            case 'rating-desc':
+                sorted.sort((a, b) => (b.averageRating ?? 0) - (a.averageRating ?? 0));
+                break;
+            case 'best-seller':
+                sorted.sort((a, b) => (b.sold ?? 0) - (a.sold ?? 0)); 
+                break;
+            default:
+                break;
+        }
+
+        const start = (currentPage - 1) * 20;
+        const end = start + 20;
+        return sorted.slice(start, end);
+    };
 
     return (
         <div className="container-home">
-            <h2>Kết quả tìm kiếm cho: "{keyword}"</h2>
+            
             <div className="container-search">
                 <div className="filter-section">
                     <p className='header-filter'>Lọc theo</p>
@@ -239,8 +269,24 @@ const SearchResult: React.FC = () => {
                     </div>
                 </div>
                 <div className="search-result-secsion">
+                    <div className="select-search">
+                        <p>Kết quả tìm kiếm cho: <span>"{keyword}" ({allBooks.length} sản phẩm)</span></p>
+                        <div className="select-item">
+                            <p>Sắp xếp theo</p>
+                            <select className="select-search-item" value={sortOption} onChange={handleSortChange}>
+                                <option value="default">Mặc định</option>
+                                <option value="price-asc">Giá: Thấp đến Cao</option>
+                                <option value="price-desc">Giá: Cao đến Thấp</option>
+                                <option value="name-asc">Tên: A-Z</option>
+                                <option value="name-desc">Tên: Z-A</option>
+                                <option value="best-seller">Bán chạy nhất</option>
+                                <option value="rating-asc">Đánh giá: Thấp đến Cao</option>
+                                <option value="rating-desc">Đánh giá: Cao đến Thấp</option>
+                            </select>
+                        </div>
+                    </div>
                     <div className="list-item-search">
-                        {books.map((book) => (
+                        {sortBooks().map((book) => (
                             <ProductCard key={book.bookId} book={book} />
                         ))}
                         

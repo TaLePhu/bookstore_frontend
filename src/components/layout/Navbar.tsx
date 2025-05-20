@@ -177,7 +177,7 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                     <li>
                         <Link to="/policy">Chính sách</Link>
                     </li>
-                    <li className="has-submenu">
+                    {/* <li className="has-submenu">
                         <Link to="" className="submenu-toggle" onClick={toggleSubmenu}>
                             Thể loại
                         </Link>
@@ -200,7 +200,7 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                                 </li>
                             </ul>
                         )}
-                    </li>
+                    </li> */}
                 </ul>
             </div>
             {/* search by book name */}

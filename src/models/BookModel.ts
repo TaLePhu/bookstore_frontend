@@ -15,6 +15,7 @@ import { Category } from "./Category";
         supplier?: string;         
         numberOfPages?: number;   
         publisher?: string; 
+        sold?: number; 
 
         constructor(
             bookId: number,
@@ -30,6 +31,7 @@ import { Category } from "./Category";
             supplier?: string,
             numberOfPages?: number,
             publisher?: string,
+            sold?: number
         ) {
             this.bookId = bookId;
             this.bookName = bookName;
@@ -44,6 +46,7 @@ import { Category } from "./Category";
             this.supplier = supplier;
             this.numberOfPages = numberOfPages;
             this.publisher = publisher;
+            this.sold = sold;
         }
 
     }

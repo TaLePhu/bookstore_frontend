@@ -227,7 +227,9 @@ const ProductDetails = () => {
         }
 
         return stars;
-        }
+    }
+
+    const isOutOfStock = (Number(product.quantity) || 0) <= 0;
 
     return(
         <div className="container-details">
@@ -253,11 +255,17 @@ const ProductDetails = () => {
                         </div>
                     </div>
                     <div className="btn-all">
-                        <div className="btn-add-cart">
+                        <div
+                            className={`btn-add-cart ${isOutOfStock ? 'disabled' : ''}`}
+                            onClick={!isOutOfStock ? handleAddToCart : undefined}
+                        >
                             <img src="/icons/icons8-cart-24.png" alt="icon-cart" />
-                            <span onClick={handleAddToCart}>Thêm vào giỏ hàng</span>
+                            <span>Thêm vào giỏ hàng</span>
                         </div>
-                        <div className="btn-buy" onClick={handleBuyNow}>
+                        <div
+                            className={`btn-buy ${isOutOfStock ? 'disabled' : ''}`}
+                            onClick={!isOutOfStock ? handleBuyNow : undefined}
+                        >
                             <span>Mua ngay</span>
                         </div>
                     </div>

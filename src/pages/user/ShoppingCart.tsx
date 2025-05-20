@@ -4,6 +4,8 @@ import { useCart } from "../../context/CartContext";
 import '../../assets/styles/ShoppingCart.css';
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import BookModel from "../../models/BookModel";
+import { getBookById } from "../../api/BookAPI";
 
 
 const ShoppingCart = () => {
@@ -11,11 +13,34 @@ const ShoppingCart = () => {
   
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [selectAll, setSelectAll] = useState(false);
+ const [product, setProduct] = useState<BookModel[]>([]);
   const navigate = useNavigate();
-
   // useEffect(() => {
   //   saveCartToLocalStorage(cartItems);
   // }, [cartItems]);
+
+  console.log("cartItems", cartItems);
+  console.log("id", cartItems.map(item => item.bookId));
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const ids = cartItems.map(item => item.bookId);
+      if (ids.length === 0) return;
+
+      try {
+        const books = await Promise.all(
+          ids.map(id => getBookById(id))
+        );
+        setProduct(books.filter((b): b is BookModel => b !== null)); // Mảng các sách tương ứng
+      } catch (error) {
+        console.error("Lỗi khi tải nhiều sách:", error);
+      }
+    };
+
+  fetchBooks();
+}, [cartItems]);
+
+  console.log("product", product);
 
   const handleIncrease = (id: number, currentQty: number) => {
     updateQuantity(id, currentQty + 1);
@@ -66,6 +91,7 @@ const ShoppingCart = () => {
   .filter(item => selectedItems.includes(item.bookId))
   .reduce((sum, item) => sum + item.salePrice * item.quantity, 0);
 
+
  //const totalPrice = cartItems.reduce((sum, item) => sum + item.salePrice * item.quantity, 0);
 
   return (
@@ -98,6 +124,9 @@ const ShoppingCart = () => {
                     <input 
                         type="checkbox"
                         checked={selectedItems.includes(item.bookId)}
+                        disabled={
+                          (Number(product.find(p => p.bookId === item.bookId)?.quantity) || 0) <= 0
+                        }
                         onChange={() => handleSelectItem(item.bookId)}
                     />
                     <div className='item-img-info'>

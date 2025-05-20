@@ -49,7 +49,8 @@ async function getBook(link: string): Promise<ResultInterface> {
             averageRating: responseData[key].averageRating,
             supplier: responseData[key].supplier,             
             numberOfPages: responseData[key].numberOfPages,  
-            publisher: responseData[key].publisher,          
+            publisher: responseData[key].publisher,   
+            sold: responseData[key].sold,       
         });
     }
 
@@ -103,28 +104,52 @@ export async function layToanBoSach(trang: number, size: number = 5): Promise<Re
 
 //     return getBook(duongDan);
 // }
+// export async function findBook(
+//     searchKey: string,
+//     categoryId: number,
+//     trang: number = 0,
+//     size: number = 5
+// ): Promise<ResultInterface> {
+//     let duongDan: string = `http://localhost:8080/books?sort=bookId,desc&size=${size}&page=${trang}`;
+
+//     if (searchKey !== '' && categoryId === 0) {
+//         duongDan = `http://localhost:8080/books/search/findByBookNameContaining?sort=bookId,desc&size=${size}&page=${trang}&bookName=${searchKey}`;
+//     }
+
+//     if (searchKey === '' && categoryId > 0) {
+//         duongDan = `http://localhost:8080/books/search/findByCategories_CategoryId?sort=bookId,desc&size=${size}&page=${trang}&categoryId=${categoryId}`;
+//     }
+
+//     if (searchKey !== '' && categoryId > 0) {
+//         duongDan = `http://localhost:8080/books/search/findByBookNameContainingAndCategories_CategoryId?sort=bookId,desc&size=${size}&page=${trang}&categoryId=${categoryId}&bookName=${searchKey}`;
+//     }
+
+//     return getBook(duongDan);
+// }
+
 export async function findBook(
     searchKey: string,
     categoryId: number,
     trang: number = 0,
     size: number = 5
 ): Promise<ResultInterface> {
-    let duongDan: string = `http://localhost:8080/books?sort=bookId,desc&size=${size}&page=${trang}`;
+    let duongDan: string ;
 
     if (searchKey !== '' && categoryId === 0) {
-        duongDan = `http://localhost:8080/books/search/findByBookNameContaining?sort=bookId,desc&size=${size}&page=${trang}&bookName=${searchKey}`;
+        duongDan = `http://localhost:8080/books/search/by-keyword?keyword=${searchKey}&page=${trang}&size=${size}&sort=bookId,desc`;
+    } else if (searchKey !== '' && categoryId > 0) {
+        duongDan = `http://localhost:8080/books/search/by-category-and-keyword?keyword=${searchKey}&categoryId=${categoryId}&page=${trang}&size=${size}&sort=bookId,desc`;
+    } else if (searchKey === '' && categoryId > 0){
+        duongDan = `http://localhost:8080/books/search/findByCategories_CategoryId?sort=bookId,desc&size=${size}&page=${trang}&categoryId=${categoryId}`;  
     }
-
-    if (searchKey === '' && categoryId > 0) {
-        duongDan = `http://localhost:8080/books/search/findByCategories_CategoryId?sort=bookId,desc&size=${size}&page=${trang}&categoryId=${categoryId}`;
-    }
-
-    if (searchKey !== '' && categoryId > 0) {
-        duongDan = `http://localhost:8080/books/search/findByBookNameContainingAndCategories_CategoryId?sort=bookId,desc&size=${size}&page=${trang}&categoryId=${categoryId}&bookName=${searchKey}`;
+    else {
+        // fallback nếu không có keyword
+        duongDan = `http://localhost:8080/books?page=${trang}&size=${size}&sort=bookId,desc`;
     }
 
     return getBook(duongDan);
 }
+
 
 /**
  * Xóa một cuốn sách theo ID
@@ -234,6 +259,7 @@ export async function getBookById(bookId: number): Promise<Book | null> {
             supplier: data.supplier,
             numberOfPages: data.numberOfPages,
             publisher: data.publisher,
+            sold: data.sold,
 
         };
 
@@ -252,22 +278,28 @@ export async function getBookById(bookId: number): Promise<Book | null> {
  * @param size Kích thước trang (mặc định là 5)
  * @returns Promise<ResultInterface> Kết quả tìm kiếm
  */
+
+
 // export async function findBookCategory(
-//     searchKey: string,
+//     keyword: string,
 //     categoryIds: number[],
-//     trang: number = 0,
-//     size: number = 5
+//     page: number,
+//     size: number
 // ): Promise<ResultInterface> {
-//     const categoryParams = categoryIds.map(id => `categoryIds=${id}`).join('&');
-//     const duongDan = `http://localhost:8080/books/search/findByBookNameContainingAndCategoryIds?sort=bookId,desc&size=${size}&page=${trang}&${categoryParams}&bookName=${searchKey}`;
+//     const params = new URLSearchParams();
+
+//     if (keyword.trim() !== '') {
+//         params.append('keyword', keyword);
+//     }
+
+//     categoryIds.forEach(id => params.append('categoryIds', id.toString()));
+//     params.append('page', page.toString());
+//     params.append('size', size.toString());
+
+//     const duongDan = `http://localhost:8080/books/search?${params.toString()}`;
+//      console.log("🌐 URL gửi tới BE:", duongDan);
 //     return getBook(duongDan);
 // }
-
-// export const findBookCategory = (keyword: string, categoryIds: number[], page: number, size: number) => {
-//     const categoriesQuery = categoryIds.length > 0 ? categoryIds.map(id => `categoryIds=${id}`).join('&') : '';
-//     return fetch(`/books/search?keyword=${keyword}&${categoriesQuery}&page=${page}&size=${size}`)
-//         .then(res => res.json());
-// };
 
 export async function findBookCategory(
     keyword: string,
@@ -276,17 +308,12 @@ export async function findBookCategory(
     size: number
 ): Promise<ResultInterface> {
     const params = new URLSearchParams();
-
-    if (keyword.trim() !== '') {
-        params.append('keyword', keyword);
-    }
-
-    categoryIds.forEach(id => params.append('categoryIds', id.toString()));
-    params.append('page', page.toString());
-    params.append('size', size.toString());
+    params.append("keyword", keyword);
+    categoryIds.forEach(id => params.append("categoryIds", id.toString()));
+    params.append("page", page.toString());
+    params.append("size", size.toString());
 
     const duongDan = `http://localhost:8080/books/search?${params.toString()}`;
-     console.log("🌐 URL gửi tới BE:", duongDan);
     return getBook(duongDan);
 }
 /* Thêm một cuốn sách mới

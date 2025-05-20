@@ -27,6 +27,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({ searchKey, categoryId
 
         if (searchKey === '' && categoryId === 0) {
             // Nếu không có từ khóa tìm kiếm và không có categoryId thì lấy tất
+            console.log('lay toan bo sach');
             layToanBoSach(trangHienTai - 1, pageSize)
                 .then((data) => {
                     setListBook(data.result);
@@ -38,6 +39,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({ searchKey, categoryId
                     setUploadData(false);
                 });
         } else {
+            console.log('tim kiem sach');
             findBook(searchKey, categoryId, trangHienTai - 1, pageSize)
                 .then((data) => {
                     setListBook(data.result);
@@ -74,8 +76,8 @@ const CategorySection: React.FC<CategorySectionProps> = ({ searchKey, categoryId
     return (
         <div className="list">
             <div className="list-total">
-                <h3>{categoryName}</h3>
-                <Link to="/category">Xem thêm</Link>
+                <h3>📚 {categoryName}</h3>
+                <Link to={`/category/${categoryId}/${encodeURIComponent(categoryName)}`}>Xem thêm</Link>
             </div>
             <div className="list-item">
                 {listBook.map((item) => (

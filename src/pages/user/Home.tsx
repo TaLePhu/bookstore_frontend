@@ -7,6 +7,8 @@ import CategorySection from '../../components/CategorySection';
 import { useEffect, useState } from 'react';
 import Category from '../../models/Category';
 import { getAllCategories } from '../../api/CategoryAPI';
+import BestSellerSection from '../../components/BestSellerSection';
+
 
 interface HomeProps {
     searchKey: string;
@@ -44,6 +46,7 @@ const Home: React.FC<HomeProps> = ({ searchKey }) => {
     return (
         <div className="container-home">
             <Banner />
+            <BestSellerSection/>
             {/* <CategorySection searchKey={searchKey} categoryId={categoryIdNumber} /> */}
             {searchKey === '' && categories.map((category) => (
                 <div key={category.categoryId} className="category-block">

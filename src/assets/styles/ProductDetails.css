@@ -733,3 +733,8 @@
         font-size: 12px;
     }
 }
+.disabled {
+    opacity: 0.5;
+    pointer-events: none; /* Chặn click */
+    cursor: not-allowed;
+}

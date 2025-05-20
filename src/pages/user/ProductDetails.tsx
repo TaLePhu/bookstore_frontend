@@ -20,6 +20,8 @@ import BookModel from '../../models/BookModel';
 import ImageModel from '../../models/ImageModel';
 import { getBookById } from '../../api/BookAPI';
 import { getAllImage } from '../../api/ImageAPI';
+import toast from 'react-hot-toast';
+
 // Modal.setAppElement("#root");
 interface UserModel {
   firstName: string;
@@ -99,8 +101,12 @@ const ProductDetails = () => {
     const handleSubmitReview = async () => {
         if (!product || !user) return;
 
-        if (newRating === 0 || newComment.trim() === '') {
-            alert("Vui lòng chọn số sao và nhập nhận xét.");
+        if (newRating === 0) {
+            toast.error("Vui lòng chọn số sao trước khi gửi!");
+            return;
+        }
+        if (!newComment.trim()) {
+            toast.error("Vui lòng nhập nhận xét!");
             return;
         }
 
@@ -128,6 +134,7 @@ const ProductDetails = () => {
             );
 
             fetchReviews();
+            toast.success("Gửi đánh giá thành công!");
             setIsModalOpennReviews(false);
             setNewRating(0);
             setNewComment("");

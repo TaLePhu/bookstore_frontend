@@ -4,14 +4,18 @@ import './App.css';
 import { BrowserRouter as Router } from 'react-router-dom';
 import AppRoutes from './routes/routes';
 import { CartProvider } from './context/CartContext';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
     return (
-        <CartProvider>
-            <Router>
-                <AppRoutes />
-            </Router>
-        </CartProvider>
+        <>
+            <Toaster position="top-center" />
+            <CartProvider>
+                <Router>
+                    <AppRoutes />
+                </Router>
+            </CartProvider>
+        </>   
     );
 }
 

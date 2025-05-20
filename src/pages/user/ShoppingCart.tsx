@@ -9,7 +9,7 @@ import { getBookById } from "../../api/BookAPI";
 
 
 const ShoppingCart = () => {
-  const { cartItems, updateQuantity, removeFromCart, getTotalItems, saveCartToLocalStorage } = useCart();
+  const { cartItems, updateQuantity, removeFromCart, getTotalItems, removeMultipleFromCart } = useCart();
   
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [selectAll, setSelectAll] = useState(false);
@@ -37,8 +37,22 @@ const ShoppingCart = () => {
       }
     };
 
-  fetchBooks();
-}, [cartItems]);
+    fetchBooks();
+  }, [cartItems]);
+
+  useEffect(() => {
+    const availableBookIds = cartItems
+      .filter(item => {
+        const book = product.find(p => p.bookId === item.bookId);
+        return book && (book.quantity ?? 0) > 0;
+      })
+      .map(item => item.bookId);
+
+    setSelectAll(
+      availableBookIds.length > 0 &&
+      availableBookIds.every(id => selectedItems.includes(id))
+    );
+  }, [selectedItems, cartItems, product]);
 
   console.log("product", product);
 
@@ -66,14 +80,23 @@ const ShoppingCart = () => {
     if (selectAll) {
       setSelectedItems([]);
     } else {
-      setSelectedItems(cartItems.map(item => item.bookId));
+      setSelectedItems(
+        cartItems
+          .filter(item => {
+            const book = product.find(p => p.bookId === item.bookId);
+            return book && (book.quantity ?? 0) > 0;
+          })
+          .map(item => item.bookId)
+      );
     }
     setSelectAll(!selectAll);
   };
 
 
-  const handleRemoveSelected = () => {
-    selectedItems.forEach(id => removeFromCart(id));
+  const handleRemoveSelected = async () => {
+    if (selectedItems.length === 0) return;
+
+    await removeMultipleFromCart(selectedItems); // Gọi đúng hàm với cả mảng bookIds
     setSelectedItems([]);
     setSelectAll(false);
   };

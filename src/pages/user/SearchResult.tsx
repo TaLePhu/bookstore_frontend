@@ -66,7 +66,7 @@ const SearchResult: React.FC = () => {
 
 
     useEffect(() => {
-        const pageSize = 20;
+        const pageSize = 18;
 
         // Hàm lọc giá
         const filterByPrice = (books: BookModel[]) => {
@@ -172,8 +172,8 @@ const SearchResult: React.FC = () => {
                 break;
         }
 
-        const start = (currentPage - 1) * 20;
-        const end = start + 20;
+        const start = (currentPage - 1) * 18;
+        const end = start + 18;
         return sorted.slice(start, end);
     };
 

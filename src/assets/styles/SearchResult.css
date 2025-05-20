@@ -22,7 +22,7 @@
 
 .list-item-search {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 item 1 hàng */
+    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
     width: 100%;
     box-sizing: border-box;

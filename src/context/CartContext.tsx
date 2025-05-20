@@ -99,7 +99,15 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
           params: { userId: user.userId },
           headers: { Authorization: `Bearer ${token}` },
         });
-        setCartItems(res.data);
+        const addedBookId = item.bookId;
+
+        // Đưa item mới lên đầu danh sách
+        const sortedItems = [
+          ...res.data.filter((i: CartItem) => i.bookId === addedBookId),
+          ...res.data.filter((i: CartItem) => i.bookId !== addedBookId),
+        ];
+
+        setCartItems(sortedItems);
 
       } catch (error) {
         console.error("Lỗi khi thêm giỏ hàng Redis:", error);

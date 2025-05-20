@@ -31,23 +31,59 @@
 
 .add-category-form {
     display: flex;
-    gap: 10px;
     align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 16px;
+    flex-wrap: wrap;
 }
 
 .add-category-input {
+    flex: 1;
+    min-width: 200px;
     padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
     font-size: 14px;
-    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.2s ease;
 }
 
 .add-category-input:focus {
+    border-color: #4a90e2;
     outline: none;
-    border-color: #4CAF50;
-    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.25);
 }
+
+.btn-save-category {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-save-category:hover {
+    background-color: #43a047;
+}
+
+.btn-cancel-category {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-cancel-category:hover {
+    background-color: #d5d5d5;
+}
+
 
 .category-table {
     width: 100%;
@@ -109,12 +145,12 @@
 
 .edit-category {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    gap: 10px;
+    align-items: center;
 }
 
 .edit-input {
-    padding: 6px 10px;
+    padding: 8px 12px;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 14px;
@@ -123,8 +159,8 @@
 
 .edit-input:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.25);
 }
 
 .edit-actions {
@@ -134,11 +170,12 @@
 
 .btn-save,
 .btn-cancel {
-    padding: 6px 12px;
+    padding: 8px 16px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
+    transition: background-color 0.3s;
 }
 
 .btn-save {
@@ -146,17 +183,17 @@
     color: white;
 }
 
-.btn-cancel {
-    background-color: #6c757d;
-    color: white;
-}
-
 .btn-save:hover {
     background-color: #45a049;
 }
 
+.btn-cancel {
+    background-color: #f44336;
+    color: white;
+}
+
 .btn-cancel:hover {
-    background-color: #5a6268;
+    background-color: #da190b;
 }
 
 .btn-edit:disabled {

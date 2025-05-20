@@ -17,7 +17,8 @@ const AdmNavbar = () => {
     const handleLogout = () => {
         localStorage.removeItem('user');
         localStorage.removeItem('token');
-        navigate('/login');
+        navigate('/auth/dang-nhap');
+        window.location.reload();
     };
 
     return (

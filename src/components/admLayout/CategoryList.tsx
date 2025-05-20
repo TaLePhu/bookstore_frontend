@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getAllCategories, updateCategory, addCategory } from '../../api/CategoryAPI';
+import { getAllCategories, updateCategory, addCategory, deleteCategory } from '../../api/CategoryAPI';
 import { findBook } from '../../api/BookAPI';
 import Category from '../../models/Category';
 import '../../assets/styles/CategoryList.css'
@@ -90,6 +90,22 @@ const CategoryList = () => {
         }
     };
 
+    const handleDelete = async (category: CategoryWithCount) => {
+        if (category.bookCount > 0) {
+            alert('Không thể xóa thể loại này vì đang có sách thuộc thể loại này.');
+            return;
+        }
+
+        if (window.confirm(`Bạn có chắc chắn muốn xóa thể loại "${category.categoryName}"?`)) {
+            const success = await deleteCategory(category.categoryId);
+            if (success) {
+                fetchCategoriesAndCounts();
+            } else {
+                alert('Không thể xóa thể loại. Vui lòng thử lại sau.');
+            }
+        }
+    };
+
     if (loading) {
         return <div>Đang tải danh sách thể loại...</div>;
     }
@@ -113,13 +129,13 @@ const CategoryList = () => {
                                 className="add-category-input"
                             />
                             <button 
-                                className="btn-save"
+                                className="btn-save-category"
                                 onClick={handleAddCategory}
                             >
                                 Thêm
                             </button>
                             <button 
-                                className="btn-cancel"
+                                className="btn-cancel-category"
                                 onClick={() => {
                                     setIsAddingCategory(false);
                                     setNewCategoryInput('');
@@ -131,6 +147,7 @@ const CategoryList = () => {
                     ) : (
                         <button 
                             className='add-catogory-btn'
+                            onClick={() => setIsAddingCategory(true)}
                         >
                             Thêm thể loại
                         </button>
@@ -184,11 +201,17 @@ const CategoryList = () => {
                                         ) : (
                                             <button 
                                                 className="btn-edit"
+                                                onClick={() => handleEdit(category)}
                                             >
                                                 Sửa
                                             </button>
                                         )}
-                                        <button className="btn-delete">Xóa</button>
+                                        <button 
+                                            className="btn-delete"
+                                            onClick={() => handleDelete(category)}
+                                        >
+                                            Xóa
+                                        </button>
                                     </td>
                                 </tr>
                             ))}

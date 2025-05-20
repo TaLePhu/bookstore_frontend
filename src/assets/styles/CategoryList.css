@@ -196,7 +196,9 @@
     background-color: #da190b;
 }
 
-.btn-edit:disabled {
+.btn-edit:disabled,
+.btn-delete:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+    background-color: #cccccc;
 }

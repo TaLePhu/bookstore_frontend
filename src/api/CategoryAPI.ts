@@ -24,7 +24,7 @@ export async function updateCategory(categoryId: number, categoryName: string): 
     try {
         const response = await my_request(
             `http://localhost:8080/categories/${categoryId}`,
-            'PATCH',
+            'PUT',
             { categoryName }
         );
         return true;

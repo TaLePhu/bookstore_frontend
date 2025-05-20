@@ -177,13 +177,13 @@ const CategoryList = () => {
                                                 />
                                                 <div className="edit-actions">
                                                     <button 
-                                                        className="btn-save"
+                                                        className="btn-save-category"
                                                         onClick={() => handleSave(category.categoryId)}
                                                     >
                                                         Lưu
                                                     </button>
                                                     <button 
-                                                        className="btn-cancel"
+                                                        className="btn-cancel-category"
                                                         onClick={handleCancel}
                                                     >
                                                         Hủy
@@ -209,6 +209,7 @@ const CategoryList = () => {
                                         <button 
                                             className="btn-delete"
                                             onClick={() => handleDelete(category)}
+                                            disabled={editingCategory === category.categoryId}
                                         >
                                             Xóa
                                         </button>

@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
+import ProtectedRoute from '../components/ProtectedRoute';
 
 import MainLayout from '../layouts/MainLayout';
 import Home from '../pages/user/Home';
@@ -48,7 +49,11 @@ const AppRoutes = () => {
             </Route>
             {/* <Route path="/checkout" element={<Checkout />} /> */}
             {/* Layout cho trang quản trị */}
-            <Route path="/admin" element={<AdminLayout />}>
+            <Route path="/admin" element={
+                <ProtectedRoute>
+                    <AdminLayout />
+                </ProtectedRoute>
+            }>
                 <Route index element={<AdminDashboard />} />
                 <Route path="product-management" element={<ProductManagement />} />
                 <Route path='order-management' element={<OrderList/>} />

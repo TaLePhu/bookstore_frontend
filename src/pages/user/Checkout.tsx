@@ -11,6 +11,7 @@ import axios from 'axios';
 import { useLocation } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { NavigateFunction } from 'react-router-dom';
+import toast from 'react-hot-toast';
 // import 'antd/dist/reset.css';
 
 
@@ -317,28 +318,10 @@ const Checkout: React.FC = () => {
           const response = await axios.post('http://localhost:8080/api/orders', orderData);
       
           if (response.status === 200) {
-           //message.success("Đặt hàng thành công!");
-            //alert("Đặt hàng thành công!");
-            //const wait = (ms: number) => new Promise(res => setTimeout(res, ms));
-
-            notification.success({
-            message: 'Đặt hàng thành công!',
-            description: 'Đơn hàng của bạn đã được đặt thành công.',
-            placement: 'topRight',
-            duration: 2,
-            onClose: () => {
-                navigate('/');
-            },
-            style: { marginTop: '20vh' },
-            });
-
-            //await wait(2000);
-            //navigate('/');
+            toast.success("Thanh toán thành công. Đã gửi link xác nhận qua email!");
+            navigate('/');
             const bookIdsToRemove = selectedProducts.map((item: { bookId: number }) => item.bookId);
             removeMultipleFromCart(bookIdsToRemove);
-            //handleSuccessModal(navigate);
-            navigate('/');
-            // Có thể redirect hoặc reset form tại đây
           } else {
             message.error("Đặt hàng thất bại!");
           }

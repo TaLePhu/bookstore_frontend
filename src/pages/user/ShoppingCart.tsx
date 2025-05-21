@@ -4,18 +4,57 @@ import { useCart } from "../../context/CartContext";
 import '../../assets/styles/ShoppingCart.css';
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import BookModel from "../../models/BookModel";
+import { getBookById } from "../../api/BookAPI";
 
 
 const ShoppingCart = () => {
-  const { cartItems, updateQuantity, removeFromCart, getTotalItems, saveCartToLocalStorage } = useCart();
+  const { cartItems, updateQuantity, removeFromCart, getTotalItems, removeMultipleFromCart } = useCart();
   
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [selectAll, setSelectAll] = useState(false);
+ const [product, setProduct] = useState<BookModel[]>([]);
   const navigate = useNavigate();
-
   // useEffect(() => {
   //   saveCartToLocalStorage(cartItems);
   // }, [cartItems]);
+
+  console.log("cartItems", cartItems);
+  console.log("id", cartItems.map(item => item.bookId));
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const ids = cartItems.map(item => item.bookId);
+      if (ids.length === 0) return;
+
+      try {
+        const books = await Promise.all(
+          ids.map(id => getBookById(id))
+        );
+        setProduct(books.filter((b): b is BookModel => b !== null)); // Mảng các sách tương ứng
+      } catch (error) {
+        console.error("Lỗi khi tải nhiều sách:", error);
+      }
+    };
+
+    fetchBooks();
+  }, [cartItems]);
+
+  useEffect(() => {
+    const availableBookIds = cartItems
+      .filter(item => {
+        const book = product.find(p => p.bookId === item.bookId);
+        return book && (book.quantity ?? 0) > 0;
+      })
+      .map(item => item.bookId);
+
+    setSelectAll(
+      availableBookIds.length > 0 &&
+      availableBookIds.every(id => selectedItems.includes(id))
+    );
+  }, [selectedItems, cartItems, product]);
+
+  console.log("product", product);
 
   const handleIncrease = (id: number, currentQty: number) => {
     updateQuantity(id, currentQty + 1);
@@ -41,14 +80,23 @@ const ShoppingCart = () => {
     if (selectAll) {
       setSelectedItems([]);
     } else {
-      setSelectedItems(cartItems.map(item => item.bookId));
+      setSelectedItems(
+        cartItems
+          .filter(item => {
+            const book = product.find(p => p.bookId === item.bookId);
+            return book && (book.quantity ?? 0) > 0;
+          })
+          .map(item => item.bookId)
+      );
     }
     setSelectAll(!selectAll);
   };
 
 
-  const handleRemoveSelected = () => {
-    selectedItems.forEach(id => removeFromCart(id));
+  const handleRemoveSelected = async () => {
+    if (selectedItems.length === 0) return;
+
+    await removeMultipleFromCart(selectedItems); // Gọi đúng hàm với cả mảng bookIds
     setSelectedItems([]);
     setSelectAll(false);
   };
@@ -65,6 +113,7 @@ const ShoppingCart = () => {
   const totalPrice = cartItems
   .filter(item => selectedItems.includes(item.bookId))
   .reduce((sum, item) => sum + item.salePrice * item.quantity, 0);
+
 
  //const totalPrice = cartItems.reduce((sum, item) => sum + item.salePrice * item.quantity, 0);
 
@@ -98,6 +147,9 @@ const ShoppingCart = () => {
                     <input 
                         type="checkbox"
                         checked={selectedItems.includes(item.bookId)}
+                        disabled={
+                          (Number(product.find(p => p.bookId === item.bookId)?.quantity) || 0) <= 0
+                        }
                         onChange={() => handleSelectItem(item.bookId)}
                     />
                     <div className='item-img-info'>

@@ -80,24 +80,25 @@ p{
     background-color: white;
     border-radius: 5px;
     padding-left: 10px;
-    padding: 15px 10px 0px 10px; /* Thêm khoảng cách trên và dưới */
+    padding: 15px 10px 0px 10px;
 }
 
 .info-item {
     display: grid;
-    grid-template-columns: 40% 25% 25% 10%; /* Chia cột theo % */
-    text-align: center; /* Căn giữa nội dung trong mỗi cột */
+    grid-template-columns: 40% 25% 25% 10%; 
+    text-align: center; 
     width: 100%;
     align-items: center;
-    padding-bottom: 15px; /* Thêm khoảng cách trên và dưới */
-    border-bottom: 1px solid #ccc; /* Thêm đường viền dưới mỗi hàng */
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ccc; 
+    padding: 10px 0px;
 }
 
 .name-item {
     display: flex;
     align-items: center;
     gap: 10px;
-    justify-content: left; /* Căn trái để checkbox + text hiển thị đúng */
+    justify-content: left; 
 }
 
 .item-img-info {

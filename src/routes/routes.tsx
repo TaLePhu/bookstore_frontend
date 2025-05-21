@@ -23,6 +23,7 @@ import AdminLayout from '../layouts/AdminLayout';
 import ProductManagement from '../pages/Admin/ProductManagement';
 import AdminDashboard from '../components/admLayout/AdminDashboard';
 import OrderList from '../components/admLayout/OrderList';
+import CategoryPage from '../pages/user/CategoryPage';
 
 const AppRoutes = () => {
     const [searchKey, setSearchKey] = useState('');
@@ -35,6 +36,7 @@ const AppRoutes = () => {
                 {/* <Route path="/:categoryId" element={<Home searchKey={searchKey} />} /> */}
                 <Route path="/about" element={<About />} />
                 <Route path="/detail/:id" element={<ProductDetails />} />
+                <Route path="/category/:categoryId/:categoryName" element={<CategoryPage />} />
                 <Route path="/policy" element={<Policy />} />
                 <Route path="/cart" element={<ShoppingCart />} />
                 <Route path="/auth/dang-nhap" element={<SignIn />} />

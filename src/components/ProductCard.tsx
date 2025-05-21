@@ -71,18 +71,14 @@ const ProductCard: React.FC<ProductCardInterface> = (props) => {
     return (
         <Link
             to={`/detail/${props.book.bookId}`}
-            // state={{
-            //     product: props.book,
-            //     imageSrc: imageSrc,
-            //     //imageSmall: imageSmall,
-            //     iconImages: iconImages,
-            // }}
             className="box-item"
         >
-            {/* <div className="box-item"> */}
             <img src={imageSrc} alt={props.book.bookName} />
             {discount > 0 && (
                 <div className="discount-tag">-{discount}%</div>
+            )}
+            {(Number(props.book.quantity) || 0) == 0 && (
+                <div className="sold-out">Hết hàng</div>
             )}
             <h4>{props.book.bookName}</h4>
             <p>{props.book.description}</p>
@@ -90,11 +86,6 @@ const ProductCard: React.FC<ProductCardInterface> = (props) => {
                 <span className="txt-promotional-price">{props.book.salePrice}đ</span>
                 <span className="txt-price">{props.book.listedPrice}đ</span>
             </div>
-            {/* <div className="box-button">
-                <img src="/icons/icons8-heart-32.png" alt="like" />
-                <img src="/icons/icons8-cart-red-24.png" alt="cart" />
-            </div> */}
-            {/* </div> */}
         </Link>
     );
 };

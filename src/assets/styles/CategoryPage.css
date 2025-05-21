@@ -1,0 +1,21 @@
+.container-category{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 0 30px;
+   
+}
+.category-page{
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.select-item-select{
+    font-size: 15px;
+    border-radius: 4px;
+}

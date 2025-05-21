@@ -7,6 +7,9 @@ import BookModel from '../../models/BookModel';
 import ImageModel from '../../models/ImageModel';
 import { findBook } from '../../api/BookAPI';
 import { getAllImage } from '../../api/ImageAPI';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHistory } from "@fortawesome/free-solid-svg-icons";
+
 
 interface NavbarProps {
     searchKey: string;
@@ -31,6 +34,10 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
     const [imageMap, setImageMap] = useState<{ [key: number]: string }>({});
     const [error, setError] = useState(null);
 
+    const [searchHistory, setSearchHistory] = useState<string[]>([]);
+    const [showHistory, setShowHistory] = useState(false);
+
+
 
 
     useEffect(() => {
@@ -38,7 +45,14 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
         if (userData) {
           setUser(JSON.parse(userData));
         }
-      }, []);
+    }, []);
+
+    useEffect(() => {
+        const history = localStorage.getItem('searchHistory');
+        if (history) {
+            setSearchHistory(JSON.parse(history));
+        }
+    }, []);
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -143,12 +157,24 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
         if (trimmed !== '') {
             setSearchKey(trimmed);
             navigate(`/search/${trimmed}`);
+
+            // Lưu lịch sử tìm kiếm vào localStorage
+            const updatedHistory = [trimmed, ...searchHistory.filter(item => item !== trimmed)].slice(0, 10); // giữ 10 từ gần nhất
+            setSearchHistory(updatedHistory);
+            localStorage.setItem('searchHistory', JSON.stringify(updatedHistory));
         }
 
         setShowDropdown(false);
         setSearchResults([]); // Thêm dòng này để xoá kết quả
         setTemporarySearchKey('');
     };
+
+    const handleDeleteHistory = (indexToDelete: number) => {
+        const updated = searchHistory.filter((_, index) => index !== indexToDelete);
+        setSearchHistory(updated);
+        localStorage.setItem('searchHistory', JSON.stringify(updated));
+    };
+
 
     return (
         <header className="navbar">
@@ -177,7 +203,7 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                     <li>
                         <Link to="/policy">Chính sách</Link>
                     </li>
-                    <li className="has-submenu">
+                    {/* <li className="has-submenu">
                         <Link to="" className="submenu-toggle" onClick={toggleSubmenu}>
                             Thể loại
                         </Link>
@@ -200,7 +226,7 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                                 </li>
                             </ul>
                         )}
-                    </li>
+                    </li> */}
                 </ul>
             </div>
             {/* search by book name */}
@@ -210,6 +236,8 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                     placeholder="Tìm kiếm..."
                     onChange={handleChange}
                     value={temporarySearchKey}
+                    onFocus={() => setShowHistory(true)}
+                    onBlur={() => setTimeout(() => setShowHistory(false), 200)} // ẩn sau khi rời input
                     onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                         handleSearch(e);
@@ -222,6 +250,34 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                     alt="icon-search"
                     onClick={handleSearch}
                 />
+
+                {showHistory && !temporarySearchKey && searchHistory.length > 0 && (
+                    <div className="search-dropdown">
+                        {searchHistory.map((keyword, index) => (
+                            <div key={index} className="search-item history-item">
+                                <div
+                                    onClick={() => {
+                                        setTemporarySearchKey(keyword);
+                                        setSearchKey(keyword);
+                                        navigate(`/search/${keyword}`);
+                                        setShowHistory(false);
+                                    }}
+                                    style={{ display: 'flex', alignItems: 'center', flex: 1, cursor: 'pointer', gap: '5px' }}
+                                >
+                                    <FontAwesomeIcon icon={faHistory} />
+                                    <span>{keyword}</span>
+                                </div>
+                                <button
+                                    className="btn-delete-history"
+                                    onClick={() => handleDeleteHistory(index)}
+                                >
+                                    ❌
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
                 
                 {(searchResults.length > 0 || isSearching) && (
                     <div className="search-dropdown">

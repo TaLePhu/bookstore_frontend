@@ -20,8 +20,21 @@ import BookModel from '../../models/BookModel';
 import ImageModel from '../../models/ImageModel';
 import { getBookById } from '../../api/BookAPI';
 import { getAllImage } from '../../api/ImageAPI';
+import toast from 'react-hot-toast';
 
 // Modal.setAppElement("#root");
+interface UserModel {
+  firstName: string;
+  lastName: string;
+}
+
+interface ReviewModel {
+  reviewId: number;
+  ratingScore: number;
+  comment: string;
+  createdAt: string; // hoặc Date
+  user: UserModel;
+}
 
 const ProductDetails = () => {
     const [quantity, setQuantity] = useState(1); 
@@ -48,6 +61,11 @@ const ProductDetails = () => {
     const [product, setProduct] = useState<BookModel | null>(null);
     const [images, setImages] = useState<ImageModel[]>([]);
 
+    const [reviews, setReviews] = useState<ReviewModel[]>([]);
+    const [isModalOpenReviews, setIsModalOpennReviews] = useState(false);
+    const [newRating, setNewRating] = useState(0);
+    const [newComment, setNewComment] = useState("");
+
     useEffect(() => {
         const fetchBook = async () => {
             if (!id) return;
@@ -63,7 +81,68 @@ const ProductDetails = () => {
         fetchBook();
     }, [id]);
 
-    console.log("Product trong detail: ", product);
+    const fetchReviews = async () => {
+        if (!id) return;
+        try {
+        const res = await fetch(`http://localhost:8080/books/${id}/reviews`);
+        if (!res.ok) throw new Error("Failed to fetch reviews");
+        const data = await res.json();
+        setReviews(data);
+        } catch (error) {
+        console.error("Lỗi tải đánh giá:", error);
+        }
+    };
+    useEffect(() => {
+        fetchReviews();
+    }, [id]);
+
+    console.log("Reviewa: ", reviews);
+
+    const handleSubmitReview = async () => {
+        if (!product || !user) return;
+
+        if (newRating === 0) {
+            toast.error("Vui lòng chọn số sao trước khi gửi!");
+            return;
+        }
+        if (!newComment.trim()) {
+            toast.error("Vui lòng nhập nhận xét!");
+            return;
+        }
+
+        const token = localStorage.getItem("token");
+        if (!token) {
+            console.error("Không có token. Người dùng chưa đăng nhập?");
+            return;
+        }
+
+        try {
+            await axios.post(
+            "http://localhost:8080/reviews",
+            {
+                ratingScore: newRating,
+                comment: newComment,
+                bookId: product.bookId,
+                userId: user.userId,
+            },
+            {
+                headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+                },
+            }
+            );
+
+            fetchReviews();
+            toast.success("Gửi đánh giá thành công!");
+            setIsModalOpennReviews(false);
+            setNewRating(0);
+            setNewComment("");
+        } catch (error) {
+            console.error("Lỗi gửi đánh giá:", error);
+        }
+    };
+
     
     // Hàm tăng số lượng
     const increaseQuantity = () => {
@@ -227,7 +306,12 @@ const ProductDetails = () => {
         }
 
         return stars;
-        }
+    }
+
+    const isOutOfStock = (Number(product.quantity) || 0) <= 0;
+
+    const totalScore = reviews.reduce((sum, review) => sum + review.ratingScore, 0);
+    const averageScore = reviews.length > 0 ? (totalScore / reviews.length).toFixed(1) : "0.0";
 
     return(
         <div className="container-details">
@@ -253,11 +337,17 @@ const ProductDetails = () => {
                         </div>
                     </div>
                     <div className="btn-all">
-                        <div className="btn-add-cart">
+                        <div
+                            className={`btn-add-cart ${isOutOfStock ? 'disabled' : ''}`}
+                            onClick={!isOutOfStock ? handleAddToCart : undefined}
+                        >
                             <img src="/icons/icons8-cart-24.png" alt="icon-cart" />
-                            <span onClick={handleAddToCart}>Thêm vào giỏ hàng</span>
+                            <span>Thêm vào giỏ hàng</span>
                         </div>
-                        <div className="btn-buy" onClick={handleBuyNow}>
+                        <div
+                            className={`btn-buy ${isOutOfStock ? 'disabled' : ''}`}
+                            onClick={!isOutOfStock ? handleBuyNow : undefined}
+                        >
                             <span>Mua ngay</span>
                         </div>
                     </div>
@@ -300,9 +390,9 @@ const ProductDetails = () => {
                         <div className="info-product2">
                             <div className="info-product2-review">
                                 <div className="star-reviews">
-                                    {renderStars(product.averageRating)}
+                                    {renderStars(Number(averageScore))}
                                 </div>
-                                <p className="info-product2-reviews-label">({product.averageRating} đánh giá)</p>
+                                <p className="info-product2-reviews-label">({reviews.length} đánh giá)</p>
                             </div>
                             <div className="info-product2-separator" >|</div>
                             <div className="info-product2-item">
@@ -393,7 +483,7 @@ const ProductDetails = () => {
                                         
                                 }}
                                 />
-                                <button className="quantity-btn" onClick={() => setQuantity(prev => Math.min(product.quantity ?? prev + 1, prev + 1))}><p>+</p></button>
+                                <button className="quantity-btnt" onClick={() => setQuantity(prev => Math.min(product.quantity ?? prev + 1, prev + 1))}><p>+</p></button>
                             </div>
                         </div>
                     </div>
@@ -430,9 +520,94 @@ const ProductDetails = () => {
                     </div>
                 </div>
             </div>
-            {/* <div className="reviews">
+            <div className="reviews">
+                <div className="reviews-box">
+                    <p className="reviews-header">Đánh giá sản phẩm</p>
+                    <div className="reviews-content">
+                        <div className="point-section">
+                            <div className="point-reviews">
+                                <p>{averageScore}</p>
+                                <span> /5</span>
+                            </div>
+                            <div className="star-reviews">
+                                {renderStars(Number(averageScore))}    
+                            </div>
+                            <p className="reviews-label">({reviews.length} đánh giá)</p>
+                        </div>
+                        .
+                        {user && (
+                            <div className="btn-reviews" onClick={() => setIsModalOpennReviews(true)}>
+                                <p>Viết đánh giá</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+                <div className="review-list">
+                    {reviews.length === 0 ? (
+                        <p>Chưa có đánh giá nào.</p>
+                    ) : (
+                        reviews.map((review) => (
+                        <div key={review.reviewId} className="review-item">
+                            <div className="review-item-user">
+                                <div className="review-item-user-name">
+                                    {review.user.firstName} {review.user.lastName}
+                                </div>
+                                <div className="review-item-user-rating">
+                                    {renderStars(review.ratingScore)}
+                                </div>
+                            </div>
+                            <div className="comment">
+                                <div className="review-item-date">
+                                    {new Date(review.createdAt).toLocaleDateString()}
+                                </div>
+                                <p className="reviews-comment">{review.comment}</p>
+                            </div>
+                        </div>
+                        ))
+                    )}
+                </div>
+            </div>
 
-            </div> */}
+            {isModalOpenReviews && (
+                <div className="modal-review">
+                    <div className="modal-content">
+                        <h2 className="modal-header">Viết đánh giá</h2>
+
+                        <label className="select-star-header">Chọn số sao:</label>
+                        <select
+                            value={newRating}
+                            onChange={(e) => setNewRating(Number(e.target.value))}
+                            className="select-star"
+                        >
+                            <option value={0}>Chọn sao</option>
+                            {[5, 4, 3, 2, 1].map((val) => (
+                                <option key={val} value={val}> 
+                                   {val} {'⭐'.repeat(val)} 
+                                </option>
+                            ))}
+                        </select>
+
+                        <label className="comment-header">Nhận xét:</label>
+                        <textarea
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            className="comment-input"
+                            rows={3}
+                        />
+
+                        <div className="btn-modal-reviews">
+                            <button className="btn-cancle-reviews" onClick={() => setIsModalOpennReviews(false)}>
+                                Hủy
+                            </button>
+                            <button className="btn-send-reviews" onClick={handleSubmitReview}>
+                                Gửi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            
         </div>
     );
 };

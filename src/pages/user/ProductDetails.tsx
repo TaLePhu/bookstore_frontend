@@ -483,7 +483,7 @@ const ProductDetails = () => {
                                         
                                 }}
                                 />
-                                <button className="quantity-btn" onClick={() => setQuantity(prev => Math.min(product.quantity ?? prev + 1, prev + 1))}><p>+</p></button>
+                                <button className="quantity-btnt" onClick={() => setQuantity(prev => Math.min(product.quantity ?? prev + 1, prev + 1))}><p>+</p></button>
                             </div>
                         </div>
                     </div>

@@ -964,3 +964,15 @@
     background-color: #0d65c3;
     color: white;
 }
+.quantity-value{
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.quantity-btn p {
+    margin: 0;
+}
+.btn-add {
+    margin-left: -47px;
+}

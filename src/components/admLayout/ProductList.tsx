@@ -283,14 +283,8 @@ const ProductList = () => {
             return;
         }
 
-        const keyword = searchKeyword.toLowerCase();
-        const filtered = books.filter(book => 
-            (book.bookName?.toLowerCase() || '').includes(keyword) ||
-            (book.authorName?.toLowerCase() || '').includes(keyword) ||
-            (book.isbn?.toLowerCase() || '').includes(keyword)
-        );
-        setFilteredBooks(filtered);
-    }, [searchKeyword, books]);
+        handleSearch();
+    }, [searchKeyword]);
 
     const loadBooks = async () => {
         try {
@@ -383,11 +377,20 @@ const ProductList = () => {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
     };
 
-    const handleSearch = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSearch = async (e?: React.FormEvent) => {
+        if (e) {
+            e.preventDefault();
+        }
+        
+        if (!searchKeyword.trim()) {
+            loadBooks();
+            return;
+        }
+
         try {
             const response = await searchProducts(searchKeyword);
             setBooks(response.result);
+            setFilteredBooks(response.result);
             setTotalPages(response.totalPages);
             
             // Load images for each book

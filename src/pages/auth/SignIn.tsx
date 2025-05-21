@@ -8,7 +8,7 @@ import axios from 'axios';
 import 'antd/dist/reset.css';
 
 notification.config({
-  top: 100, // điều chỉnh sao cho thấp hơn navbar
+    top: 100, // điều chỉnh sao cho thấp hơn navbar
 });
 
 const LoginForm = () => {
@@ -25,33 +25,33 @@ const LoginForm = () => {
             password: password.trim(),
         };
 
-        axios.post('http://localhost:8080/account/sign-in', loginRequest, {
-            headers: { 'Content-Type': 'application/json' },
-        })
-        .then((response) => {
-            const { jwt, role } = response.data;
-            console.log('Token nhận được sau login:', jwt);
-            localStorage.setItem('token', jwt);
-            const decoded: any = jwtDecode(jwt);
-            localStorage.setItem('user', JSON.stringify(decoded));
+        axios
+            .post('http://localhost:8080/account/sign-in', loginRequest, {
+                headers: { 'Content-Type': 'application/json' },
+            })
+            .then((response) => {
+                const { jwt, role } = response.data;
+                console.log('Token nhận được sau login:', jwt);
+                localStorage.setItem('token', jwt);
+                const decoded: any = jwtDecode(jwt);
+                localStorage.setItem('user', JSON.stringify(decoded));
 
-            setNotify('Đăng nhập thành công!');
-            if (role === 'ADMIN' || role === 'STAFF') {
-                navigate('/admin');
-            } else {
-                navigate('/');
-            }
-            window.location.reload();
-        })
-        .catch((error) => {
-            console.error('Đăng nhập thất bại:', error);
-            setNotify('Đăng nhập thất bại. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.');
+                setNotify('Đăng nhập thành công!');
+                if (role === 'ADMIN' || role === 'STAFF') {
+                    navigate('/admin');
+                } else {
+                    navigate('/');
+                }
+                window.location.reload();
+            })
+            .catch((error) => {
+                console.error('Đăng nhập thất bại:', error);
+                setNotify('Đăng nhập thất bại. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.');
 
-            if (axios.isAxiosError(error) && error.response?.status === 429) {
-                setNotify('Bạn đã nhập sai quá nhiều lần. Vui lòng thử lại sau ít phút.');
-            }
-        });
-
+                if (axios.isAxiosError(error) && error.response?.status === 429) {
+                    setNotify('Bạn đã nhập sai quá nhiều lần. Vui lòng thử lại sau ít phút.');
+                }
+            });
     };
 
     return (

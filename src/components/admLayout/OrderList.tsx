@@ -8,6 +8,7 @@ const OrderList = () => {
     const [error, setError] = useState<string | null>(null);
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
     const [showModal, setShowModal] = useState(false);
+    const [searchId, setSearchId] = useState<string>(''); // Thêm state cho ô tìm kiếm
 
     useEffect(() => {
         fetchOrders();
@@ -47,6 +48,9 @@ const OrderList = () => {
         }
     };
 
+    // Hàm lọc đơn hàng theo mã
+    const filteredOrders = orders.filter((order) => searchId === '' || order.orderId.toString().includes(searchId));
+
     if (loading) {
         return <div>Đang tải danh sách đơn hàng...</div>;
     }
@@ -60,6 +64,14 @@ const OrderList = () => {
             <div className="order-list-container">
                 <div className="order-list-header">
                     <h2>Danh sách đơn hàng</h2>
+                    <div className="search-box">
+                        <input
+                            type="text"
+                            placeholder="Tìm theo mã đơn hàng..."
+                            value={searchId}
+                            onChange={(e) => setSearchId(e.target.value)}
+                        />
+                    </div>
                 </div>
                 <div className="order-table">
                     <table>
@@ -75,7 +87,7 @@ const OrderList = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {orders.map((order) => (
+                            {filteredOrders.map((order) => (
                                 <tr
                                     key={order.orderId}
                                     onClick={() => handleRowClick(order)}

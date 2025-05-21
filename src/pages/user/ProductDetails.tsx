@@ -145,7 +145,8 @@ const ProductDetails = () => {
         if (product && quantity < (product.quantity ?? 0)) {
             setQuantity(prev => prev + 1);
         } else {
-            alert("Vượt quá số lượng có sẵn trong kho.");
+            toast.error("Không đủ hàng trong kho.");
+
         }
     };
 
@@ -215,7 +216,7 @@ const ProductDetails = () => {
             setSelectedAddress(`${selectedWard.label}, ${selectedDistrict.label}, ${selectedProvince.label}`);
             setIsModalOpen(false);
         } else {
-            alert("Vui lòng chọn đầy đủ tỉnh, huyện, xã.");
+            toast.error("Vui lòng chọn đầy đủ địa chỉ.");
         }
     };
 
@@ -242,7 +243,7 @@ const ProductDetails = () => {
 
     const handleAddToCart = async () => {
         if (quantity > (product.quantity ?? 0)) {
-            alert("Không đủ hàng trong kho.");
+            toast.error("Không đủ hàng trong kho.");
             return;
         }
         const item = {
@@ -255,12 +256,13 @@ const ProductDetails = () => {
         };
 
         addToCart(item);
+        toast.success("Thêm vào giỏ hàng thành công!");
     };
 
       
       const handleBuyNow = () => {
         if (quantity > (product.quantity ?? 0)) {
-          alert("Không đủ hàng trong kho.");
+          toast.error("Không đủ hàng trong kho.");
           return;
         }
       
@@ -274,6 +276,7 @@ const ProductDetails = () => {
         };
       
         addToCart(item);
+        toast.success("Thêm vào giỏ hàng thành công!");
         navigate("/cart"); // chuyển sang trang giỏ hàng
     };
 

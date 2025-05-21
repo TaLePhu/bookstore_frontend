@@ -24,6 +24,7 @@ import ProductManagement from '../pages/Admin/ProductManagement';
 import AdminDashboard from '../components/admLayout/AdminDashboard';
 import OrderList from '../components/admLayout/OrderList';
 import CategoryPage from '../pages/user/CategoryPage';
+import PurchaseOrder from '../pages/user/PurchaseOrder';
 
 const AppRoutes = () => {
     const [searchKey, setSearchKey] = useState('');
@@ -47,12 +48,21 @@ const AppRoutes = () => {
                 <Route path="/activate/:email/:activationCode" element={<ActivateAccount />} />
                 <Route path="/order-confirm-success" element={<OrderConfirmSuccess />} />
                 <Route path="/order-confirm-false" element={<OrderConfirmFalse />} />
+                {/* <Route path="/order-purchase" element={<PurchaseOrder />} /> */}
+                <Route
+                    path="/order-purchase"
+                    element={
+                        <ProtectedRoute>
+                        <PurchaseOrder />
+                        </ProtectedRoute>
+                    }
+                />
                 <Route path="/search/:keyword" element={<SearchResult />} />
             </Route>
             {/* <Route path="/checkout" element={<Checkout />} /> */}
             {/* Layout cho trang quản trị */}
             <Route path="/admin" element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={['ADMIN']}>
                     <AdminLayout />
                 </ProtectedRoute>
             }>

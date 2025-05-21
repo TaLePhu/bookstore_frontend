@@ -1,4 +1,4 @@
-import { my_request } from './Request';
+import { my_request, phu_request } from './Request';
 
 export interface Order {
     orderId: number;
@@ -14,6 +14,7 @@ export interface Order {
     confirmed: boolean;
     orderDate: string;
     deliveryDate: string;
+    delivered: boolean;
     user: {
         userId: number;
         firstName: string;
@@ -34,6 +35,11 @@ export interface Order {
         book: {
             bookId: number;
             bookName: string;
+            images: {
+                imageId: number;
+                imageData: string;
+            }[];
+
         };
     }[];
 }
@@ -41,6 +47,16 @@ export interface Order {
 export async function getAllOrders(): Promise<Order[]> {
     try {
         const response = await my_request('http://localhost:8080/admin/orders');
+        return response;
+    } catch (error) {
+        console.error('Error fetching orders:', error);
+        throw error;
+    }
+}
+
+export async function getAllOrdersUser(): Promise<Order[]> {
+    try {
+        const response = await my_request('http://localhost:8080/api/orders');
         return response;
     } catch (error) {
         console.error('Error fetching orders:', error);

@@ -8,7 +8,7 @@ import ImageModel from '../../models/ImageModel';
 import { findBook } from '../../api/BookAPI';
 import { getAllImage } from '../../api/ImageAPI';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHistory } from "@fortawesome/free-solid-svg-icons";
+import { faHistory, faSuitcase } from "@fortawesome/free-solid-svg-icons";
 
 
 interface NavbarProps {
@@ -326,23 +326,28 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                 </ul> */}
                 {user ? (
                     // Khi đã đăng nhập
-                    <div className="user-menu">
-                        <span className="username">{user.fullName}</span>
-                        <div className="dropdown">
-                            <img
-                                className="size-icon"
-                                src="/icons/icons8-user-48.png"
-                                alt="icon-login"
-                                onClick={() => setShowDropdown((prev) => !prev)}
-                            />
-                            {showDropdown && (
-                            <div className="dropdown-content">
-                                <button className="btn-logout" onClick={handleLogout}>Đăng xuất</button>
-                                <button className="btn-profile">Thông tin cá nhân</button>
+                    <>
+                        <Link to="/order-purchase" className="purchase-order">
+                            <FontAwesomeIcon icon={faSuitcase} />
+                        </Link>
+                        <div className="user-menu">
+                            <span className="username">{user.fullName}</span>
+                            <div className="dropdown">
+                                <img
+                                    className="size-icon"
+                                    src="/icons/icons8-user-48.png"
+                                    alt="icon-login"
+                                    onClick={() => setShowDropdown((prev) => !prev)}
+                                />
+                                {showDropdown && (
+                                <div className="dropdown-content">
+                                    <button className="btn-logout" onClick={handleLogout}>Đăng xuất</button>
+                                    <button className="btn-profile">Thông tin cá nhân</button>
+                                </div>
+                                )}
                             </div>
-                            )}
                         </div>
-                    </div>
+                    </>
                 ) : (
                     // Khi chưa đăng nhập
                     <ul className="navbar-list-1">

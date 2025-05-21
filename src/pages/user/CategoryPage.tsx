@@ -60,8 +60,9 @@ const CategoryPage: React.FC = () => {
 
     return (
         <div className="container-category">
-            <h2>📖 Thể loại: {categoryName}</h2>
-
+            <div className="category-link">
+                <a href="/">Trang chủ</a> &gt; <span>{categoryName}</span>
+            </div>
            <div className="category-page">
                 <div className="select-item">
                     <label>Sắp xếp: </label>

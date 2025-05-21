@@ -50,7 +50,8 @@ async function getBook(link: string): Promise<ResultInterface> {
             supplier: responseData[key].supplier,             
             numberOfPages: responseData[key].numberOfPages,  
             publisher: responseData[key].publisher,   
-            sold: responseData[key].sold,       
+            sold: responseData[key].sold, 
+                  
         });
     }
 

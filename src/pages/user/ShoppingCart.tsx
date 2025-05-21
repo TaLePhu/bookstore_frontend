@@ -197,8 +197,8 @@ const ShoppingCart = () => {
             <div className='payment-address'>Địa chỉ giao hàng</div>
             <div className='total-payment'>
               <div className='total-payment-title'>
-                <span>Tổng tiền:</span>
-                <span>{totalPrice.toLocaleString()}</span>
+                <p>Tổng tiền:</p>
+                <span>{totalPrice.toLocaleString()} vnd</span>
               </div>
               <button className='btn-payment' onClick={handleCheckout} disabled={selectedItems.length === 0}>Thanh toán</button>
             </div>

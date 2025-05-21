@@ -483,6 +483,9 @@
     text-align: center;
     position: relative;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 /* .modal {
     background: white;
@@ -514,22 +517,34 @@
 .select-item{
     margin-top: 30px;
 }
-
-.btn-save {
-    background-color: #28a745;
+.btn-modal-address{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    justify-content: center;
+}
+.btn-save-address {
+    background-color: #2489f4;
     color: white;
-    margin-right: 10px;
-    margin-top: 30px;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    height: 50px;
+    width: 30%;
 }
 
-.btn-save:hover {
-    background-color: #218838;
+.btn-save-address:hover {
+    background-color: #0c59ab;
 }
 
 .btn-dong {
     background-color: #dc3545;
     color: white;
-    margin-left: 30px;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    height: 50px;
+    width: 30%;
 }
 
 .btn-dong:hover {
@@ -970,8 +985,24 @@
     align-items: center;
     justify-content: center;
 }
-.quantity-btn p {
+.quantity-btnt p, .quantity-btn p {
     margin: 0;
+}
+.quantity-btnt{
+     background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    padding: 5px 12px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.2s;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    margin-left: -57px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 .btn-add {
     margin-left: -47px;

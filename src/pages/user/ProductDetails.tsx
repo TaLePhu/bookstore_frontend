@@ -1,8 +1,4 @@
-// install các thư viện này để dùng được
-// npm install --save @fortawesome/fontawesome-svg-core
-// npm install --save @fortawesome/free-solid-svg-icons
-// npm install --save @fortawesome/react-fontawesome
-//npm install react-modal
+
 
 import { useLocation, useParams } from "react-router-dom";
 import '../../assets/styles/ProductDetails.css';
@@ -443,8 +439,10 @@ const ProductDetails = () => {
                             className="select-item"
                         />
 
-                        <button onClick={handleSaveAddress} className="btn-save">Xác nhận</button>
-                        <button onClick={() => setIsModalOpen(false)} className="btn-dong">Đóng</button>
+                        <div className="btn-modal-address">
+                            <button onClick={() => setIsModalOpen(false)} className="btn-dong">Đóng</button>
+                            <button onClick={handleSaveAddress} className="btn-save-address">Xác nhận</button>
+                        </div>
                     </Modal>
                    
 

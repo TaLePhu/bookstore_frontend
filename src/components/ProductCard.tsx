@@ -5,6 +5,9 @@ import BookModel from '../models/BookModel';
 import ImageModel from '../models/ImageModel';
 import { getAllImage } from '../api/ImageAPI';
 import React, { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar as faStarSolid, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
+import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 
 interface ProductCardInterface {
     book: BookModel;
@@ -68,6 +71,33 @@ const ProductCard: React.FC<ProductCardInterface> = (props) => {
     const listedPrice = props.book.listedPrice ?? 1;
     const discount = Math.round(100 - (salePrice / listedPrice) * 100);
 
+    function renderStars(averageRating: any) {
+        const stars = [];
+        // Lấy số nguyên phần sao đầy đủ
+        const fullStars = Math.floor(averageRating);
+        // Kiểm tra có sao nửa không
+        const hasHalfStar = averageRating - fullStars >= 0.5;
+        // Số sao trống
+        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+        // Thêm sao đầy đủ
+        for (let i = 0; i < fullStars; i++) {
+            stars.push(<FontAwesomeIcon key={'full-' + i} icon={faStarSolid} style={{ color: '#f8ce0b' }} className='start-icon'/>);
+        }
+
+        // Thêm sao nửa
+        if (hasHalfStar) {
+            stars.push(<FontAwesomeIcon key="half" icon={faStarHalfAlt} style={{ color: '#f8ce0b' }} className='start-icon' />);
+        }
+
+        // Thêm sao trống (màu xám)
+        for (let i = 0; i < emptyStars; i++) {
+            stars.push(<FontAwesomeIcon key={'empty-' + i} icon={faStarRegular} style={{ color: '#ccc' }}  className='start-icon'/>);
+        }
+
+        return stars;
+    }
+
     return (
         <Link
             to={`/detail/${props.book.bookId}`}
@@ -78,14 +108,16 @@ const ProductCard: React.FC<ProductCardInterface> = (props) => {
                 <div className="discount-tag">-{discount}%</div>
             )}
             {(Number(props.book.quantity) || 0) == 0 && (
-                <div className="sold-out">Hết hàng</div>
+                <div className="sold-outp">Hết hàng</div>
             )}
             <h4>{props.book.bookName}</h4>
             <p>{props.book.description}</p>
             <div>
-                <span className="txt-promotional-price">{props.book.salePrice}đ</span>
-                <span className="txt-price">{props.book.listedPrice}đ</span>
+                <span className="txt-promotional-pricep">{props.book.salePrice?.toLocaleString()} đ</span>
+                <span className="txt-price">{props.book.listedPrice?.toLocaleString()} đ</span>
             </div>
+            <span className="txt-rating">{renderStars(props.book.averageRating)}</span>
+            <span className="txt-sold">{props.book.sold} đã bán</span>
         </Link>
     );
 };

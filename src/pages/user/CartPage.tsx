@@ -1,4 +1,4 @@
-// CartPage.tsx
+
 import { useCart } from "../../context/CartContext";
 
 const CartPage = () => {

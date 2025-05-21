@@ -180,3 +180,22 @@ p{
   .so-luong-number{
     margin-bottom: 0;
   }
+.total-payment-title{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 5px;
+}
+.total-payment-title p{
+    width: 24%;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+}
+.total-payment-title span{
+    width: 60%;
+    font-size: 25px;
+    font-weight: 800;
+    color: #007bff;
+}

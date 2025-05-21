@@ -2,7 +2,7 @@ import { serialize } from 'v8';
 import Book from '../models/BookModel';
 import { my_request, phu_request } from './Request';
 import Category from '../models/Category';
-// import { getCategoriesOfBook } from "./CategoryAPI"; 
+// import { getCategoriesOfBook } from "./CategoryAPI";
 
 //phu-add
 interface ResultInterface {
@@ -35,7 +35,6 @@ async function getBook(link: string): Promise<ResultInterface> {
     const totalPages = res.page?.totalPages ?? res.totalPages ?? 0;
     const totalBook = res.page?.totalElements ?? res.totalElements ?? 0;
 
-
     for (const key in responseData) {
         result.push({
             bookId: responseData[key].bookId,
@@ -47,13 +46,13 @@ async function getBook(link: string): Promise<ResultInterface> {
             salePrice: responseData[key].salePrice,
             quantity: responseData[key].quantity,
             averageRating: responseData[key].averageRating,
-            supplier: responseData[key].supplier,             
-            numberOfPages: responseData[key].numberOfPages,  
-            publisher: responseData[key].publisher,          
+            supplier: responseData[key].supplier,
+            numberOfPages: responseData[key].numberOfPages,
+            publisher: responseData[key].publisher,
         });
     }
 
-     console.log("📦 Dữ liệu trả về từ API:", responseData); 
+    console.log('📦 Dữ liệu trả về từ API:', responseData);
 
     return { result: result, totalPages: totalPages, totalBook: totalBook };
 }
@@ -107,7 +106,7 @@ export async function findBook(
     searchKey: string,
     categoryId: number,
     trang: number = 0,
-    size: number = 5
+    size: number = 5,
 ): Promise<ResultInterface> {
     let duongDan: string = `http://localhost:8080/books?sort=bookId,desc&size=${size}&page=${trang}`;
 
@@ -143,7 +142,7 @@ export async function deleteBook(bookId: number): Promise<boolean> {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                Authorization: `Bearer ${token}`,
             },
         });
 
@@ -180,7 +179,7 @@ export async function updateBook(bookId: number, bookData: Book): Promise<boolea
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(bookData),
         });
@@ -234,7 +233,6 @@ export async function getBookById(bookId: number): Promise<Book | null> {
             supplier: data.supplier,
             numberOfPages: data.numberOfPages,
             publisher: data.publisher,
-
         };
 
         return book;
@@ -273,7 +271,7 @@ export async function findBookCategory(
     keyword: string,
     categoryIds: number[],
     page: number,
-    size: number
+    size: number,
 ): Promise<ResultInterface> {
     const params = new URLSearchParams();
 
@@ -281,12 +279,12 @@ export async function findBookCategory(
         params.append('keyword', keyword);
     }
 
-    categoryIds.forEach(id => params.append('categoryIds', id.toString()));
+    categoryIds.forEach((id) => params.append('categoryIds', id.toString()));
     params.append('page', page.toString());
     params.append('size', size.toString());
 
     const duongDan = `http://localhost:8080/books/search?${params.toString()}`;
-     console.log("🌐 URL gửi tới BE:", duongDan);
+    console.log('🌐 URL gửi tới BE:', duongDan);
     return getBook(duongDan);
 }
 /* Thêm một cuốn sách mới
@@ -306,7 +304,7 @@ export async function createBook(bookData: Book): Promise<Book | null> {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(bookData),
         });
@@ -330,4 +328,3 @@ export async function createBook(bookData: Book): Promise<Book | null> {
         return null;
     }
 }
-

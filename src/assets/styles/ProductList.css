@@ -83,8 +83,8 @@
     gap: 8px;
 }
 
-.edit-btn,
-.delete-btn {
+.edit-btn-bookk,
+.delete-btn-bookk {
     padding: 6px 12px;
     border: none;
     border-radius: 4px;
@@ -93,21 +93,21 @@
     transition: background-color 0.3s;
 }
 
-.edit-btn {
-    background-color: #2196F3;
+.edit-btn-bookk {
+    background-color: #4CAF50;
     color: white;
 }
 
-.edit-btn:hover {
-    background-color: #1976D2;
+.edit-btn-bookk:hover {
+    background-color:rgb(66, 148, 68);
 }
 
-.delete-btn {
+.delete-btn-bookk {
     background-color: #f44336;
     color: white;
 }
 
-.delete-btn:hover {
+.delete-btn-bookk:hover {
     background-color: #d32f2f;
 }
 
@@ -549,4 +549,47 @@
     .edit-book-save-btn {
         width: 100%;
     }
+}
+
+.product-list-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.search-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.search-form input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    min-width: 300px;
+}
+
+.search-form button {
+    padding: 8px 16px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.search-form button:hover {
+    background-color: #d32f2f;
+}
+
+.cancel-search-btn {
+    background-color: #757575 !important;
+}
+
+.cancel-search-btn:hover {
+    background-color: #616161 !important;
 }

@@ -24,7 +24,7 @@ import ProductManagement from '../pages/Admin/ProductManagement';
 import AdminDashboard from '../components/admLayout/AdminDashboard';
 import OrderList from '../components/admLayout/OrderList';
 import CategoryPage from '../pages/user/CategoryPage';
-
+import UserList from '../components/admLayout/UserList';
 const AppRoutes = () => {
     const [searchKey, setSearchKey] = useState('');
 
@@ -59,6 +59,7 @@ const AppRoutes = () => {
                 <Route index element={<AdminDashboard />} />
                 <Route path="product-management" element={<ProductManagement />} />
                 <Route path='order-management' element={<OrderList/>} />
+                <Route path='user-management' element={<UserList/>} />
             </Route>
         </Routes>
     );

@@ -34,7 +34,7 @@ const AdmNavbar = () => {
                 <Link to="/admin/order-management" className={location.pathname === '/admin/order-management' ? 'active' : ''}>
                     Quản lí đơn hàng
                 </Link>
-                <Link to="/admin/users" className={location.pathname === '/admin/users' ? 'active' : ''}>
+                <Link to="/admin/user-management" className={location.pathname === '/admin/user-management' ? 'active' : ''}>
                     Quản lí người dùng
                 </Link>
             </nav>

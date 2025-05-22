@@ -449,8 +449,9 @@
 
 .header-actions {
     display: flex;
-    align-items: center;
+    align-items: end;
     gap: 20px;
+    flex-direction: column;
 }
 
 .role-filter {
@@ -522,5 +523,42 @@
 .assign-role-btn:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-form input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 250px;
+    transition: border-color 0.3s ease;
+}
+
+.search-form input:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.cancel-search-btn {
+    padding: 6px 12px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #666;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-search-btn:hover {
+    background-color: #e0e0e0;
+    border-color: #ccc;
 }
 

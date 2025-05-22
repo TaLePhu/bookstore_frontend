@@ -15,6 +15,7 @@ const UserList: React.FC = () => {
     const [currentUserId, setCurrentUserId] = useState<number | null>(null);
     const [selectedRole, setSelectedRole] = useState<string>('ALL');
     const [selectedRoleToAssign, setSelectedRoleToAssign] = useState<string>('USER');
+    const [searchKeyword, setSearchKeyword] = useState('');
 
     useEffect(() => {
         // Debug: Log all localStorage keys
@@ -52,18 +53,29 @@ const UserList: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        if (selectedRole === 'ALL') {
-            setFilteredUsers(users);
-        } else if (selectedRole === 'NO_ROLE') {
-            const filtered = users.filter(user => !user.roles || user.roles.length === 0);
-            setFilteredUsers(filtered);
-        } else {
-            const filtered = users.filter(user => 
+        let filtered = users;
+
+        // Apply search filter
+        if (searchKeyword.trim()) {
+            const keyword = searchKeyword.toLowerCase();
+            filtered = filtered.filter(user => {
+                const email = user.email?.toLowerCase() || '';
+                const username = user.username?.toLowerCase() || '';
+                return email.includes(keyword) || username.includes(keyword);
+            });
+        }
+
+        // Apply role filter
+        if (selectedRole === 'NO_ROLE') {
+            filtered = filtered.filter(user => !user.roles || user.roles.length === 0);
+        } else if (selectedRole !== 'ALL') {
+            filtered = filtered.filter(user => 
                 user.roles && user.roles.some(role => role === selectedRole)
             );
-            setFilteredUsers(filtered);
         }
-    }, [selectedRole, users]);
+
+        setFilteredUsers(filtered);
+    }, [selectedRole, users, searchKeyword]);
 
     const fetchUsers = async () => {
         try {
@@ -256,6 +268,7 @@ const UserList: React.FC = () => {
             <div className="user-list-header">
                 <h2>Quản lý người dùng</h2>
                 <div className="header-actions">
+                    
                     <div className="role-filter">
                         <label className="role-filter-label">
                             <input
@@ -308,9 +321,22 @@ const UserList: React.FC = () => {
                             Chưa phân quyền
                         </label>
                     </div>
-                    <button className="refresh-button" onClick={fetchUsers}>
-                        Làm mới danh sách
-                    </button>
+                    <div className="search-form">
+                        <input
+                            type="text"
+                            placeholder="Tìm kiếm theo email hoặc tên đăng nhập..."
+                            value={searchKeyword}
+                            onChange={(e) => setSearchKeyword(e.target.value)}
+                        />
+                        {searchKeyword && (
+                            <button 
+                                className="cancel-search-btn"
+                                onClick={() => setSearchKeyword('')}
+                            >
+                                Huỷ tìm kiếm
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
 

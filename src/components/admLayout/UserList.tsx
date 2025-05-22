@@ -52,9 +52,12 @@ const UserList: React.FC = () => {
     useEffect(() => {
         if (selectedRole === 'ALL') {
             setFilteredUsers(users);
+        } else if (selectedRole === 'NO_ROLE') {
+            const filtered = users.filter(user => !user.roles || user.roles.length === 0);
+            setFilteredUsers(filtered);
         } else {
             const filtered = users.filter(user => 
-                user.roles && user.roles.includes(selectedRole)
+                user.roles && user.roles.some(role => role === selectedRole)
             );
             setFilteredUsers(filtered);
         }
@@ -235,6 +238,16 @@ const UserList: React.FC = () => {
                             />
                             User
                         </label>
+                        <label className="role-filter-label">
+                            <input
+                                type="radio"
+                                name="roleFilter"
+                                value="NO_ROLE"
+                                checked={selectedRole === 'NO_ROLE'}
+                                onChange={handleRoleFilterChange}
+                            />
+                            Chưa phân quyền
+                        </label>
                     </div>
                     <button className="refresh-button" onClick={fetchUsers}>
                         Làm mới danh sách
@@ -281,7 +294,7 @@ const UserList: React.FC = () => {
                                                         </span>
                                                     ))
                                                 ) : (
-                                                    <span className="role-badge user">USER</span>
+                                                    <span className="role-badge no-role">Chưa phân quyền</span>
                                                 )}
                                             </div>
                                         </td>
@@ -331,7 +344,7 @@ const UserList: React.FC = () => {
                                 <div className="form-group">
                                     <label>Quyền người dùng</label>
                                     <div className="role-radio">
-                                        <label className="role-radio-label">
+                                        <label className={`role-radio-label ${selectedUser.roles.includes("ADMIN") ? 'selected' : ''}`}>
                                             <input
                                                 type="radio"
                                                 name="role"
@@ -346,9 +359,9 @@ const UserList: React.FC = () => {
                                                     }
                                                 }}
                                             />
-                                            ADMIN
+                                            <span className="role-badge admin">ADMIN</span>
                                         </label>
-                                        <label className="role-radio-label">
+                                        <label className={`role-radio-label ${selectedUser.roles.includes("STAFF") ? 'selected' : ''}`}>
                                             <input
                                                 type="radio"
                                                 name="role"
@@ -363,9 +376,9 @@ const UserList: React.FC = () => {
                                                     }
                                                 }}
                                             />
-                                            STAFF
+                                            <span className="role-badge staff">STAFF</span>
                                         </label>
-                                        <label className="role-radio-label">
+                                        <label className={`role-radio-label ${selectedUser.roles.includes("USER") ? 'selected' : ''}`}>
                                             <input
                                                 type="radio"
                                                 name="role"
@@ -380,7 +393,7 @@ const UserList: React.FC = () => {
                                                     }
                                                 }}
                                             />
-                                            USER
+                                            <span className="role-badge user">USER</span>
                                         </label>
                                     </div>
                                 </div>

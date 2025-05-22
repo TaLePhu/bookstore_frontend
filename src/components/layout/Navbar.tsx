@@ -369,22 +369,12 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                                     onClick={() => setShowDropdown((prev) => !prev)}
                                 />
                                 {showDropdown && (
-<<<<<<< HEAD
                                 <div className="dropdown-content">
                                     <button className="btn-logout" onClick={handleLogout}>Đăng xuất</button>
-                                    <button className="btn-profile">Thông tin cá nhân</button>
+                                    <button className="btn-profile" onClick={fetchProfile}>Thông tin cá nhân</button>
                                     <button className="btn-profile" onClick={changPePassword}>Đặt lại mật khẩu</button>
                                 </div>
-=======
-                                    <div className="dropdown-content">
-                                        <button className="btn-logout" onClick={handleLogout}>
-                                            Đăng xuất
-                                        </button>
-                                        <button className="btn-profile" onClick={fetchProfile}>
-                                            Thông tin cá nhân
-                                        </button>
-                                    </div>
->>>>>>> feature/thach-Profile
+
                                 )}
                             </div>
                         </div>

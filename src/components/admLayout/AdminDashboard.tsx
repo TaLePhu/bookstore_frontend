@@ -229,7 +229,7 @@ const AdminDashboard = () => {
                 </div>
                 <div className="revenue-card">
                     <div className="stat-content">
-                        <h3>Doanh thu</h3>
+                        <h3>Tổng doanh thu</h3>
                         <p className="stat-value">{totalRevenue.toLocaleString('vi-VN')} VNĐ</p>
                     </div>
                 </div>
@@ -247,6 +247,18 @@ const AdminDashboard = () => {
                         <option key={year} value={year}>{year}</option>
                     ))}
                 </select>
+            </div>
+
+            <div className="revenue-card">
+                <div className="stat-content">
+                    <h3>Doanh thu năm {selectedYear}</h3>
+                    <p className="stat-value">
+                        {orders
+                            .filter(order => new Date(order.createdDate).getFullYear() === selectedYear)
+                            .reduce((sum, order) => sum + order.totalPrice, 0)
+                            .toLocaleString('vi-VN')} VNĐ
+                    </p>
+                </div>
             </div>
 
             <div className="charts-container">

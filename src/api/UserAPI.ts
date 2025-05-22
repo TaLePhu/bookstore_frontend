@@ -99,4 +99,14 @@ export const deleteUser = async (id: number): Promise<boolean> => {
         console.error('Error deleting user:', error);
         throw error;
     }
+};
+
+export const assignRolesToUser = async (userId: number, roleIds: number[]): Promise<boolean> => {
+    try {
+        const response = await axiosInstance.post(`/admin/users/${userId}/roles`, roleIds);
+        return response.status === 200;
+    } catch (error) {
+        console.error('Error assigning roles to user:', error);
+        throw error;
+    }
 }; 

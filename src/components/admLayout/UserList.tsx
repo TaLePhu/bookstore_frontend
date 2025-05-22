@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAllUsers, updateUser, deleteUser } from '../../api/UserAPI';
+import { getAllUsers, updateUser, deleteUser, assignRolesToUser } from '../../api/UserAPI';
 import UserModel, { Role } from '../../models/UserModel';
 import '../../assets/styles/UserList.css';
 import { AxiosError } from 'axios';
@@ -11,8 +11,10 @@ const UserList: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [selectedUser, setSelectedUser] = useState<UserModel | null>(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isAssignRoleModalOpen, setIsAssignRoleModalOpen] = useState(false);
     const [currentUserId, setCurrentUserId] = useState<number | null>(null);
     const [selectedRole, setSelectedRole] = useState<string>('ALL');
+    const [selectedRoleToAssign, setSelectedRoleToAssign] = useState<string>('USER');
 
     useEffect(() => {
         // Debug: Log all localStorage keys
@@ -183,6 +185,54 @@ const UserList: React.FC = () => {
         setSelectedRole(e.target.value);
     };
 
+    const handleAssignRole = (user: UserModel) => {
+        setSelectedUser(user);
+        setIsAssignRoleModalOpen(true);
+    };
+
+    const handleCloseAssignRoleModal = () => {
+        setSelectedUser(null);
+        setIsAssignRoleModalOpen(false);
+        setSelectedRoleToAssign('USER');
+    };
+
+    const handleAssignRoleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!selectedUser) return;
+
+        try {
+            // Map role name to role ID - Fixed mapping
+            const roleIdMap: { [key: string]: number } = {
+                'ADMIN': 1,  
+                'STAFF': 2, 
+                'USER': 3   
+            };
+
+            const roleId = roleIdMap[selectedRoleToAssign];
+            if (!roleId) {
+                alert('Quyền không hợp lệ');
+                return;
+            }
+
+            console.log('Assigning role:', selectedRoleToAssign, 'with ID:', roleId); // Debug log
+
+            const success = await assignRolesToUser(selectedUser.userId, [roleId]);
+            if (success) {
+                // Refresh user list to get updated data
+                await fetchUsers();
+                handleCloseAssignRoleModal();
+                alert('Phân quyền người dùng thành công');
+            }
+        } catch (error: any) {
+            console.error('Error assigning role:', error);
+            if (error.response?.data?.message) {
+                alert(error.response.data.message);
+            } else {
+                alert('Không thể phân quyền người dùng. Vui lòng thử lại sau.');
+            }
+        }
+    };
+
     if (loading) {
         return (
             <div className="loading">
@@ -278,6 +328,7 @@ const UserList: React.FC = () => {
                         ) : (
                             filteredUsers.map(user => {
                                 const isCurrentUser = user.userId === currentUserId;
+                                const hasNoRole = !user.roles || user.roles.length === 0;
                                 return (
                                     <tr key={user.userId}>
                                         <td>{user.userId}</td>
@@ -300,12 +351,21 @@ const UserList: React.FC = () => {
                                         </td>
                                         <td>
                                             <div className="action-buttons">
-                                                <button 
-                                                    className="edit-btn-user"
-                                                    onClick={() => handleEdit(user)}
-                                                >
-                                                    Sửa
-                                                </button>
+                                                {hasNoRole ? (
+                                                    <button 
+                                                        className="assign-role-btn"
+                                                        onClick={() => handleAssignRole(user)}
+                                                    >
+                                                        Phân quyền
+                                                    </button>
+                                                ) : (
+                                                    <button 
+                                                        className="edit-btn-user"
+                                                        onClick={() => handleEdit(user)}
+                                                    >
+                                                        Sửa
+                                                    </button>
+                                                )}
                                                 <button 
                                                     className={`delete-btn-user ${isCurrentUser ? 'disabled' : ''}`}
                                                     onClick={() => handleDelete(user.userId)}
@@ -403,6 +463,72 @@ const UserList: React.FC = () => {
                                     </button>
                                     <button type="submit" className="save-btn">
                                         Lưu thay đổi
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {isAssignRoleModalOpen && selectedUser && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h2>Phân quyền người dùng</h2>
+                            <button className="close-btn" onClick={handleCloseAssignRoleModal}>&times;</button>
+                        </div>
+                        <div className="modal-body">
+                            <form onSubmit={handleAssignRoleSubmit}>
+                                <div className="form-group">
+                                    <label>Thông tin người dùng:</label>
+                                    <div className="user-info">
+                                        <p><strong>Tên đăng nhập:</strong> {selectedUser.username}</p>
+                                        <p><strong>Họ và tên:</strong> {selectedUser.firstName} {selectedUser.lastName}</p>
+                                        <p><strong>Email:</strong> {selectedUser.email}</p>
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label>Chọn quyền:</label>
+                                    <div className="role-radio">
+                                        <label className={`role-radio-label ${selectedRoleToAssign === "ADMIN" ? 'selected' : ''}`}>
+                                            <input
+                                                type="radio"
+                                                name="roleToAssign"
+                                                value="ADMIN"
+                                                checked={selectedRoleToAssign === "ADMIN"}
+                                                onChange={(e) => setSelectedRoleToAssign(e.target.value)}
+                                            />
+                                            <span className="role-badge admin">ADMIN</span>
+                                        </label>
+                                        <label className={`role-radio-label ${selectedRoleToAssign === "STAFF" ? 'selected' : ''}`}>
+                                            <input
+                                                type="radio"
+                                                name="roleToAssign"
+                                                value="STAFF"
+                                                checked={selectedRoleToAssign === "STAFF"}
+                                                onChange={(e) => setSelectedRoleToAssign(e.target.value)}
+                                            />
+                                            <span className="role-badge staff">STAFF</span>
+                                        </label>
+                                        <label className={`role-radio-label ${selectedRoleToAssign === "USER" ? 'selected' : ''}`}>
+                                            <input
+                                                type="radio"
+                                                name="roleToAssign"
+                                                value="USER"
+                                                checked={selectedRoleToAssign === "USER"}
+                                                onChange={(e) => setSelectedRoleToAssign(e.target.value)}
+                                            />
+                                            <span className="role-badge user">USER</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div className="modal-buttons">
+                                    <button type="button" className="cancel-btn" onClick={handleCloseAssignRoleModal}>
+                                        Hủy
+                                    </button>
+                                    <button type="submit" className="save-btn">
+                                        Phân quyền
                                     </button>
                                 </div>
                             </form>

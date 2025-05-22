@@ -503,3 +503,22 @@
     background-color: #f5f5f5;
     color: #616161;
 }
+
+.assign-role-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.3s;
+    background-color: #4CAF50;
+}
+.assign-role-btn:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.assign-role-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}

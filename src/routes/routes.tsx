@@ -18,16 +18,18 @@ import Policy from '../pages/user/Policy';
 import OrderConfirmSuccess from '../pages/user/OrderConfirmSuccess';
 import OrderConfirmFalse from '../pages/user/OrderConfirmFalse';
 
-
 import AdminLayout from '../layouts/AdminLayout';
 import ProductManagement from '../pages/Admin/ProductManagement';
 import AdminDashboard from '../components/admLayout/AdminDashboard';
 import OrderList from '../components/admLayout/OrderList';
 import CategoryPage from '../pages/user/CategoryPage';
+
 import PurchaseOrder from '../pages/user/PurchaseOrder';
 import ForgotPassword from '../pages/auth/ForgotPassword';
 import ResetPassword from '../pages/auth/ResetPassword';
 import ChangePassword from '../pages/auth/ChangePassword';
+
+import UserList from '../components/admLayout/UserList';
 
 const AppRoutes = () => {
     const [searchKey, setSearchKey] = useState('');
@@ -59,7 +61,7 @@ const AppRoutes = () => {
                     path="/order-purchase"
                     element={
                         <ProtectedRoute>
-                        <PurchaseOrder />
+                            <PurchaseOrder />
                         </ProtectedRoute>
                     }
                 />
@@ -67,14 +69,18 @@ const AppRoutes = () => {
             </Route>
             {/* <Route path="/checkout" element={<Checkout />} /> */}
             {/* Layout cho trang quản trị */}
-            <Route path="/admin" element={
-                <ProtectedRoute allowedRoles={['ADMIN']}>
-                    <AdminLayout />
-                </ProtectedRoute>
-            }>
+            <Route
+                path="/admin"
+                element={
+                    <ProtectedRoute allowedRoles={['ADMIN']}>
+                        <AdminLayout />
+                    </ProtectedRoute>
+                }
+            >
                 <Route index element={<AdminDashboard />} />
                 <Route path="product-management" element={<ProductManagement />} />
-                <Route path='order-management' element={<OrderList/>} />
+                <Route path="order-management" element={<OrderList />} />
+                <Route path="user-management" element={<UserList />} />
             </Route>
         </Routes>
     );

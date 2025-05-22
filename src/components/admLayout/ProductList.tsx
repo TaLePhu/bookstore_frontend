@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { layToanBoSach, deleteBook, updateBook } from '../../api/BookAPI';
+import { searchProducts } from '../../api/ProductSearchAPI';
 import BookModel from '../../models/BookModel';
 import { getAllImage, uploadImage } from '../../api/ImageAPI';
 import ImageModel from '../../models/ImageModel';
@@ -258,6 +259,7 @@ const BookDetailModal = ({ isOpen, onClose, book, bookImage }: BookDetailModalPr
 
 const ProductList = () => {
     const [books, setBooks] = useState<BookModel[]>([]);
+    const [filteredBooks, setFilteredBooks] = useState<BookModel[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -267,16 +269,29 @@ const ProductList = () => {
     const [editingBook, setEditingBook] = useState<BookModel | null>(null);
     const [selectedBook, setSelectedBook] = useState<BookModel | null>(null);
     const [showAddBook, setShowAddBook] = useState(false);
+    const [searchKeyword, setSearchKeyword] = useState('');
 
+    // Load books initially and when page changes
     useEffect(() => {
         loadBooks();
     }, [currentPage]);
+
+    // Filter books when search keyword changes
+    useEffect(() => {
+        if (!searchKeyword.trim()) {
+            setFilteredBooks(books);
+            return;
+        }
+
+        handleSearch();
+    }, [searchKeyword]);
 
     const loadBooks = async () => {
         try {
             setLoading(true);
             const response = await layToanBoSach(currentPage - 1);
             setBooks(response.result);
+            setFilteredBooks(response.result);
             setTotalPages(response.totalPages);
             
             // Load images for each book
@@ -362,20 +377,84 @@ const ProductList = () => {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
     };
 
+    const handleSearch = async (e?: React.FormEvent) => {
+        if (e) {
+            e.preventDefault();
+        }
+        
+        if (!searchKeyword.trim()) {
+            loadBooks();
+            return;
+        }
+
+        try {
+            const response = await searchProducts(searchKeyword);
+            setBooks(response.result);
+            setFilteredBooks(response.result);
+            setTotalPages(response.totalPages);
+            
+            // Load images for each book
+            const imagePromises = response.result.map(async (book) => {
+                try {
+                    const images = await getAllImage(book.bookId);
+                    const mainImage = images.find(img => !img.isIcon)?.imageData || 
+                                    images[0]?.imageData || 
+                                    'https://cdn.pixabay.com/photo/2023/12/29/18/23/daisy-8476666_1280.jpg';
+                    return { bookId: book.bookId, imageUrl: mainImage };
+                } catch (error) {
+                    console.error(`Error loading image for book ${book.bookId}:`, error);
+                    return { bookId: book.bookId, imageUrl: 'https://cdn.pixabay.com/photo/2023/12/29/18/23/daisy-8476666_1280.jpg' };
+                }
+            });
+
+            const imageResults = await Promise.all(imagePromises);
+            const imageMap = imageResults.reduce((acc, { bookId, imageUrl }) => {
+                acc[bookId] = imageUrl;
+                return acc;
+            }, {} as { [key: number]: string });
+
+            setBookImages(imageMap);
+        } catch (error) {
+            console.error('Error searching books:', error);
+            alert('Có lỗi xảy ra khi tìm kiếm sách.');
+        }
+    };
+
     if (loading) {
-        return <div className="loading">Loading...</div>;
+        return <div className="loading">Đang tải...</div>;
     }
 
     return (
         <div className="product-list-container">
             <div className="product-list-header">
                 <h2>Danh sách Sách</h2>
-                <button 
-                    className="add-product-btn"
-                    onClick={() => setShowAddBook(!showAddBook)}
-                >
-                    {showAddBook ? 'Đóng form thêm sách' : 'Thêm sách mới'}
-                </button>
+                <div className="product-list-actions">
+                    <div className="search-form">
+                        <input
+                            type="text"
+                            placeholder="Nhập tên sách, tác giả hoặc ISBN..."
+                            value={searchKeyword}
+                            onChange={(e) => setSearchKeyword(e.target.value)}
+                        />
+                        {searchKeyword && (
+                            <button 
+                                className="cancel-search-btn"
+                                onClick={() => {
+                                    setSearchKeyword('');
+                                    loadBooks();
+                                }}
+                            >
+                                Huỷ tìm kiếm
+                            </button>
+                        )}
+                    </div>
+                    <button 
+                        className="add-product-btn"
+                        onClick={() => setShowAddBook(!showAddBook)}
+                    >
+                        {showAddBook ? 'Đóng form thêm sách' : 'Thêm sách mới'}
+                    </button>
+                </div>
             </div>
 
             {showAddBook ? (
@@ -402,7 +481,7 @@ const ProductList = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {books.map((book) => (
+                                {filteredBooks.map((book) => (
                                     <tr key={book.bookId} onClick={() => handleBookClick(book)} style={{ cursor: 'pointer' }}>
                                         <td>
                                             <div className="product-image">
@@ -423,7 +502,7 @@ const ProductList = () => {
                                         <td>
                                             <div className="action-buttons">
                                                 <button 
-                                                    className="edit-btn"
+                                                    className="edit-btn-bookk"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         handleEdit(book);
@@ -432,7 +511,7 @@ const ProductList = () => {
                                                     Sửa
                                                 </button>
                                                 <button 
-                                                    className="delete-btn"
+                                                    className="delete-btn-bookk"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         handleDelete(book.bookId);

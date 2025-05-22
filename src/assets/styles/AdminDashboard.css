@@ -190,6 +190,62 @@
     border: 1px solid #feb2b2;
 }
 
+.revenue-card {
+    background: white;
+    padding: 28px 25px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    position: relative;
+    overflow: hidden;
+    min-height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-column: 1 / -1; /* Make it span full width */
+    width: 100%;
+}
+
+.revenue-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.revenue-card .stat-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+}
+
+.revenue-card h3 {
+    margin: 0 0 15px 0;
+    color: #666;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    letter-spacing: 0.3px;
+}
+
+.revenue-card:hover h3 {
+    color: #4a90e2;
+}
+
+.revenue-card .stat-value {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+    transition: all 0.3s ease;
+    background: linear-gradient(45deg, #2c3e50, #4a90e2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 200%;
+    animation: gradient 3s ease infinite;
+    letter-spacing: -0.5px;
+}
+
 @media (max-width: 768px) {
     .admin-dashboard {
         padding: 15px;

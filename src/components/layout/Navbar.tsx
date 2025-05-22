@@ -7,9 +7,8 @@ import BookModel from '../../models/BookModel';
 import ImageModel from '../../models/ImageModel';
 import { findBook } from '../../api/BookAPI';
 import { getAllImage } from '../../api/ImageAPI';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHistory, faSuitcase } from "@fortawesome/free-solid-svg-icons";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHistory, faSuitcase } from '@fortawesome/free-solid-svg-icons';
 
 interface NavbarProps {
     searchKey: string;
@@ -22,7 +21,7 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
     const { getTotalItems } = useCart(); // dùng hook lấy tổng số lượng sản phẩm trong giỏ hàng
     const [user, setUser] = useState<any | null>(null);
 
-    const [temporarySearchKey, setTemporarySearchKey] = useState(searchKey); // State tạm thời để lưu giá trị tìm kiếm    
+    const [temporarySearchKey, setTemporarySearchKey] = useState(searchKey); // State tạm thời để lưu giá trị tìm kiếm
     const navigate = useNavigate();
 
     const [showDropdown, setShowDropdown] = useState(false);
@@ -37,13 +36,18 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
     const [searchHistory, setSearchHistory] = useState<string[]>([]);
     const [showHistory, setShowHistory] = useState(false);
 
-
-
+    const [showProfile, setShowProfile] = useState(false);
+    const [profile, setProfile] = useState<any>(null);
+    const [loadingProfile, setLoadingProfile] = useState(false);
+    const [profileError, setProfileError] = useState<string | null>(null);
+    const [isEditingProfile, setIsEditingProfile] = useState(false);
+    const [editProfileData, setEditProfileData] = useState<any>(null);
+    const [showEditProfile, setShowEditProfile] = useState(false);
 
     useEffect(() => {
         const userData = localStorage.getItem('user');
         if (userData) {
-          setUser(JSON.parse(userData));
+            setUser(JSON.parse(userData));
         }
     }, []);
 
@@ -58,16 +62,16 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
         const fetchImages = async () => {
             const map: { [key: number]: string } = {};
             for (const book of searchResults) {
-            try {
-                const imageList = await getAllImage(book.bookId);
-                if (imageList.length > 0) {
-                    if (imageList.length > 0 && imageList[0].imageData) {
-                        map[book.bookId] = imageList[0].imageData;
+                try {
+                    const imageList = await getAllImage(book.bookId);
+                    if (imageList.length > 0) {
+                        if (imageList.length > 0 && imageList[0].imageData) {
+                            map[book.bookId] = imageList[0].imageData;
+                        }
                     }
+                } catch (error) {
+                    console.error(`Lỗi lấy ảnh cho sách ${book.bookId}:`, error);
                 }
-            } catch (error) {
-                console.error(`Lỗi lấy ảnh cho sách ${book.bookId}:`, error);
-            }
             }
             setImageMap(map);
         };
@@ -75,23 +79,22 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
         if (searchResults.length > 0) {
             fetchImages();
         }
-        }, [searchResults]);
+    }, [searchResults]);
 
+    console.log('User: ', user);
 
-      console.log("User: ",user);
-
-      const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-          setShowDropdown(false);
+            setShowDropdown(false);
         }
-      };
-    
-      useEffect(() => {
+    };
+
+    useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
-          document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('mousedown', handleClickOutside);
         };
-      }, []);
+    }, []);
 
     // Hàm xử lý khi người dùng nhấn nút tìm kiếm
 
@@ -163,7 +166,7 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
             navigate(`/search/${trimmed}`);
 
             // Lưu lịch sử tìm kiếm vào localStorage
-            const updatedHistory = [trimmed, ...searchHistory.filter(item => item !== trimmed)].slice(0, 10); // giữ 10 từ gần nhất
+            const updatedHistory = [trimmed, ...searchHistory.filter((item) => item !== trimmed)].slice(0, 10); // giữ 10 từ gần nhất
             setSearchHistory(updatedHistory);
             localStorage.setItem('searchHistory', JSON.stringify(updatedHistory));
         }
@@ -179,6 +182,26 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
         localStorage.setItem('searchHistory', JSON.stringify(updated));
     };
 
+    const fetchProfile = async () => {
+        setShowProfile(true);
+        setLoadingProfile(true);
+        setProfileError(null);
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) throw new Error('Không tìm thấy token');
+            const res = await fetch('http://localhost:8080/account/profile', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            if (!res.ok) throw new Error('Lỗi lấy thông tin cá nhân');
+            const data = await res.json();
+            setProfile(data);
+        } catch (err: any) {
+            setProfileError(err.message || 'Lỗi không xác định');
+        }
+        setLoadingProfile(false);
+    };
 
     return (
         <header className="navbar">
@@ -191,7 +214,8 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                 </button>
                 <ul className={`navbar-list ${isMenuOpen ? 'open' : ''}`}>
                     <li>
-                        <Link to="/"
+                        <Link
+                            to="/"
                             onClick={() => {
                                 setSearchKey('');
                                 setTemporarySearchKey('');
@@ -202,7 +226,7 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                         </Link>
                     </li>
                     <li>
-                        <Link to="/about" >Giới thiệu</Link>
+                        <Link to="/about">Giới thiệu</Link>
                     </li>
                     <li>
                         <Link to="/policy">Chính sách</Link>
@@ -243,10 +267,10 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                     onFocus={() => setShowHistory(true)}
                     onBlur={() => setTimeout(() => setShowHistory(false), 200)} // ẩn sau khi rời input
                     onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                        handleSearch(e);
-                    }
-                }}
+                        if (e.key === 'Enter') {
+                            handleSearch(e);
+                        }
+                    }}
                 />
                 <img
                     className="icon-search"
@@ -266,15 +290,18 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                                         navigate(`/search/${keyword}`);
                                         setShowHistory(false);
                                     }}
-                                    style={{ display: 'flex', alignItems: 'center', flex: 1, cursor: 'pointer', gap: '5px' }}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        flex: 1,
+                                        cursor: 'pointer',
+                                        gap: '5px',
+                                    }}
                                 >
                                     <FontAwesomeIcon icon={faHistory} />
                                     <span>{keyword}</span>
                                 </div>
-                                <button
-                                    className="btn-delete-history"
-                                    onClick={() => handleDeleteHistory(index)}
-                                >
+                                <button className="btn-delete-history" onClick={() => handleDeleteHistory(index)}>
                                     ❌
                                 </button>
                             </div>
@@ -282,7 +309,6 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                     </div>
                 )}
 
-                
                 {(searchResults.length > 0 || isSearching) && (
                     <div className="search-dropdown">
                         {isSearching ? (
@@ -290,7 +316,7 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                         ) : (
                             searchResults.map((book) => (
                                 <Link
-                                    to={`/detail/${book.bookId}`} 
+                                    to={`/detail/${book.bookId}`}
                                     key={book.bookId}
                                     className="search-item"
                                     onClick={() => {
@@ -302,8 +328,8 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                                         className="img-search"
                                         src={
                                             imageMap[book.bookId]
-                                            ? imageMap[book.bookId]
-                                            : 'https://cdn.pixabay.com/photo/2023/12/29/18/23/daisy-8476666_1280.jpg'
+                                                ? imageMap[book.bookId]
+                                                : 'https://cdn.pixabay.com/photo/2023/12/29/18/23/daisy-8476666_1280.jpg'
                                         }
                                         alt={book.bookName}
                                     />
@@ -313,7 +339,6 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                         )}
                     </div>
                 )}
-
             </div>
             <div className="region">
                 <Link to="/cart" className="cart-container">
@@ -344,11 +369,22 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                                     onClick={() => setShowDropdown((prev) => !prev)}
                                 />
                                 {showDropdown && (
+<<<<<<< HEAD
                                 <div className="dropdown-content">
                                     <button className="btn-logout" onClick={handleLogout}>Đăng xuất</button>
                                     <button className="btn-profile">Thông tin cá nhân</button>
                                     <button className="btn-profile" onClick={changPePassword}>Đặt lại mật khẩu</button>
                                 </div>
+=======
+                                    <div className="dropdown-content">
+                                        <button className="btn-logout" onClick={handleLogout}>
+                                            Đăng xuất
+                                        </button>
+                                        <button className="btn-profile" onClick={fetchProfile}>
+                                            Thông tin cá nhân
+                                        </button>
+                                    </div>
+>>>>>>> feature/thach-Profile
                                 )}
                             </div>
                         </div>
@@ -370,6 +406,238 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                     <img className="size-icon" src="/icons/icons8-user-48.png" alt="icon-login" />
                 </Link>
             </div>
+
+            {showProfile && (
+                <div className="modal-profile-overlay">
+                    <div className="modal-profile-content">
+                        <button className="modal-close-btn" onClick={() => setShowProfile(false)}>
+                            ×
+                        </button>
+                        <img src="/icons/icons8-user-48.png" alt="avatar" className="modal-avatar" />
+                        <h2 className="modal-title">Thông tin cá nhân</h2>
+                        {loadingProfile && <div className="modal-loading">Đang tải...</div>}
+                        {profileError && <div className="modal-error">{profileError}</div>}
+                        {profile && (
+                            <ul className="modal-info-list">
+                                <li>
+                                    <b>Họ tên:</b>{' '}
+                                    <span>
+                                        {profile.firstName} {profile.lastName}
+                                    </span>
+                                </li>
+                                <li>
+                                    <b>Email:</b> <span>{profile.email}</span>
+                                </li>
+                                <li>
+                                    <b>SĐT:</b> <span>{profile.phoneNumber}</span>
+                                </li>
+                                <li>
+                                    <b>Địa chỉ thanh toán:</b> <span>{profile.billingAddress}</span>
+                                </li>
+                                <li>
+                                    <b>Địa chỉ giao hàng:</b> <span>{profile.shippingAddress}</span>
+                                </li>
+                                <li>
+                                    <b>Giới tính:</b>{' '}
+                                    <span>
+                                        {profile.gender === 'M' ? 'Nam' : profile.gender === 'F' ? 'Nữ' : 'Khác'}
+                                    </span>
+                                </li>
+                                <li>
+                                    <b>Tên đăng nhập:</b> <span>{profile.username}</span>
+                                </li>
+                            </ul>
+                        )}
+                        {profile && (
+                            <button
+                                className="modal-edit-btn"
+                                onClick={() => {
+                                    setEditProfileData(profile);
+                                    setShowEditProfile(true);
+                                    setShowProfile(false);
+                                }}
+                                style={{
+                                    marginTop: 16,
+                                    cursor: 'pointer',
+                                    fontWeight: 500,
+                                    padding: '8px 18px',
+                                    borderRadius: 6,
+                                    border: 'none',
+                                    color: '#fff',
+                                    background: '#6366f1',
+                                }}
+                            >
+                                Chỉnh sửa
+                            </button>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {showEditProfile && editProfileData && (
+                <div className="modal-profile-overlay">
+                    <div className="modal-profile-content">
+                        <button
+                            className="modal-close-btn"
+                            onClick={() => {
+                                setShowEditProfile(false);
+                                setShowProfile(true);
+                            }}
+                        >
+                            ×
+                        </button>
+                        <h2 className="modal-title">Chỉnh sửa thông tin</h2>
+                        <form
+                            className="modal-edit-form"
+                            onSubmit={async (e) => {
+                                e.preventDefault();
+                                try {
+                                    const token = localStorage.getItem('token');
+                                    const res = await fetch('http://localhost:8080/account/update-profile', {
+                                        method: 'PUT',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            Authorization: `Bearer ${token}`,
+                                        },
+                                        body: JSON.stringify(editProfileData),
+                                    });
+                                    if (!res.ok) throw new Error('Cập nhật thất bại');
+                                    const data = await res.json();
+                                    setProfile(data);
+                                    setShowEditProfile(false);
+                                    setShowProfile(true);
+                                } catch (err: any) {
+                                    alert(err.message || 'Lỗi không xác định');
+                                }
+                            }}
+                            style={{ width: '100%', marginTop: 10 }}
+                        >
+                            <div style={{ marginBottom: 10 }}>
+                                <label>
+                                    <b>Họ tên:</b>
+                                </label>
+                                <input
+                                    type="text"
+                                    value={editProfileData.firstName}
+                                    onChange={(e) =>
+                                        setEditProfileData({ ...editProfileData, firstName: e.target.value })
+                                    }
+                                    style={{ marginLeft: 8, marginRight: 8, width: 90 }}
+                                    required
+                                />
+                                <input
+                                    type="text"
+                                    value={editProfileData.lastName}
+                                    onChange={(e) =>
+                                        setEditProfileData({ ...editProfileData, lastName: e.target.value })
+                                    }
+                                    style={{ width: 90 }}
+                                    required
+                                />
+                            </div>
+                            <div style={{ marginBottom: 10 }}>
+                                <label>
+                                    <b>Email:</b>
+                                </label>
+                                <input
+                                    type="email"
+                                    value={editProfileData.email}
+                                    onChange={(e) => setEditProfileData({ ...editProfileData, email: e.target.value })}
+                                    style={{ marginLeft: 8, width: 220 }}
+                                    required
+                                />
+                            </div>
+                            <div style={{ marginBottom: 10 }}>
+                                <label>
+                                    <b>SĐT:</b>
+                                </label>
+                                <input
+                                    type="text"
+                                    value={editProfileData.phoneNumber}
+                                    onChange={(e) =>
+                                        setEditProfileData({ ...editProfileData, phoneNumber: e.target.value })
+                                    }
+                                    style={{ marginLeft: 8, width: 220 }}
+                                />
+                            </div>
+                            <div style={{ marginBottom: 10 }}>
+                                <label>
+                                    <b>Địa chỉ thanh toán:</b>
+                                </label>
+                                <input
+                                    type="text"
+                                    value={editProfileData.billingAddress}
+                                    onChange={(e) =>
+                                        setEditProfileData({ ...editProfileData, billingAddress: e.target.value })
+                                    }
+                                    style={{ marginLeft: 8, width: 180 }}
+                                />
+                            </div>
+                            <div style={{ marginBottom: 10 }}>
+                                <label>
+                                    <b>Địa chỉ giao hàng:</b>
+                                </label>
+                                <input
+                                    type="text"
+                                    value={editProfileData.shippingAddress}
+                                    onChange={(e) =>
+                                        setEditProfileData({ ...editProfileData, shippingAddress: e.target.value })
+                                    }
+                                    style={{ marginLeft: 8, width: 180 }}
+                                />
+                            </div>
+                            <div style={{ marginBottom: 10 }}>
+                                <label>
+                                    <b>Giới tính:</b>
+                                </label>
+                                <select
+                                    value={editProfileData.gender}
+                                    onChange={(e) => setEditProfileData({ ...editProfileData, gender: e.target.value })}
+                                    style={{ marginLeft: 8, width: 100 }}
+                                >
+                                    <option value="M">Nam</option>
+                                    <option value="F">Nữ</option>
+                                    <option value="O">Khác</option>
+                                </select>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setShowEditProfile(false);
+                                        setShowProfile(true);
+                                    }}
+                                    style={{
+                                        background: '#eee',
+                                        color: '#333',
+                                        border: 'none',
+                                        borderRadius: 6,
+                                        padding: '7px 16px',
+                                        fontWeight: 500,
+                                        cursor: 'pointer',
+                                    }}
+                                >
+                                    Hủy
+                                </button>
+                                <button
+                                    type="submit"
+                                    style={{
+                                        background: '#6366f1',
+                                        color: '#fff',
+                                        border: 'none',
+                                        borderRadius: 6,
+                                        padding: '7px 16px',
+                                        fontWeight: 500,
+                                        cursor: 'pointer',
+                                    }}
+                                >
+                                    Lưu
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </header>
     );
 };

@@ -20,6 +20,7 @@ import {
     Tooltip,
     Legend
 } from 'chart.js';
+import { getAllUsers } from '../../api/UserAPI';
 
 // Đăng ký các components cần thiết cho Chart.js
 ChartJS.register(
@@ -54,6 +55,7 @@ const AdminDashboard = () => {
     const [error, setError] = useState<string | null>(null);
     const [orders, setOrders] = useState<Order[]>([]);
     const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
+    const [totalUsers, setTotalUsers] = useState<number>(0);
 
     // Tạo danh sách năm từ 2023 đến năm hiện tại
     const years = getYearsFrom(2023); // 2023 là năm bắt đầu
@@ -172,6 +174,24 @@ const AdminDashboard = () => {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        const fetchTotalUsers = async () => {
+            try {
+                setLoading(true);
+                const users = await getAllUsers();
+                setTotalUsers(users.length);
+                setError(null);
+            } catch (err) {
+                console.error('Error fetching total users:', err);
+                setError('Không thể tải số lượng người dùng');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTotalUsers();
+    }, []);
+
     if (loading) {
         return <div className="loading">Đang tải dữ liệu...</div>;
     }
@@ -197,16 +217,23 @@ const AdminDashboard = () => {
                 </div>
                 <div className="stat-card">
                     <div className="stat-content">
-                        <h3>Đơn hàng</h3>
+                        <h3>Tổng số đơn hàng</h3>
                         <p className="stat-value">{totalOrders}</p>
                     </div>
                 </div>
                 <div className="stat-card">
                     <div className="stat-content">
+                        <h3>Tổng số người dùng</h3>
+                        <p className="stat-value">{totalUsers}</p>
+                    </div>
+                </div>
+                <div className="revenue-card">
+                    <div className="stat-content">
                         <h3>Doanh thu</h3>
                         <p className="stat-value">{totalRevenue.toLocaleString('vi-VN')} VNĐ</p>
                     </div>
                 </div>
+                
             </div>
 
             <div className="year-selector">

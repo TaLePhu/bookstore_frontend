@@ -122,6 +122,10 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
         window.location.reload();
     };
 
+    const changPePassword = () => {
+        navigate('/auth/doi-mat-khau');
+    };
+
     let debounceTimeout: NodeJS.Timeout;
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -343,6 +347,7 @@ const Navbar: React.FC<NavbarProps> = ({ searchKey, setSearchKey }) => {
                                 <div className="dropdown-content">
                                     <button className="btn-logout" onClick={handleLogout}>Đăng xuất</button>
                                     <button className="btn-profile">Thông tin cá nhân</button>
+                                    <button className="btn-profile" onClick={changPePassword}>Đặt lại mật khẩu</button>
                                 </div>
                                 )}
                             </div>

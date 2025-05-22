@@ -25,6 +25,9 @@ import AdminDashboard from '../components/admLayout/AdminDashboard';
 import OrderList from '../components/admLayout/OrderList';
 import CategoryPage from '../pages/user/CategoryPage';
 import PurchaseOrder from '../pages/user/PurchaseOrder';
+import ForgotPassword from '../pages/auth/ForgotPassword';
+import ResetPassword from '../pages/auth/ResetPassword';
+import ChangePassword from '../pages/auth/ChangePassword';
 
 const AppRoutes = () => {
     const [searchKey, setSearchKey] = useState('');
@@ -45,6 +48,9 @@ const AppRoutes = () => {
                 <Route path="/test" element={<Test />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout" element={<Checkout />} />
+                <Route path="/auth/quen-mat-khau" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/auth/doi-mat-khau" element={<ChangePassword />} />
                 <Route path="/activate/:email/:activationCode" element={<ActivateAccount />} />
                 <Route path="/order-confirm-success" element={<OrderConfirmSuccess />} />
                 <Route path="/order-confirm-false" element={<OrderConfirmFalse />} />

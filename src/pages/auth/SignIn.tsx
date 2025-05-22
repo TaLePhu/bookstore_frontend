@@ -3,18 +3,18 @@ import { Link } from 'react-router-dom';
 import '../../assets/styles/LoginForm.css';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
-import { Alert, notification, message } from 'antd';
 import axios from 'axios';
 import 'antd/dist/reset.css';
+import toast from 'react-hot-toast';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
-notification.config({
-  top: 100, // điều chỉnh sao cho thấp hơn navbar
-});
 
 const LoginForm = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [notify, setNotify] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -35,7 +35,7 @@ const LoginForm = () => {
             const decoded: any = jwtDecode(jwt);
             localStorage.setItem('user', JSON.stringify(decoded));
 
-            setNotify('Đăng nhập thành công!');
+            toast.success('Đăng nhập thành công!')
             if (role === 'ADMIN' || role === 'STAFF') {
                 navigate('/admin');
             } else {
@@ -44,11 +44,9 @@ const LoginForm = () => {
             window.location.reload();
         })
         .catch((error) => {
-            console.error('Đăng nhập thất bại:', error);
-            setNotify('Đăng nhập thất bại. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.');
-
+            toast.error('Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập.');
             if (axios.isAxiosError(error) && error.response?.status === 429) {
-                setNotify('Bạn đã nhập sai quá nhiều lần. Vui lòng thử lại sau ít phút.');
+                toast.error('Bạn đã nhập sai quá nhiều lần. Vui lòng thử lại sau ít phút.');
             }
         });
 
@@ -78,13 +76,18 @@ const LoginForm = () => {
                 </div>
                 <div className="form-group">
                     <input
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         id="password"
                         name="password"
                         placeholder="Mật khẩu*"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
+                    />
+                    <FontAwesomeIcon
+                        icon={showPassword ? faEyeSlash : faEye}
+                        className="eye-icon"
+                        onClick={() => setShowPassword(!showPassword)}
                     />
                 </div>
                 <div className="footer-links">
@@ -99,7 +102,7 @@ const LoginForm = () => {
             {notify && <div style={{ color: 'red' }}>{notify}</div>}
             <div className="footer-links">
                 <p>
-                    <a href="#">Quên mật khẩu</a>
+                    <a href="/auth/quen-mat-khau">Quên mật khẩu</a>
                 </p>
             </div>
         </div>

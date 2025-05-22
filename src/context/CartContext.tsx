@@ -116,9 +116,16 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       // Nếu chưa đăng nhập → lưu localStorage như cũ
       setCartItems((prevItems) => {
         const existingItemIndex = prevItems.findIndex(i => i.bookId === item.bookId);
+
         if (existingItemIndex !== -1) {
           const updatedItems = [...prevItems];
-          updatedItems[existingItemIndex].quantity += item.quantity;
+          const existingItem = updatedItems[existingItemIndex];
+
+          updatedItems[existingItemIndex] = {
+            ...existingItem,
+            quantity: existingItem.quantity + item.quantity
+          };
+
           return updatedItems;
         } else {
           return [item, ...prevItems];

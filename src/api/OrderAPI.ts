@@ -54,9 +54,9 @@ export async function getAllOrders(): Promise<Order[]> {
     }
 }
 
-export async function getAllOrdersUser(): Promise<Order[]> {
+export async function getOrdersByUserId(userId: number): Promise<Order[]> {
     try {
-        const response = await my_request('http://localhost:8080/api/orders');
+        const response = await my_request(`http://localhost:8080/api/orders/${userId}`);
         return response;
     } catch (error) {
         console.error('Error fetching orders:', error);

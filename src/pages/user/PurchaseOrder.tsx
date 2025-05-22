@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import '../../assets/styles/PurchaseOrder.css';
-import { getAllOrdersUser, Order } from '../../api/OrderAPI';
+import { getOrdersByUserId, Order } from '../../api/OrderAPI';
 
 const PurchaseOrder: React.FC = () => {
-  const navigate = useNavigate();
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
+    const [orders, setOrders] = useState<Order[]>([]);
+    const [error, setError] = useState<string | null>(null);
+    const userJson = localStorage.getItem("user");
+    const user = userJson ? JSON.parse(userJson) : null;
+    const userId = user?.userId;
 
   useEffect(() => {
     fetchOrders();
@@ -14,12 +17,14 @@ const PurchaseOrder: React.FC = () => {
 
   const fetchOrders = async () => {
     try {
-      const data = await getAllOrdersUser();
-      setOrders(data);
+        if (userId) {
+        const data = await getOrdersByUserId(Number(userId));
+        setOrders(data);
+        }
     } catch (err: any) {
-      setError(err.message);
+        setError(err.message);
     }
-  };
+};
 
   return (
     <div className="container-purchase-order">

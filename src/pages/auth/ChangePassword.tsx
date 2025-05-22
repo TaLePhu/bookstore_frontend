@@ -58,7 +58,7 @@ const ChangePassword = () => {
                  <div className="password-wrapper">
                     <input
                         type={showCurrentPassword ? 'text' : 'password'}
-                        placeholder="Mật khẩu mới"
+                        placeholder="Mật khẩu hiện tại"
                         value={currentPassword}
                         onChange={(e) => setCurrentPassword(e.target.value)}
                         required

@@ -16,6 +16,8 @@ const LoginForm = () => {
     const [notify, setNotify] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
+    const [cooldown, setCooldown] = useState(0);     // thời gian đếm ngược
+    const [isBlocked, setIsBlocked] = useState(false); // chặn nút
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -44,9 +46,23 @@ const LoginForm = () => {
             window.location.reload();
         })
         .catch((error) => {
-            toast.error('Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập.');
             if (axios.isAxiosError(error) && error.response?.status === 429) {
-                toast.error('Bạn đã nhập sai quá nhiều lần. Vui lòng thử lại sau ít phút.');
+                toast.error('Bạn đã nhập sai quá nhiều lần. Vui lòng thử lại sau 60 giây.');
+                setIsBlocked(true);
+                setCooldown(30); 
+
+                const interval = setInterval(() => {
+                    setCooldown((prev) => {
+                        if (prev <= 1) {
+                            clearInterval(interval);
+                            setIsBlocked(false);
+                            return 0;
+                        }
+                        return prev - 1;
+                    });
+                }, 1000);
+            } else {
+                toast.error('Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập.');
             }
         });
 
@@ -95,8 +111,8 @@ const LoginForm = () => {
                         Bạn chưa có tài khoản? <Link to="/auth/dang-ky">Đăng ký</Link>
                     </p>
                 </div>
-                <button type="submit" className="login-btn">
-                    ĐĂNG NHẬP
+                <button type="submit" className="login-btn" disabled={isBlocked}>
+                    {isBlocked ? `Vui lòng chờ ${cooldown}s` : 'ĐĂNG NHẬP'}
                 </button>
             </form>
             {notify && <div style={{ color: 'red' }}>{notify}</div>}

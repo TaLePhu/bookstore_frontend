@@ -6,11 +6,13 @@ import { AxiosError } from 'axios';
 
 const UserList: React.FC = () => {
     const [users, setUsers] = useState<UserModel[]>([]);
+    const [filteredUsers, setFilteredUsers] = useState<UserModel[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [selectedUser, setSelectedUser] = useState<UserModel | null>(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [currentUserId, setCurrentUserId] = useState<number | null>(null);
+    const [selectedRole, setSelectedRole] = useState<string>('ALL');
 
     useEffect(() => {
         // Debug: Log all localStorage keys
@@ -46,6 +48,17 @@ const UserList: React.FC = () => {
 
         fetchUsers();
     }, []);
+
+    useEffect(() => {
+        if (selectedRole === 'ALL') {
+            setFilteredUsers(users);
+        } else {
+            const filtered = users.filter(user => 
+                user.roles && user.roles.includes(selectedRole)
+            );
+            setFilteredUsers(filtered);
+        }
+    }, [selectedRole, users]);
 
     const fetchUsers = async () => {
         try {
@@ -163,6 +176,10 @@ const UserList: React.FC = () => {
         });
     };
 
+    const handleRoleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSelectedRole(e.target.value);
+    };
+
     if (loading) {
         return (
             <div className="loading">
@@ -176,9 +193,53 @@ const UserList: React.FC = () => {
         <div className="user-list-container">
             <div className="user-list-header">
                 <h2>Quản lý người dùng</h2>
-                <button className="refresh-button" onClick={fetchUsers}>
-                    Làm mới danh sách
-                </button>
+                <div className="header-actions">
+                    <div className="role-filter">
+                        <label className="role-filter-label">
+                            <input
+                                type="radio"
+                                name="roleFilter"
+                                value="ALL"
+                                checked={selectedRole === 'ALL'}
+                                onChange={handleRoleFilterChange}
+                            />
+                            Tất cả
+                        </label>
+                        <label className="role-filter-label">
+                            <input
+                                type="radio"
+                                name="roleFilter"
+                                value="ADMIN"
+                                checked={selectedRole === 'ADMIN'}
+                                onChange={handleRoleFilterChange}
+                            />
+                            Admin
+                        </label>
+                        <label className="role-filter-label">
+                            <input
+                                type="radio"
+                                name="roleFilter"
+                                value="STAFF"
+                                checked={selectedRole === 'STAFF'}
+                                onChange={handleRoleFilterChange}
+                            />
+                            Staff
+                        </label>
+                        <label className="role-filter-label">
+                            <input
+                                type="radio"
+                                name="roleFilter"
+                                value="USER"
+                                checked={selectedRole === 'USER'}
+                                onChange={handleRoleFilterChange}
+                            />
+                            User
+                        </label>
+                    </div>
+                    <button className="refresh-button" onClick={fetchUsers}>
+                        Làm mới danh sách
+                    </button>
+                </div>
             </div>
 
             <div className="user-table-container">
@@ -195,17 +256,15 @@ const UserList: React.FC = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {users.length === 0 ? (
+                        {filteredUsers.length === 0 ? (
                             <tr>
                                 <td colSpan={7} className="no-data">
                                     Không tìm thấy người dùng nào
                                 </td>
                             </tr>
                         ) : (
-                            users.map(user => {
+                            filteredUsers.map(user => {
                                 const isCurrentUser = user.userId === currentUserId;
-                                console.log(`User ${user.userId} is current user:`, isCurrentUser);
-                                
                                 return (
                                     <tr key={user.userId}>
                                         <td>{user.userId}</td>
@@ -217,25 +276,25 @@ const UserList: React.FC = () => {
                                             <div className="role-badges">
                                                 {user.roles && user.roles.length > 0 ? (
                                                     user.roles.map((role, index) => (
-                                                        <span key={index} className="role-badge">
+                                                        <span key={index} className={`role-badge ${role.toLowerCase()}`}>
                                                             {role}
                                                         </span>
                                                     ))
                                                 ) : (
-                                                    <span className="role-badge">USER</span>
+                                                    <span className="role-badge user">USER</span>
                                                 )}
                                             </div>
                                         </td>
                                         <td>
                                             <div className="action-buttons">
                                                 <button 
-                                                    className="edit-btn"
+                                                    className="edit-btn-user"
                                                     onClick={() => handleEdit(user)}
                                                 >
                                                     Sửa
                                                 </button>
                                                 <button 
-                                                    className={`delete-btn ${isCurrentUser ? 'disabled' : ''}`}
+                                                    className={`delete-btn-user ${isCurrentUser ? 'disabled' : ''}`}
                                                     onClick={() => handleDelete(user.userId)}
                                                     disabled={isCurrentUser}
                                                     title={isCurrentUser ? 'Không thể xóa tài khoản đang đăng nhập' : 'Xóa người dùng'}

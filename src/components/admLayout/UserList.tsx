@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAllUsers, updateUser, deleteUser, assignRolesToUser } from '../../api/UserAPI';
+import { getAllUsers, updateUser, deleteUser, assignRolesToUser, updateUserRoles } from '../../api/UserAPI';
 import UserModel, { Role } from '../../models/UserModel';
 import '../../assets/styles/UserList.css';
 import { AxiosError } from 'axios';
@@ -150,19 +150,28 @@ const UserList: React.FC = () => {
                 return;
             }
 
-            const updatedUserData = {
-                ...selectedUser,
-                roles: [selectedRole]
+            // Map role name to role ID
+            const roleIdMap: { [key: string]: number } = {
+                'ADMIN': 1,
+                'STAFF': 2,
+                'USER': 3
             };
 
-            const updatedUser = await updateUser(selectedUser.userId, updatedUserData);
-            setUsers(users.map(user => 
-                user.userId === updatedUser.userId ? updatedUser : user
-            ));
-            handleCloseEditModal();
-            alert('Cập nhật quyền người dùng thành công');
+            const roleId = roleIdMap[selectedRole];
+            if (!roleId) {
+                alert('Quyền không hợp lệ');
+                return;
+            }
+
+            const success = await updateUserRoles(selectedUser.userId, [roleId]);
+            if (success) {
+                // Refresh user list to get updated data
+                await fetchUsers();
+                handleCloseEditModal();
+                alert('Cập nhật quyền người dùng thành công');
+            }
         } catch (error: any) {
-            console.error('Error updating user:', error);
+            console.error('Error updating user role:', error);
             if (error.response?.data?.message) {
                 alert(error.response.data.message);
             } else {

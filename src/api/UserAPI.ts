@@ -109,4 +109,14 @@ export const assignRolesToUser = async (userId: number, roleIds: number[]): Prom
         console.error('Error assigning roles to user:', error);
         throw error;
     }
+};
+
+export const updateUserRoles = async (userId: number, roleIds: number[]): Promise<boolean> => {
+    try {
+        const response = await axiosInstance.put(`/admin/users/${userId}/roles`, roleIds);
+        return response.status === 200;
+    } catch (error) {
+        console.error('Error updating user roles:', error);
+        throw error;
+    }
 }; 

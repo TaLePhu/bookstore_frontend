@@ -9,9 +9,10 @@ import Pagination from '../utils/Pagination';
 interface CategorySectionProps {
     searchKey: string;
     categoryId: number;
+    categoryName: string;
 }
 
-const CategorySection: React.FC<CategorySectionProps> = ({ searchKey, categoryId }) => {
+const CategorySection: React.FC<CategorySectionProps> = ({ searchKey, categoryId, categoryName }) => {
     const [listBook, setListBook] = useState<BookModel[]>([]);
     const [uploadData, setUploadData] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -22,9 +23,12 @@ const CategorySection: React.FC<CategorySectionProps> = ({ searchKey, categoryId
 
     useEffect(() => {
         setUploadData(true);
+        const pageSize = 5;
+
         if (searchKey === '' && categoryId === 0) {
             // Nếu không có từ khóa tìm kiếm và không có categoryId thì lấy tất
-            layToanBoSach(trangHienTai - 1)
+            console.log('lay toan bo sach');
+            layToanBoSach(trangHienTai - 1, pageSize)
                 .then((data) => {
                     setListBook(data.result);
                     setTongSoTrang(data.totalPages);
@@ -35,7 +39,8 @@ const CategorySection: React.FC<CategorySectionProps> = ({ searchKey, categoryId
                     setUploadData(false);
                 });
         } else {
-            findBook(searchKey, categoryId)
+            console.log('tim kiem sach');
+            findBook(searchKey, categoryId, trangHienTai - 1, pageSize)
                 .then((data) => {
                     setListBook(data.result);
                     setTongSoTrang(data.totalPages);
@@ -71,8 +76,8 @@ const CategorySection: React.FC<CategorySectionProps> = ({ searchKey, categoryId
     return (
         <div className="list">
             <div className="list-total">
-                <h3>Danh sách sản phẩm</h3>
-                <Link to="/category">Xem thêm</Link>
+                <h3>📚 {categoryName}</h3>
+                <Link to={`/category/${categoryId}/${encodeURIComponent(categoryName)}`}>Xem thêm</Link>
             </div>
             <div className="list-item">
                 {listBook.map((item) => (

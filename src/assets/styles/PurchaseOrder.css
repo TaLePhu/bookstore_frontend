@@ -1,0 +1,106 @@
+.container-purchase-order{
+    padding: 16px;
+}
+.list-purchase-order{
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.img-book{
+    width: 80px;
+    height: 110px;
+    object-fit: cover;
+    border: 1px solid #e0e0e0;
+}
+.item-purchase-order{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 8px;
+    border-bottom: 2px solid #e0e0e0;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 16px
+
+}
+.list-book-order{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 16px;
+    border-bottom: 1px solid #e0e0e0;
+    width: 100%;
+    padding: 16px 0;
+}
+.book-order{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 16px;
+}
+.book-info{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+.time-ship{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+.delivered{
+    font-size: 16px;
+    font-weight: 500;
+    color: #000;
+}
+.pending-delivery{
+    font-size: 16px;
+    font-weight: 500;
+    color: #4CAF50;
+}
+.date-delivery{
+    font-size: 14px;
+    font-weight: 400;
+    color: #757575;
+    font-style: italic;
+}
+.book-title{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.book-title p{
+    font-size: 16px;
+    font-weight: 500;
+    color: #000;
+}
+.book-title span{
+    font-size: 14px;
+    font-weight: 400;
+    color: #757575;
+}
+.price-book{
+    font-size: 14px;
+    font-weight: 400;
+    color: #000000;
+}
+.order-total{
+    display: flex;
+    gap: 10px;
+}
+.order-total span{
+    font-size: 16px;
+    font-weight: 500;
+    color: #2277ff;
+}
+.category-link{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0 16px;
+}

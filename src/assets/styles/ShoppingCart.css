@@ -76,28 +76,29 @@ p{
     margin: 0;
 }
 
-.list-item {
+.list-item-cart {
     background-color: white;
     border-radius: 5px;
     padding-left: 10px;
-    padding: 15px 10px 0px 10px; /* Thêm khoảng cách trên và dưới */
+    padding: 15px 10px 0px 10px;
 }
 
 .info-item {
     display: grid;
-    grid-template-columns: 40% 25% 25% 10%; /* Chia cột theo % */
-    text-align: center; /* Căn giữa nội dung trong mỗi cột */
+    grid-template-columns: 40% 25% 25% 10%; 
+    text-align: center; 
     width: 100%;
     align-items: center;
-    padding-bottom: 15px; /* Thêm khoảng cách trên và dưới */
-    border-bottom: 1px solid #ccc; /* Thêm đường viền dưới mỗi hàng */
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ccc; 
+    padding: 10px 0px;
 }
 
 .name-item {
     display: flex;
     align-items: center;
     gap: 10px;
-    justify-content: left; /* Căn trái để checkbox + text hiển thị đúng */
+    justify-content: left; 
 }
 
 .item-img-info {
@@ -154,5 +155,47 @@ p{
     border-radius: 5px;
     display: flex;
     flex-direction: column;
-    padding: 15px 10px 15px 10px; /* Thêm khoảng cách trên và dưới */
+    padding: 15px 10px 15px 10px; 
+    align-items: center;
+}
+.btn-payment{
+    padding: 8px 0;
+    margin: 8px 0;
+    font-weight: 700;
+    color: white;
+    background-color: #007bff;
+    margin-top: 20px;
+    border-radius: 5px;
+    width: 245px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+}
+.btn-payment:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  .so-luong-number{
+    margin-bottom: 0;
+  }
+.total-payment-title{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 5px;
+}
+.total-payment-title p{
+    width: 24%;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+}
+.total-payment-title span{
+    width: 60%;
+    font-size: 25px;
+    font-weight: 800;
+    color: #007bff;
 }

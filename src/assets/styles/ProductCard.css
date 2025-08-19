@@ -21,21 +21,45 @@
 }
 
 .list-item {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 4 item 1 hàng */
     gap: 16px;
-    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
 }
 
+@media (max-width: 1024px) {
+    .list-item {
+        grid-template-columns: repeat(3, 1fr); /* 3 item 1 hàng khi nhỏ hơn 1024px */
+    }
+}
+
+@media (max-width: 768px) {
+    .list-item {
+        grid-template-columns: repeat(2, 1fr); /* 2 item 1 hàng khi nhỏ hơn 768px */
+    }
+}
+
+@media (max-width: 480px) {
+    .list-item {
+        grid-template-columns: repeat(1, 1fr); /* 1 item 1 hàng khi nhỏ hơn 480px */
+    }
+}
+
+
 .box-item {
-    width: 200px;
+    width: 100%; /* Chiếm toàn bộ 1 cột đã chia */
     border: 1px solid #ddd;
     padding: 12px;
     border-radius: 8px;
     background: #fff;
-    text-align: left; /* Căn lề trái */
+    text-align: left;
     transition: 0.3s;
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .box-item:hover {
@@ -43,22 +67,34 @@
 }
 
 .box-item img {
-    width: 100%;
+    width: 50%;
     height: 150px;
     border-radius: 6px;
+    object-fit: cover;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .box-item h4 {
     font-size: 16px;
     font-weight: bold;
     margin-top: 8px;
-    margin-bottom: 0;
+    margin-bottom: 0;        
+    overflow: hidden;            
+    text-overflow: ellipsis; 
 }
 
 .box-item p {
     font-size: 14px;
     color: #666;
     margin-bottom: 8px;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;            
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .box-item a {
@@ -115,4 +151,39 @@
 
 a{
     text-decoration: none;;
+}
+
+.discount-tag {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+.sold-outp{
+    position: absolute;
+    top: 8px;
+    left: 191px;
+    background-color: rgba(65, 201, 255, 0.728);
+    color: rgb(255, 255, 255);
+    font-size: 10px;
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+.txt-promotional-pricep{
+    color: red;
+    font-weight: bold;
+    font-size: 20px;
+}
+.start-icon{
+    font-size: 12px;
+}
+.txt-sold{
+    color: #666;
+    font-size: 12px;
 }

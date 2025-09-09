@@ -6,6 +6,31 @@
 
 Hệ thống nhà sách trực tuyến được phát triển nhằm đáp ứng nhu cầu tìm kiếm, chọn mua sách một cách nhanh chóng, tiện lợi, không giới hạn về thời gian và địa điểm. Dự án cung cấp một nền tảng cho người dùng có thể duyệt, tìm kiếm và mua sách một cách dễ dàng, đồng thời hỗ trợ quản lý kho sách, đơn hàng và người dùng cho quản trị viên.
 
+## 📸 Demo Giao Diện
+
+### Trang Chủ
+![Home Page 1](./screenshots/1_home-page.png)  
+![Home Page 2](./screenshots/2_home-page.png)
+
+### Trang Chi Tiết Sản Phẩm
+![Product Detail](./screenshots/3_product-detail.png)
+
+### Giỏ Hàng
+![Cart](./screenshots/4_cart.png)
+
+### Thanh Toán
+![Payment](./screenshots/5_payment.png)
+
+### Đăng Ký & Đăng Nhập
+![Sign Up](./screenshots/6_signup.png)  
+![Sign In](./screenshots/7_Sign-in.png)
+
+### Trang Quản Trị (Admin)
+![Admin Dashboard](./screenshots/8_admin-dashboard.png)  
+![Admin - Quản lý Sản phẩm](./screenshots/9_product-m.png)  
+![Admin - Quản lý Người dùng](./screenshots/10_admin-user.png)
+
+
 ## 🎯 Mục Tiêu Dự Án
 
 - **Giao diện thân thiện**: Xây dựng website bán sách với UI/UX dễ sử dụng
@@ -81,7 +106,7 @@ Dự án áp dụng **Layered Architecture** với các lớp:
 ## 📋 Yêu Cầu Hệ Thống
 
 - Node.js (version 14.0.0 hoặc cao hơn)
-- npm hoặc yarn
+- npm 
 - Git
 - Modern browser (Chrome, Firefox, Safari, Edge)
 
@@ -124,22 +149,6 @@ yarn start
 ```
 
 Ứng dụng sẽ chạy tại [http://localhost:3000](http://localhost:3000)
-
-## 🧪 Chạy Tests
-
-```bash
-npm test
-# hoặc
-yarn test
-```
-
-## 🏭 Build Production
-
-```bash
-npm run build
-# hoặc
-yarn build
-```
 
 ## 📁 Cấu Trúc Dự Án
 
@@ -197,55 +206,9 @@ bookstore_frontend/
 - `GET /api/admin/users` - Quản lý người dùng
 - `GET /api/admin/orders` - Quản lý đơn hàng
 
-## 🎨 Thiết Kế UML
-
-Dự án được thiết kế với các sơ đồ UML đầy đủ:
-- **Use Case Diagram**: Mô tả tương tác của 3 actors (Guest, Customer, Admin)
-- **Class Diagram**: Định nghĩa cấu trúc các lớp đối tượng
-- **ERD Diagram**: Thiết kế cơ sở dữ liệu MySQL
 
 ## 🌐 Liên Kết Repository
-
-- **Frontend**: [bookstore_frontend](https://github.com/TaLePhu/bookstore_frontend)
 - **Backend**: [team12_project_software_architecture](https://github.com/TaLePhu/team12_project_software_architecture)
-
-## 🚀 Deployment
-
-Ứng dụng có thể được deploy trên:
-- **Netlify**: Tự động deploy từ GitHub
-- **Vercel**: Zero-config deployment
-- **Firebase Hosting**: Google hosting platform
-- **GitHub Pages**: Static hosting
-
-## 🔧 Scripts Có Sẵn
-
-```bash
-npm start          # Chạy development server
-npm test           # Chạy test suite
-npm run build      # Build production
-npm run eject      # Eject CRA configuration
-```
-
-## 📱 Hỗ Trợ Trình Duyệt
-
-- Chrome (latest)
-- Firefox (latest) 
-- Safari (latest)
-- Edge (latest)
-
-## 🤝 Đóng Góp
-
-1. Fork repository
-2. Tạo feature branch (`git checkout -b feature/TenTinhNang`)
-3. Commit thay đổi (`git commit -m 'Thêm tính năng mới'`)
-4. Push to branch (`git push origin feature/TenTinhNang`)
-5. Tạo Pull Request
-
-## 📚 Tài Liệu Tham Khảo
-
-- [Create React App Documentation](https://facebook.github.io/create-react-app/docs/getting-started)
-- [React Documentation](https://reactjs.org/)
-- [Layered Architecture Pattern](https://docs.microsoft.com/en-us/previous-versions/msp-n-p/ff649690(v=pandp.10))
 
 ## 🎓 Thông Tin Học Thuật
 
@@ -264,8 +227,6 @@ npm run eject      # Eject CRA configuration
 - ✅ **Component Architecture**: Thiết kế component tái sử dụng
 - ✅ **Modern JavaScript**: Sử dụng ES6+ features
 - ✅ **Code Quality**: Tuân thủ coding standards và best practices
-
-## 🔍 Dành Cho Nhà Tuyển Dụng
 
 ### Kỹ Năng Được Thể Hiện:
 
